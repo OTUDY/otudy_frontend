@@ -1,6 +1,5 @@
 import React from "react";
 import HeaderBar from "../components/HeaderBar";
-import LeftMenu from "../components/LeftMenu";
 import "../styles/HeaderBar.css";
 import "../styles/Section.css"; // Import your custom CSS file for the Section component
 
@@ -12,9 +11,7 @@ const Section = () => {
       </div>
 
       <div className="content">
-        <div className="left-menu">
-          <LeftMenu />
-        </div>
+        <div className="left-menu"></div>
         <div className="section-content">
           <h1>Section</h1>
           <p>
