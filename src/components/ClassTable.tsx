@@ -1,12 +1,8 @@
-import * as React from "react";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-
-const columns: GridColDef[] = [
-  { field: "classNumber", headerName: "aaaa", width: 150 },
-  { field: "className", headerName: "Class Name", width: 200 },
-  { field: "classLevel", headerName: "Class Level", width: 200 },
-  { field: "memberCount", headerName: "Amount of Members", width: 150 },
-];
+import React, { useState } from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import ClassForm from "./ClassForm.tsx";
 
 const generateSampleRows = (count: number) => {
   const rows = [];
@@ -24,12 +20,40 @@ const generateSampleRows = (count: number) => {
 
 const ClassTable = () => {
   const rows = generateSampleRows(10); // Generate 10 sample rows
+  const [isAddClassFormOpen, setIsAddClassFormOpen] = useState(false);
+  const handleOpenAddClassForm = () => {
+    setIsAddClassFormOpen(true);
+    console.log("Open");
+  };
+
+  const handleCloseAddClassForm = () => {
+    setIsAddClassFormOpen(false);
+  };
 
   return (
     <div style={{ height: 600, width: "100%" }}>
       <DataGrid
         rows={rows}
-        columns={columns}
+        columns={[
+          { field: "classNumber", headerName: "#", width: 150 },
+          { field: "className", headerName: "Class Name", width: 200 },
+          { field: "classLevel", headerName: "Class Level", width: 200 },
+          { field: "memberCount", headerName: "Amount of Members", width: 250 },
+          {
+            field: "edit",
+            headerName: "Edit",
+            width: 100,
+            renderCell: () => (
+              <IconButton
+                aria-label="edit"
+                color="primary"
+                onClick={() => handleOpenAddClassForm()}
+              >
+                <EditIcon />
+              </IconButton>
+            ),
+          },
+        ]}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },
@@ -37,6 +61,7 @@ const ClassTable = () => {
         }}
         pageSizeOptions={[5, 10]}
       />
+      <ClassForm open={isAddClassFormOpen} onClose={handleCloseAddClassForm} />
     </div>
   );
 };
