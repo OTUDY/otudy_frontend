@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import HeaderBar from "../components/HeaderBar";
 import ClassTable from "../components/ClassTable";
+import AddClassForm from "../components/AddClassForm"; // Adjust the import path based on your project structure
+import { Button, Grid } from "@mui/material";
 
 const Section = () => {
+  const [isAddClassFormOpen, setIsAddClassFormOpen] = useState(false);
+
+  const handleOpenAddClassForm = () => {
+    setIsAddClassFormOpen(true);
+  };
+
+  const handleCloseAddClassForm = () => {
+    setIsAddClassFormOpen(false);
+  };
+
   return (
     <div className="page-container">
       <div className="header-bar">
@@ -11,14 +23,29 @@ const Section = () => {
 
       <div className="content">
         <div className="section-content">
-          <h1>Class</h1>
-          <p>
-            This is a basic example of a React Section page in your application.
-            You can customize this page with your own content and components.
-          </p>
+          <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
+            <Grid item xs={12} md={6}>
+              <h1>Section</h1>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleOpenAddClassForm}
+                sx={{ marginBottom: 2 }}
+              >
+                Add Class
+              </Button>
+            </Grid>
+          </Grid>
           <ClassTable />
         </div>
       </div>
+
+      <AddClassForm
+        open={isAddClassFormOpen}
+        onClose={handleCloseAddClassForm}
+      />
     </div>
   );
 };
