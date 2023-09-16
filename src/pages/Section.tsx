@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import HeaderBar from "../components/HeaderBar";
 import ClassTable from "../components/ClassTable";
-import AddClassForm from "../components/AddClassForm"; // Adjust the import path based on your project structure
+import ClassForm from "../components/ClassForm";
 import { Button, Grid } from "@mui/material";
 
 const Section = () => {
@@ -42,10 +42,7 @@ const Section = () => {
         </div>
       </div>
 
-      <AddClassForm
-        open={isAddClassFormOpen}
-        onClose={handleCloseAddClassForm}
-      />
+      <ClassForm open={isAddClassFormOpen} onClose={handleCloseAddClassForm} />
     </div>
   );
 };
