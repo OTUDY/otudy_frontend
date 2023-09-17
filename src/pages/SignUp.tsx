@@ -7,6 +7,7 @@ import {
   Link,
   Grid,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 // import "react-phone-number-input/style.css";
 // import PhoneInput from "react-phone-number-input";
 
@@ -18,6 +19,7 @@ const SignUp: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [telephone, setTelephone] = useState("");
   const [schoolOrOrganization, setSchoolOrOrganization] = useState("");
+  const navigate = useNavigate();
 
   const handleSignUp = () => {
     // Handle sign-up logic here (e.g., send a request to your authentication server)
@@ -30,6 +32,7 @@ const SignUp: React.FC = () => {
       telephone,
       schoolOrOrganization,
     });
+    navigate("/section", { replace: true });
   };
 
   return (
@@ -113,7 +116,12 @@ const SignUp: React.FC = () => {
         </form>
         <Grid container justifyContent="center">
           <Grid item>
-            <Link href="/sign-in" variant="body2">
+            <Link
+              variant="body2"
+              onClick={() => {
+                navigate("/sign-in", { replace: true });
+              }}
+            >
               Already have an account? Sign In
             </Link>
           </Grid>
