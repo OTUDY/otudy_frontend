@@ -53,7 +53,9 @@ const ClassRoom = () => {
         <div className="classroom-content">
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>
-              <h1>Class ID: {classId}</h1>
+              <h2>
+                Class {classId} {}/ Student
+              </h2>
             </Grid>
             <Grid item xs={12} md={6}>
               <Button
