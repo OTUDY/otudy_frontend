@@ -1,11 +1,11 @@
-.section-container {
+.classroom-container {
   display: flex;
   align-items: flex-start; /* Align children at the top of the content div */
   justify-content: space-between; /* Add space between LeftMenu and section-content */
   padding: 20px; /* Add padding as needed */
 }
 
-.section-content {
+.classroom-content {
   flex: 1; /* Allow the content to expand and take available space */
   padding: 20px; /* Add padding as needed */
   

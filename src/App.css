@@ -1,6 +1,6 @@
 @import './styles/HeaderBar.css';
 @import './styles/Section.css';
-
+@import './styles/ClassRoom.css';
 #root {
   width: 100%;
   min-height: 100vh;
@@ -18,3 +18,4 @@
   margin: 0 auto;
   padding: 0;
 }
+
