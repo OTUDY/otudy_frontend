@@ -3,6 +3,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import ClassForm from "./ClassForm.tsx";
+import { useNavigate } from "react-router-dom";
 
 const generateSampleRows = (count: number) => {
   const rows = [];
@@ -29,6 +30,7 @@ const ClassTable = () => {
   const handleCloseAddClassForm = () => {
     setIsAddClassFormOpen(false);
   };
+  const navigate = useNavigate();
 
   return (
     <div style={{ height: 600, width: "100%" }}>
@@ -47,13 +49,21 @@ const ClassTable = () => {
               <IconButton
                 aria-label="edit"
                 color="primary"
-                onClick={() => handleOpenAddClassForm()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenAddClassForm();
+                }}
               >
                 <EditIcon />
               </IconButton>
             ),
           },
         ]}
+        onRowClick={(params) => {
+          navigate(`/class/${params.row.id}`);
+          // navigate("/", { replace: true });
+          console.log(navigate);
+        }}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },
