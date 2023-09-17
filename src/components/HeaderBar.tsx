@@ -11,7 +11,9 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
+import OtudyLogo from "../assets/OtudyLogo.svg";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { useNavigate } from "react-router-dom";
 
 function HeaderBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -37,6 +39,12 @@ function HeaderBar() {
     setAnchorElUser(null);
   };
 
+  const navigate = useNavigate();
+  const handleLogoClick = () => {
+    navigate("/", { replace: true });
+    console.log(navigate);
+  };
+
   // Define your menu items
   const navMenuItems = ["Class", "History"];
   const userMenuItems = ["Profile", "Logout"];
@@ -45,24 +53,16 @@ function HeaderBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
+          <IconButton
+            size="large"
+            edge="start"
+            color="primary"
+            aria-label="home"
+            sx={{ mr: 2 }}
+            onClick={handleLogoClick}
           >
-            Otudy
-          </Typography>
+            <img src={OtudyLogo} />
+          </IconButton>
 
           {/* Nav menu for smaller screens */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -102,26 +102,6 @@ function HeaderBar() {
             </Menu>
           </Box>
 
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LOGO
-          </Typography>
-
           {/* Nav buttons for larger screens */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {navMenuItems.map((page) => (
@@ -137,6 +117,9 @@ function HeaderBar() {
 
           {/* User menu */}
           <Box sx={{ flexGrow: 0 }}>
+            <IconButton size="large" color="inherit" sx={{ mr: 1 }}>
+              <NotificationsIcon />
+            </IconButton>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="profile pic" />
