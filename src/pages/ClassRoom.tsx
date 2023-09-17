@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import HeaderBar from "../components/HeaderBar";
 import { useParams } from "react-router-dom";
-import StudentClassTable from "../components/StudentClasstable";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import StudentClassTable from "../components/StudentClasstable";
+import StudentClassForm from "../components/StudentClassForm";
 
 const ClassRoom = () => {
   interface Student {
@@ -29,8 +30,19 @@ const ClassRoom = () => {
     return students;
   };
   const sampleStudentData = generateSampleStudentData(2);
-  console.log(sampleStudentData);
+
   const { classId } = useParams();
+  const [isAddStudentClassFormOpen, setIsAddStudentClassFormOpen] =
+    useState(false);
+
+  const handleOpenAddStudentClassForm = () => {
+    setIsAddStudentClassFormOpen(true);
+  };
+
+  const handleCloseAddStudentClassForm = () => {
+    setIsAddStudentClassFormOpen(false);
+  };
+
   return (
     <div className="page-container">
       <div className="header-bar">
@@ -48,6 +60,7 @@ const ClassRoom = () => {
                 variant="contained"
                 color="primary"
                 sx={{ marginBottom: 2 }}
+                onClick={handleOpenAddStudentClassForm}
               >
                 Add Student
               </Button>
@@ -56,6 +69,10 @@ const ClassRoom = () => {
           <StudentClassTable data={sampleStudentData} />
         </div>
       </div>
+      <StudentClassForm
+        open={isAddStudentClassFormOpen}
+        onClose={handleCloseAddStudentClassForm}
+      />
     </div>
   );
 };
