@@ -42,7 +42,7 @@ function HeaderBar() {
   const navigate = useNavigate();
   const handleLogoClick = () => {
     navigate("/", { replace: true });
-    console.log(history);
+    console.log(navigate);
   };
 
   // Define your menu items
