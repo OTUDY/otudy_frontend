@@ -8,11 +8,13 @@ import {
   Link,
 } from "@mui/material";
 import validator from "validator";
+import { useNavigate } from "react-router-dom";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const navigate = useNavigate();
 
   const checkEmailValidity = (email: string) => {
     setEmail(email);
@@ -27,6 +29,7 @@ const SignIn: React.FC = () => {
     if (validator.isEmail(email)) {
       // Email is valid, you can proceed with sign-in logic
       console.log("Signing in with email:", email);
+      navigate("/section", { replace: true });
     } else {
       // Email is not valid
       setIsEmailValid(false);
