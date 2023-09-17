@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import HeaderBar from "../components/HeaderBar";
 import ClassTable from "../components/ClassTable";
 import ClassForm from "../components/ClassForm";
