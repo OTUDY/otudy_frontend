@@ -8,6 +8,7 @@ import {
   Grid,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import validator from "validator";
 // import "react-phone-number-input/style.css";
 // import PhoneInput from "react-phone-number-input";
 
@@ -15,11 +16,21 @@ const SignUp: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [telephone, setTelephone] = useState("");
   const [schoolOrOrganization, setSchoolOrOrganization] = useState("");
   const navigate = useNavigate();
+
+  const checkEmailValidity = (email: string) => {
+    setEmail(email);
+    if (validator.isEmail(email)) {
+      setIsEmailValid(true);
+    } else {
+      setIsEmailValid(false);
+    }
+  };
 
   const handleSignUp = () => {
     // Handle sign-up logic here (e.g., send a request to your authentication server)
@@ -41,7 +52,7 @@ const SignUp: React.FC = () => {
         <Typography variant="h4">Sign up</Typography>
         <form>
           <TextField
-            label="First Name"
+            label="First Name *"
             fullWidth
             margin="normal"
             variant="outlined"
@@ -49,7 +60,7 @@ const SignUp: React.FC = () => {
             onChange={(e) => setFirstName(e.target.value)}
           />
           <TextField
-            label="Last Name"
+            label="Last Name *"
             fullWidth
             margin="normal"
             variant="outlined"
@@ -57,16 +68,18 @@ const SignUp: React.FC = () => {
             onChange={(e) => setLastName(e.target.value)}
           />
           <TextField
-            label="Email"
+            label="Email *"
             type="email"
             fullWidth
             margin="normal"
             variant="outlined"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => checkEmailValidity(e.target.value)}
+            error={!isEmailValid} // Apply error style if email is invalid
+            helperText={!isEmailValid && "Invalid email format"}
           />
           <TextField
-            label="Password"
+            label="Password *"
             type="password"
             fullWidth
             margin="normal"
@@ -75,7 +88,7 @@ const SignUp: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <TextField
-            label="Confirm Password"
+            label="Confirm Password *"
             type="password"
             fullWidth
             margin="normal"
@@ -84,7 +97,7 @@ const SignUp: React.FC = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <TextField
-            label="Telephone"
+            label="Telephone *"
             fullWidth
             margin="normal"
             variant="outlined"
@@ -98,7 +111,7 @@ const SignUp: React.FC = () => {
           /> */}
 
           <TextField
-            label="School or Organization"
+            label="School or Organization *"
             fullWidth
             margin="normal"
             variant="outlined"
@@ -110,6 +123,7 @@ const SignUp: React.FC = () => {
             color="primary"
             fullWidth
             onClick={handleSignUp}
+            disabled={!isEmailValid || email.length === 0}
           >
             Sign Up
           </Button>
