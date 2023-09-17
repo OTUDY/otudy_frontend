@@ -60,8 +60,10 @@ const ClassTable = () => {
           },
         ]}
         onRowClick={(params) => {
-          navigate(`/class/${params.row.id}`);
+          const classId = params.row.id;
+          navigate(`/class/${classId}`);
           // navigate("/", { replace: true });
+          console.log(params.row.classNumber);
           console.log(navigate);
         }}
         initialState={{
