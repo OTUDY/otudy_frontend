@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import OtudyLogo from "../assets/OtudyLogo.svg";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { useNavigate } from "react-router-dom";
 
 function HeaderBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -38,6 +39,12 @@ function HeaderBar() {
     setAnchorElUser(null);
   };
 
+  const navigate = useNavigate();
+  const handleLogoClick = () => {
+    navigate("/", { replace: true });
+    console.log(history);
+  };
+
   // Define your menu items
   const navMenuItems = ["Class", "History"];
   const userMenuItems = ["Profile", "Logout"];
@@ -52,6 +59,7 @@ function HeaderBar() {
             color="primary"
             aria-label="home"
             sx={{ mr: 2 }}
+            onClick={handleLogoClick}
           >
             <img src={OtudyLogo} />
           </IconButton>
