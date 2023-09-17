@@ -88,7 +88,12 @@ const SignIn: React.FC = () => {
                 <Typography variant="body2">Don't have an account?</Typography>
               </Grid>
               <Grid item>
-                <Link href="/sign-up" variant="body2">
+                <Link
+                  variant="body2"
+                  onClick={() => {
+                    navigate("/sign-up", { replace: true });
+                  }}
+                >
                   Sign up
                 </Link>
               </Grid>
