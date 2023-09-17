@@ -21,7 +21,7 @@ const Section = () => {
         <HeaderBar />
       </div>
 
-      <div className="content">
+      <div className="section-container">
         <div className="section-content">
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>

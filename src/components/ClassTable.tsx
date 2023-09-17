@@ -60,13 +60,14 @@ const ClassTable = () => {
           },
         ]}
         onRowClick={(params) => {
-          navigate(`/class/${params.row.id}`);
-          // navigate("/", { replace: true });
+          const classId = params.row.id;
+          navigate(`/class/${classId}`);
+          console.log(params.row.classNumber);
           console.log(navigate);
         }}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
+            paginationModel: { page: 0, pageSize: 10 },
           },
         }}
         pageSizeOptions={[5, 10]}

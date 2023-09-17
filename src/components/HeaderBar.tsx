@@ -44,6 +44,10 @@ function HeaderBar() {
     navigate("/", { replace: true });
     console.log(navigate);
   };
+  const handleClassButtonClick = () => {
+    navigate("/section");
+    handleCloseNavMenu(); // Close the navigation menu
+  };
 
   // Define your menu items
   const navMenuItems = ["Class", "History"];
@@ -95,7 +99,14 @@ function HeaderBar() {
               }}
             >
               {navMenuItems.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem
+                  key={page}
+                  onClick={
+                    page === "Class"
+                      ? handleClassButtonClick
+                      : handleCloseNavMenu
+                  }
+                >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -107,7 +118,9 @@ function HeaderBar() {
             {navMenuItems.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={
+                  page === "Class" ? handleClassButtonClick : handleCloseNavMenu
+                }
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
