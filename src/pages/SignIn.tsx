@@ -35,7 +35,7 @@ const SignIn: React.FC = () => {
       const formData = new FormData();
       formData.append('username', email);
       formData.append('password', password.toString());
-      formData.append('client_id', "1");
+      formData.append('client_id', (Number(isStudent) + 1).toString());
     try {
       const response = await axios.post(url, formData, {
         headers: {
@@ -44,8 +44,8 @@ const SignIn: React.FC = () => {
       });
       // document.cookie = response.data.access_token;
       localStorage.setItem("token", response.data.access_token);
-      console.log(response.data)
-      //navigate("/section", { replace: true });
+      console.log('Login completed! Navigating to section page.')
+      navigate("/section", { replace: true });
   
     } catch (error) {
       console.error('Error:', error);
