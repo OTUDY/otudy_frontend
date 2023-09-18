@@ -7,6 +7,8 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+import axios from "axios";
+// import { useNavigate } from "react-router-dom";
 
 interface AddClassFormProps {
   open: boolean;
@@ -18,11 +20,32 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
   const [classLevel, setClassLevel] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     // Handle create action
     console.log("Class Name:", className);
     console.log("Class Level:", classLevel);
     console.log("Description:", description);
+
+    const body = {
+      'class_name': className,
+      'level': classLevel,
+      'class_desc': description
+    };
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    };
+
+    const response = await axios.post(
+      'https://backend.otudy.co/api/v1/class/create_class', 
+      body, 
+      {
+      headers: headers
+    });
+
+    console.log(response.data);
+    window.location.reload();
+
     onClose(); // Close the dialog
   };
 
