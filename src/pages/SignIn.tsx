@@ -9,11 +9,13 @@ import {
 } from "@mui/material";
 import validator from "validator";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isStudent, setIsStudent] = useState(false);
   const navigate = useNavigate();
 
   const checkEmailValidity = (email: string) => {
@@ -25,16 +27,34 @@ const SignIn: React.FC = () => {
     }
   };
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     if (validator.isEmail(email)) {
       // Email is valid, you can proceed with sign-in logic
       console.log("Signing in with email:", email);
-      navigate("/section", { replace: true });
-    } else {
-      // Email is not valid
+      const url = 'https://backend.otudy.co/api/v1/user/login'; // Replace with your OAuth2 token endpoint
+      const formData = new FormData();
+      formData.append('username', email);
+      formData.append('password', password.toString());
+      formData.append('client_id', "1");
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      // document.cookie = response.data.access_token;
+      localStorage.setItem("token", response.data.access_token);
+      console.log(response.data)
+      //navigate("/section", { replace: true });
+  
+    } catch (error) {
+      console.error('Error:', error);
+    }
+    }
+    else {
       setIsEmailValid(false);
     }
-  };
+};
 
   return (
     <Container maxWidth="xs">

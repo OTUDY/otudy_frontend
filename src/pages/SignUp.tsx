@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
+import axios from 'axios';
 // import "react-phone-number-input/style.css";
 // import PhoneInput from "react-phone-number-input";
 
@@ -21,6 +22,8 @@ const SignUp: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [telephone, setTelephone] = useState("");
   const [schoolOrOrganization, setSchoolOrOrganization] = useState("");
+  const [isStudent, setIsStudent] = useState(false);
+  const [urlEndpoint, setUrlEndpoint] = useState('https://backend.otudy.co/api/v1/user/teacher/register');
   const navigate = useNavigate();
 
   const checkEmailValidity = (email: string) => {
@@ -32,7 +35,11 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const handleSignUp = () => {
+  const changeRole = () => {
+    setIsStudent(true);
+  }
+
+  const handleSignUp = async () => {
     // Handle sign-up logic here (e.g., send a request to your authentication server)
     console.log("Signing up with data:", {
       firstName,
@@ -43,7 +50,40 @@ const SignUp: React.FC = () => {
       telephone,
       schoolOrOrganization,
     });
-    navigate("/section", { replace: true });
+    const body = {
+      'email': email,
+      'pwd': password,
+      'fname': firstName,
+      'surname': lastName,
+      'phone': telephone,
+      'role': Number(isStudent) + 1,
+      'affiliation': schoolOrOrganization,
+      'class_id': ''
+    };
+
+    if (isStudent) {
+      await setUrlEndpoint('https://backend.otudy.co/api/v1/user/student/register');
+    };
+    
+    if (password === confirmPassword) {
+      const response = await axios.post('https://backend.otudy.co/api/v1/user/teacher/register/', body, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.status != 200 && response.status != 201 && response.status != 202){
+        console.log(response.data);
+        navigate('/sign-in', { replace: true });
+      }
+      else {
+        console.log('Password or email is incorrect, please check your entries.');
+        // Please perform logic to inform user to check their entries.
+        
+      }
+      
+    }
+
   };
 
   return (
