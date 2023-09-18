@@ -22,8 +22,8 @@ const SignUp: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [telephone, setTelephone] = useState("");
   const [schoolOrOrganization, setSchoolOrOrganization] = useState("");
-  const [isStudent, setIsStudent] = useState(false);
-  const [urlEndpoint, setUrlEndpoint] = useState('https://backend.otudy.co/api/v1/user/teacher/register');
+  const [isStudent] = useState(false);
+  // const [urlEndpoint, setUrlEndpoint] = useState('https://backend.otudy.co/api/v1/user/teacher/register');
   const navigate = useNavigate();
 
   const checkEmailValidity = (email: string) => {
@@ -35,9 +35,9 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const changeRole = () => {
-    setIsStudent(true);
-  }
+  // const changeRole = () => {
+  //   setIsStudent(true);
+  // }
 
   const handleSignUp = async () => {
     // Handle sign-up logic here (e.g., send a request to your authentication server)
@@ -61,9 +61,9 @@ const SignUp: React.FC = () => {
       'class_id': ''
     };
 
-    if (isStudent) {
-      await setUrlEndpoint('https://backend.otudy.co/api/v1/user/student/register');
-    };
+    // if (isStudent) {
+    //   await setUrlEndpoint('https://backend.otudy.co/api/v1/user/student/register');
+    // };
     
     if (password === confirmPassword) {
       const response = await axios.post('https://backend.otudy.co/api/v1/user/teacher/register/', body, {
@@ -79,7 +79,7 @@ const SignUp: React.FC = () => {
       else {
         console.log('Password or email is incorrect, please check your entries.');
         // Please perform logic to inform user to check their entries.
-        
+
       }
       
     }

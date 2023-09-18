@@ -15,7 +15,7 @@ const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
-  const [isStudent, setIsStudent] = useState(false);
+  const [isStudent] = useState(false);
   const navigate = useNavigate();
 
   const checkEmailValidity = (email: string) => {

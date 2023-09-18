@@ -1,45 +1,45 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import ClassForm from "./ClassForm.tsx";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+// import axios from 'axios';
 
-const generateSampleRows = (count: number) => {
-  const rows = [];
-  for (let i = 1; i <= count; i++) {
-    rows.push({
-      id: i,
-      classNumber: ` ${i}`,
-      className: `Class ${i} Name`,
-      classLevel: i % 2 === 0 ? "High School" : "Middle School",
-      memberCount: Math.floor(Math.random() * 30) + 20,
-    });
-  }
-  return rows;
-};
+// const generateSampleRows = (count: number) => {
+//   const rows = [];
+//   for (let i = 1; i <= count; i++) {
+//     rows.push({
+//       id: i,
+//       classNumber: ` ${i}`,
+//       className: `Class ${i} Name`,
+//       classLevel: i % 2 === 0 ? "High School" : "Middle School",
+//       memberCount: Math.floor(Math.random() * 30) + 20,
+//     });
+//   }
+//   return rows;
+// };
 
-const getAssignedClasses = () => {
-  let responseData: any;
-  axios
-  .get('https://backend.otudy.co/api/v1/user/teacher/get_assigned_classes', {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
-    }
-  })
-  .then((response) => {
-    responseData = response.data.classes;
-    for (let i = 0; i < responseData.length; i++) {
-      responseData[i]['id'] = i;
-    };
-    console.log(responseData);
-    return responseData;
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
-}
+// const getAssignedClasses = () => {
+//   let responseData: any;
+//   axios
+//   .get('https://backend.otudy.co/api/v1/user/teacher/get_assigned_classes', {
+//     headers: {
+//       Authorization: `Bearer ${localStorage.getItem('token')}`
+//     }
+//   })
+//   .then((response) => {
+//     responseData = response.data.classes;
+//     for (let i = 0; i < responseData.length; i++) {
+//       responseData[i]['id'] = i;
+//     };
+//     console.log(responseData);
+//     return responseData;
+//   })
+//   .catch((error) => {
+//     console.error('Error:', error);
+//   });
+// }
 
 const ClassTable = () => {
   const rows: any = [{
