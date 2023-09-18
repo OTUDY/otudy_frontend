@@ -47,7 +47,31 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
     window.location.reload();
 
     onClose(); // Close the dialog
-  };
+    };
+
+    // const handleEdit = async() => {
+    //   const body = {
+    //     'class_name': className,
+    //     'level': classLevel,
+    //     'class_desc': description
+    //   };
+    //   const headers = {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${localStorage.getItem('token')}`
+    //   };
+  
+    //   const response = await axios.put(
+    //     'https://backend.otudy.co/api/v1/class/update_class_detail', 
+    //     body, 
+    //     {
+    //     headers: headers
+    //   });
+  
+    //   console.log(response.data);
+    //   window.location.reload();
+
+    //   onClose();
+    // }
 
   return (
     <Dialog open={open} onClose={onClose}>
