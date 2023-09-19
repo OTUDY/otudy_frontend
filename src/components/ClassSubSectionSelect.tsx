@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -10,11 +10,9 @@ const ClassSubSectionSelect: React.FC<ClassSubSectionSelectProps> = ({
   classId,
 }) => {
   const navigate = useNavigate();
-  const [selectedMenuItem, setSelectedMenuItem] = useState("student");
 
   const handleMenuItemChange = (event: SelectChangeEvent<string>) => {
     const selectedItem = event.target.value as string;
-    setSelectedMenuItem(selectedItem);
     const encodedClassId = encodeURIComponent(classId);
 
     // Navigate to the Mission page if "Mission" is selected
@@ -31,7 +29,7 @@ const ClassSubSectionSelect: React.FC<ClassSubSectionSelectProps> = ({
 
   return (
     <Select
-      value={selectedMenuItem} // Set the value based on the selectedMenuItem
+      // Set the value based on the selectedMenuItem
       onChange={handleMenuItemChange}
       sx={{ ".MuiOutlinedInput-notchedOutline": { border: 0 } }}
     >
