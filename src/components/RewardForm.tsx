@@ -10,12 +10,12 @@ import {
 //import axios from "axios";
 //import { useNavigate } from "react-router-dom";
 
-interface AddClassFormProps {
+interface RewardFormProps {
   open: boolean;
   onClose: () => void;
 }
 
-const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
+const RewardForm: React.FC<RewardFormProps> = ({ open, onClose }) => {
   const [title, setTitle] = useState("");
   const [point, setPoint] = useState("");
   const [description, setDescription] = useState("");
@@ -87,4 +87,4 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
   );
 };
 
-export default StudentClassForm;
+export default RewardForm;
