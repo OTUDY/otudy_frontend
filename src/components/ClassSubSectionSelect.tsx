@@ -15,10 +15,17 @@ const ClassSubSectionSelect: React.FC<ClassSubSectionSelectProps> = ({
   const handleMenuItemChange = (event: SelectChangeEvent<string>) => {
     const selectedItem = event.target.value as string;
     setSelectedMenuItem(selectedItem);
+    const encodedClassId = encodeURIComponent(classId);
 
     // Navigate to the Mission page if "Mission" is selected
-    if (selectedItem === "mission") {
-      navigate(`/class/${classId}/mission`);
+    if (selectedItem === "student") {
+      navigate(`/class/${encodedClassId}/student`);
+    } else if (selectedItem === "mission") {
+      navigate(`/class/${encodedClassId}/mission`);
+    } else if (selectedItem === "reward") {
+      navigate(`/class/${encodedClassId}/reward`);
+    } else if (selectedItem === "leaderboard") {
+      navigate(`/class/${encodedClassId}/leaderboard`);
     }
   };
 
