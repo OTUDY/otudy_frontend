@@ -3,9 +3,10 @@ import HeaderBar from "../components/HeaderBar";
 import { useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import StudentClassTable from "../components/StudentClasstable";
+import StudentClassTable from "../components/StudentClassTable";
 import StudentClassForm from "../components/StudentClassForm";
 import ClassSubSectionSelect from "../components/ClassSubSectionSelect";
+import Typography from "@mui/material/Typography";
 
 const ClassRoom = () => {
   interface Student {
@@ -56,10 +57,10 @@ const ClassRoom = () => {
         <div className="classroom-content">
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>
-              <p>
+              <Typography>
                 Class{classId} /
                 {classId && <ClassSubSectionSelect classId={classId} />}
-              </p>
+              </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Button

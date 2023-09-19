@@ -5,6 +5,8 @@ import Button from "@mui/material/Button";
 import ClassSubSectionSelect from "../components/ClassSubSectionSelect";
 import { useState } from "react";
 import MissionForm from "../components/MissionForm";
+import { Typography } from "@mui/material";
+import MissionTable from "../components/MissionTable";
 
 const Mission = () => {
   const { classId } = useParams();
@@ -27,10 +29,10 @@ const Mission = () => {
         <div className="classroom-content">
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>
-              <p>
+              <Typography>
                 Class{classId} /
                 {classId && <ClassSubSectionSelect classId={classId} />}
-              </p>
+              </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Button
@@ -43,6 +45,7 @@ const Mission = () => {
               </Button>
             </Grid>
           </Grid>
+          <MissionTable />
         </div>
       </div>
       <MissionForm open={isAddMissionOpen} onClose={handleCloseAddMission} />
