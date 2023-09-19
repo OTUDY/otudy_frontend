@@ -46,6 +46,13 @@ const Mission = () => {
             </Grid>
           </Grid>
           <MissionTable />
+          <Typography
+            variant="h6"
+            sx={{ marginTop: 2, justifyContent: "flex-start" }}
+          >
+            Expired Mission
+          </Typography>
+          <MissionTable />
         </div>
       </div>
       <MissionForm open={isAddMissionOpen} onClose={handleCloseAddMission} />

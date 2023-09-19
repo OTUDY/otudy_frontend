@@ -3,9 +3,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import MissionForm from "./MissionForm";
-import { useNavigate } from "react-router-dom";
 
 const MissionTable = () => {
+  //const [rows, setRows] = useState([]);
+  const [isAddMissionFormOpen, setIsAddMissionFormOpen] = useState(false);
+  //const [selectedMission, setSelectedMission] = useState(null);
   const generateSampleRows = (count: number) => {
     const rows = [];
     for (let i = 1; i <= count; i++) {
@@ -21,9 +23,6 @@ const MissionTable = () => {
   };
 
   const sampleRows = generateSampleRows(10); // Generate 10 sample rows
-  console.log(sampleRows);
-
-  const [isAddMissionFormOpen, setIsAddMissionFormOpen] = useState(false);
 
   const handleOpenAddMissionForm = () => {
     setIsAddMissionFormOpen(true);
@@ -32,8 +31,6 @@ const MissionTable = () => {
   const handleCloseAddMissionForm = () => {
     setIsAddMissionFormOpen(false);
   };
-
-  const navigate = useNavigate();
 
   return (
     <div style={{ height: 600, width: "100%" }}>
