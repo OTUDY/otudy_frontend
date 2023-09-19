@@ -41,15 +41,15 @@ const SignUp: React.FC = () => {
 
   const handleSignUp = async () => {
     // Handle sign-up logic here (e.g., send a request to your authentication server)
-    console.log("Signing up with data:", {
-      firstName,
-      lastName,
-      email,
-      password,
-      confirmPassword,
-      telephone,
-      schoolOrOrganization,
-    });
+    // console.log("Signing up with data:", {
+    //   firstName,
+    //   lastName,
+    //   email,
+    //   password,
+    //   confirmPassword,
+    //   telephone,
+    //   schoolOrOrganization,
+    // });
     const body = {
       'email': email,
       'pwd': password,
@@ -72,9 +72,10 @@ const SignUp: React.FC = () => {
         }
       });
 
-      if (response.status != 200 && response.status != 201 && response.status != 202){
+      if (response.status == 200 || response.status == 201 || response.status == 202){
         console.log(response.data);
         navigate('/sign-in', { replace: true });
+        console.log(navigate);
       }
       else {
         console.log('Password or email is incorrect, please check your entries.');
