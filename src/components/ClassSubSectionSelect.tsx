@@ -14,18 +14,17 @@ const ClassSubSectionSelect: React.FC<ClassSubSectionSelectProps> = ({
 
   const handleMenuItemChange = (event: SelectChangeEvent<string>) => {
     const selectedItem = event.target.value as string;
+    setSelectedMenuItem(selectedItem);
 
     // Navigate to the Mission page if "Mission" is selected
     if (selectedItem === "mission") {
       navigate(`/class/${classId}/mission`);
-    } else {
-      setSelectedMenuItem(selectedItem);
     }
   };
 
   return (
     <Select
-      value={selectedMenuItem}
+      value={selectedMenuItem} // Set the value based on the selectedMenuItem
       onChange={handleMenuItemChange}
       sx={{ ".MuiOutlinedInput-notchedOutline": { border: 0 } }}
     >
