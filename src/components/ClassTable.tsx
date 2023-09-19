@@ -49,7 +49,7 @@ const ClassTable = () => {
       const rows = [];
       for (let i = 0; i < response.data.classes.length; i++) {
         let data = response.data.classes[i];
-        data['id'] = i;
+        data['id'] = response.data.classes[i].class_name;
         rows.push(data);
       }
 
@@ -88,7 +88,7 @@ const ClassTable = () => {
           },
         ]}
         onRowClick={(params) => {
-          const classId = params.row.id;
+          const classId = encodeURIComponent(params.row.id);
           navigate(`/class/${classId}`);
           console.log(params.row.classNumber);
           console.log(navigate);

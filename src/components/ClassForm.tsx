@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface AddClassFormProps {
   open: boolean;
@@ -19,6 +19,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
   const [className, setClassName] = useState("");
   const [classLevel, setClassLevel] = useState("");
   const [description, setDescription] = useState("");
+  const navigate = useNavigate();
 
   const handleCreate = async () => {
     // Handle create action
@@ -44,7 +45,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
     });
 
     console.log(response.data);
-    window.location.reload();
+    navigate('/section', { replace: true })
 
     onClose(); // Close the dialog
     };
