@@ -79,8 +79,6 @@ const SignUp: React.FC = () => {
       }
       else {
         console.log(`Account with email: ${email} is existed, proceed to login.`);
-        // Please perform logic to inform user to check their entries.
-
       }
       
     }
