@@ -3,6 +3,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import MissionForm from "./MissionForm";
+import MissionCompleteList from "./MissionCompleteList";
 
 const MissionTable = () => {
   //const [rows, setRows] = useState([]);
@@ -24,12 +25,48 @@ const MissionTable = () => {
 
   const sampleRows = generateSampleRows(10); // Generate 10 sample rows
 
+  interface Student {
+    id: number;
+    studentId: string;
+    name: string;
+    lastName: string;
+    completed: boolean;
+  }
+  const generateSampleStudentData = (count: number): Student[] => {
+    const students: Student[] = [];
+
+    for (let i = 1; i <= count; i++) {
+      const student: Student = {
+        id: i, // Unique ID
+        studentId: `S${i}`,
+        name: `Student ${i}`,
+        lastName: `Lastname ${i}`,
+        completed: false,
+      };
+
+      students.push(student);
+    }
+
+    return students;
+  };
+  const sampleStudentData = generateSampleStudentData(2);
+
   const handleOpenAddMissionForm = () => {
     setIsAddMissionFormOpen(true);
   };
 
   const handleCloseAddMissionForm = () => {
     setIsAddMissionFormOpen(false);
+  };
+
+  const [viewCompleteStatus, setViewCompleteStatus] = useState(false);
+
+  const handleOpenCompleteStatus = () => {
+    setViewCompleteStatus(true);
+  };
+
+  const handleCloseCompleteStatus = () => {
+    setViewCompleteStatus(false);
   };
 
   return (
@@ -61,6 +98,7 @@ const MissionTable = () => {
           },
         ]}
         onRowClick={(params) => {
+          handleOpenCompleteStatus();
           const missionId = params.row.id;
           // Navigate to mission details page or handle as needed
           console.log("Mission ID:", missionId);
@@ -75,6 +113,11 @@ const MissionTable = () => {
       <MissionForm
         open={isAddMissionFormOpen}
         onClose={handleCloseAddMissionForm}
+      />
+      <MissionCompleteList
+        students={sampleStudentData}
+        open={viewCompleteStatus}
+        onClose={handleCloseCompleteStatus}
       />
     </div>
   );
