@@ -25,6 +25,7 @@ const MissionTable = () => {
 
   const sampleRows = generateSampleRows(10); // Generate 10 sample rows
 
+  //Generate Sample student data
   interface Student {
     id: number;
     studentId: string;

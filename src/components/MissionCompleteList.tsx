@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellParams,
+  GridRowSelectionModel,
+} from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 
@@ -22,6 +26,14 @@ const columns = [
   { field: "studentId", headerName: "Student ID", width: 150 },
   { field: "name", headerName: "Name", width: 150 },
   { field: "lastName", headerName: "Last Name", width: 150 },
+  {
+    field: "completed",
+    headerName: "Completed",
+    width: 150,
+    renderCell: (params: GridCellParams) => {
+      return params.value ? "Completed" : "Not Completed";
+    },
+  },
 ];
 
 const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
@@ -39,7 +51,7 @@ const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth={true}>
+    <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="md">
       <div style={{ height: "100%", width: "100%" }}>
         <DataGrid
           rows={students}
