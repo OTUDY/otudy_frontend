@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import RewardForm from "./RewardForm";
+import TeacherRedeem from "./TeacherRedeem";
 
 interface RewardCardProps {
   title: string;
@@ -18,6 +19,15 @@ const RewardCard: React.FC<RewardCardProps> = ({
   expiredDate,
 }) => {
   const [isRewardFormOpen, setIsRewardFormOpen] = useState(false);
+  const [isTeacherRedeemOpen, setIsTeacherRedeemOpen] = useState(false);
+  const handleTeacherRedeem = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsTeacherRedeemOpen(true);
+  };
+
+  const handleCloseTeacherRedeem = () => {
+    setIsTeacherRedeemOpen(false);
+  };
 
   const handleCardClick = () => {
     setIsRewardFormOpen(true);
@@ -44,6 +54,7 @@ const RewardCard: React.FC<RewardCardProps> = ({
       <Button
         variant="contained"
         color="primary"
+        onClick={handleTeacherRedeem}
         sx={{
           position: "absolute",
           bottom: 10,
@@ -53,6 +64,11 @@ const RewardCard: React.FC<RewardCardProps> = ({
         Redeem
       </Button>
       <RewardForm open={isRewardFormOpen} onClose={handleCloseRewardForm} />
+      <TeacherRedeem
+        open={isTeacherRedeemOpen}
+        onClose={handleCloseTeacherRedeem}
+        students={[]}
+      />
     </Card>
   );
 };
