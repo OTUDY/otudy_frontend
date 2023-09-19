@@ -1,12 +1,11 @@
 import { useState } from "react";
 import HeaderBar from "../components/HeaderBar";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import StudentClassTable from "../components/StudentClasstable";
 import StudentClassForm from "../components/StudentClassForm";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
+import ClassSubSectionSelect from "../components/ClassSubSectionSelect";
 
 const ClassRoom = () => {
   interface Student {
@@ -32,21 +31,10 @@ const ClassRoom = () => {
     return students;
   };
   const sampleStudentData = generateSampleStudentData(2);
-  const navigate = useNavigate();
-  const [selectedMenuItem, setSelectedMenuItem] = useState("student");
-
-  const handleMenuItemChange = (event: SelectChangeEvent<string>) => {
-    const selectedItem = event.target.value;
-
-    // Navigate to the Mission page if "Mission" is selected
-    if (selectedItem === "mission") {
-      navigate(`/class/${classId}/mission`);
-    } else {
-      setSelectedMenuItem(selectedItem);
-    }
-  };
 
   const { classId } = useParams();
+
+  console.log(classId);
   const [isAddStudentClassFormOpen, setIsAddStudentClassFormOpen] =
     useState(false);
 
@@ -69,19 +57,8 @@ const ClassRoom = () => {
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>
               <p>
-                Class {classId} /
-                <Select
-                  value={selectedMenuItem}
-                  onChange={handleMenuItemChange}
-                  sx={{
-                    ".MuiOutlinedInput-notchedOutline": { border: 0 },
-                  }}
-                >
-                  <MenuItem value="student">Student</MenuItem>
-                  <MenuItem value="mission">Mission</MenuItem>
-                  <MenuItem value="reward">Reward</MenuItem>
-                  <MenuItem value="leaderboard">Leaderboard</MenuItem>
-                </Select>
+                Class{classId} /
+                {classId && <ClassSubSectionSelect classId={classId} />}
               </p>
             </Grid>
             <Grid item xs={12} md={6}>
