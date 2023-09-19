@@ -2,12 +2,20 @@ import HeaderBar from "../components/HeaderBar";
 import { useParams } from "react-router-dom";
 import { Button, Grid, Typography } from "@mui/material";
 import ClassSubSectionSelect from "../components/ClassSubSectionSelect";
+import RewardForm from "../components/RewardForm";
+import { useState } from "react";
 
 const Reward = () => {
   const { classId } = useParams();
+  const [isAddRewardOpen, setIsAddRewardOpen] = useState(false);
   const handleAddReward = () => {
-    console.log("add reward");
+    setIsAddRewardOpen(true);
   };
+
+  const handleCloseAddReward = () => {
+    setIsAddRewardOpen(false);
+  };
+
   return (
     <div className="page-container">
       <div className="header-bar">
@@ -30,12 +38,13 @@ const Reward = () => {
                 sx={{ marginBottom: 2 }}
                 onClick={handleAddReward}
               >
-                Add Mission
+                Add Reward
               </Button>
             </Grid>
           </Grid>
         </div>
       </div>
+      <RewardForm open={isAddRewardOpen} onClose={handleCloseAddReward} />
     </div>
   );
 };
