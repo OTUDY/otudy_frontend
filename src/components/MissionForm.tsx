@@ -7,6 +7,9 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
 
 interface AddMissionFormProps {
@@ -69,12 +72,20 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
             sx={{ marginBottom: 2 }}
           />
           <TextField
-            label="Due Date (optional)"
+            label="Due Date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
           />
+          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Due Date"
+              value={dueDate}
+              onChange={(date) => setDueDate(date)}
+              sx={{ marginBottom: 2 }}
+            />
+          </LocalizationProvider> */}
         </form>
       </DialogContent>
       <DialogActions
