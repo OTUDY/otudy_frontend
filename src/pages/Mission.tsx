@@ -10,14 +10,14 @@ import MissionTable from "../components/MissionTable";
 
 const Mission = () => {
   const { classId } = useParams();
-  const [isAddMissionOpen, setisAddMissionOpen] = useState(false);
+  const [isAddMissionOpen, setIsAddMissionOpen] = useState(false);
 
   const handleOpenAddMission = () => {
-    setisAddMissionOpen(true);
+    setIsAddMissionOpen(true);
   };
 
   const handleCloseAddMission = () => {
-    setisAddMissionOpen(false);
+    setIsAddMissionOpen(false);
   };
   return (
     <div className="page-container">
