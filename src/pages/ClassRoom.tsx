@@ -5,6 +5,8 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import StudentClassTable from "../components/StudentClasstable";
 import StudentClassForm from "../components/StudentClassForm";
+import ClassSubSectionSelect from "../components/ClassSubSectionSelect";
+import Typography from "@mui/material/Typography";
 import axios from "axios";
 
 const ClassRoom = () => {
@@ -32,14 +34,18 @@ const ClassRoom = () => {
   //   return students;
   // };
   //const sampleStudentData = generateSampleStudentData(2);
-  const [studentData, setStudentData] = useState([{
-    studentId: '',
-    id: '',
-    firstName: '',
-    surName: ''
-  }])
+  const [studentData, setStudentData] = useState([
+    {
+      studentId: "",
+      id: "",
+      firstName: "",
+      surName: "",
+    },
+  ]);
 
   const { classId } = useParams();
+
+  console.log(classId);
   const [isAddStudentClassFormOpen, setIsAddStudentClassFormOpen] =
     useState(false);
 
@@ -52,20 +58,24 @@ const ClassRoom = () => {
   };
 
   useEffect(() => {
-    const getClassDetails = async() => {
-      const response = await axios.get(`https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classId}`, {
-        headers: {
-          "Content-Type": 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+    const getClassDetails = async () => {
+      const response = await axios.get(
+        `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-      });
+      );
       for (let i = 0; i < response.data.classStudents.length; i++) {
-        response.data.classStudents[i]['id'] = response.data.classStudents[i]['studentId'];
-      };
+        response.data.classStudents[i]["id"] =
+          response.data.classStudents[i]["studentId"];
+      }
       setStudentData(response.data.classStudents);
-    }
+    };
     getClassDetails();
-  }, [])
+  }, []);
 
   return (
     <div className="page-container">
@@ -77,9 +87,10 @@ const ClassRoom = () => {
         <div className="classroom-content">
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>
-              <h2>
-                Class {classId}
-              </h2>
+              <Typography>
+                Class{classId} /
+                {classId && <ClassSubSectionSelect classId={classId} />}
+              </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Button
