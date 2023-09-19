@@ -78,7 +78,7 @@ const SignUp: React.FC = () => {
         console.log(navigate);
       }
       else {
-        console.log('Password or email is incorrect, please check your entries.');
+        console.log(`Account with email: ${email} is existed, proceed to login.`);
         // Please perform logic to inform user to check their entries.
 
       }
