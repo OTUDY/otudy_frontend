@@ -72,12 +72,12 @@ const SignUp: React.FC = () => {
         }
       });
 
-      if (response.status != 200 && response.status != 201 && response.status != 202){
+      if (response.status == 200 || response.status == 201 || response.status == 202){
         console.log(response.data);
         navigate('/sign-in', { replace: true });
       }
       else {
-        console.log('Password or email is incorrect, please check your entries.');
+        console.log(`Account with email: ${email} is already existed.`);
         // Please perform logic to inform user to check their entries.
 
       }
