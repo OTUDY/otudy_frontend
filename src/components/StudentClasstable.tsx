@@ -4,9 +4,9 @@ import React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 interface Student {
-  student_id: string;
-  name: string;
-  lastname: string;
+  studentId: string;
+  firstName: string;
+  surName: string;
 }
 
 interface StudentClassTableProps {
@@ -14,9 +14,9 @@ interface StudentClassTableProps {
 }
 
 const columns: GridColDef[] = [
-  { field: "student_id", headerName: "Student ID", width: 150 },
-  { field: "name", headerName: "Name", width: 200 },
-  { field: "lastname", headerName: "Last Name", width: 200 },
+  { field: "studentId", headerName: "Student ID", width: 150 },
+  { field: "firstName", headerName: "First Name", width: 200 },
+  { field: "surName", headerName: "Last Name", width: 200 },
 ];
 
 const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {
