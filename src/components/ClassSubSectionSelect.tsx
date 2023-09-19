@@ -17,7 +17,7 @@ const ClassSubSectionSelect: React.FC<ClassSubSectionSelectProps> = ({
 
     // Navigate to the Mission page if "Mission" is selected
     if (selectedItem === "student") {
-      navigate(`/class/${encodedClassId}/student`);
+      navigate(`/class/${encodedClassId}`);
     } else if (selectedItem === "mission") {
       navigate(`/class/${encodedClassId}/mission`);
     } else if (selectedItem === "reward") {
