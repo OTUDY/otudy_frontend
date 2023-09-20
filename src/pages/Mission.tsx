@@ -45,6 +45,7 @@ const Mission = () => {
               </Button>
             </Grid>
           </Grid>
+          <MissionTable active={true} classId={classId as string}/>
           <MissionTable />
           <Typography
             variant="h6"
@@ -52,6 +53,10 @@ const Mission = () => {
           >
             Expired Mission
           </Typography>
+          <MissionTable active={false} classId={classId as string}/>
+        </div>
+      </div>
+      <MissionForm classId={classId} open={isAddMissionOpen} onClose={handleCloseAddMission} isEdit={false} />
           <MissionTable />
         </div>
       </div>

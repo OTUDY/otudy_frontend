@@ -78,7 +78,11 @@ const SignUp: React.FC = () => {
         console.log(navigate);
       }
       else {
+
+
         console.log(`Account with email: ${email} is existed, proceed to login.`);
+        // show false modal here
+
       }
       
     }

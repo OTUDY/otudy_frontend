@@ -15,6 +15,20 @@ import axios from "axios";
 interface AddMissionFormProps {
   open: boolean;
   onClose: () => void;
+  classId: any;
+  isEdit: boolean;
+}
+
+const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, isEdit }) => {
+  const [missionTitle, setMissionTitle] = useState("");
+  const [missionDescription, setMissionDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [rewardPoints, setRewardPoints] = useState(0);
+  const [activeStatus, setActiveStatus] = useState(false);
+  const [tagsInput, setTagsInput] = useState('');
+
+  const handleCreate = async () => {
+
 }
 
 const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
@@ -23,10 +37,28 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
   const [dueDate, setDueDate] = useState("");
 
   const handleCreate = async () => {
+
     // Handle create action
     console.log("Class Name:", missionTitle);
     console.log("Class Level:", missionDescription);
     console.log("Description:", dueDate);
+    
+    console.log(tagsInput);
+    const tagsToSendCreate: string[] = [];
+    const tagsSplitted = tagsInput.split(', ');
+    tagsSplitted.forEach((currentItem) => {
+      tagsToSendCreate.push(currentItem);
+    })
+
+    
+    const body = {
+      mission_name: missionTitle,
+      mission_desc: missionDescription,
+      mission_points: rewardPoints,
+      mission_active_status: activeStatus,
+      mission_class_id: classId,
+      mission_expired_date: dueDate,
+      tags: tagsToSendCreate
 
     const body = {
       class_name: missionTitle,
@@ -38,6 +70,30 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
 
+    if (!isEdit) {
+      const response = await axios.post(
+        "https://backend.otudy.co/api/v1/mission/create_mission",
+        body,
+        {
+          headers: headers,
+        }
+      );
+      console.log(response.data);
+      if (!(response.status == 200 || response.status == 201 || response.status == 202)) {
+        // show false modal here
+      }
+    }
+    else {
+      const response = await axios.put(
+        'https://backend.otudy.co/api/v1/mission/update_mission_detail', body, { headers: headers }
+      )
+      if (response.status == 200 || response.status == 201 || response.status == 202) {
+        console.log(response.data);
+      }
+      else {
+        //show false modal here
+      }
+    }
     const response = await axios.post(
       "https://backend.otudy.co/api/v1/class/create_class",
       body,
@@ -54,6 +110,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Create new mission</DialogTitle>
       <DialogTitle>Add Class</DialogTitle>
       <DialogContent>
         <form>
@@ -65,9 +122,23 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
             sx={{ marginBottom: 2 }}
           />
           <TextField
+            label="Reward points"
+            value={rewardPoints}
+            onChange={(e) => setRewardPoints(parseInt(e.target.value))}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+          />
+          <TextField
             label="Description"
             value={missionDescription}
             onChange={(e) => setMissionDescription(e.target.value)}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+          />
+          <TextField
+            label="Active Status"
+            value={activeStatus}
+            onChange={(e) => setActiveStatus(Boolean(e.target.value))}
             fullWidth
             sx={{ marginBottom: 2 }}
           />
@@ -78,14 +149,13 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
             fullWidth
             sx={{ marginBottom: 2 }}
           />
-          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Due Date"
-              value={dueDate}
-              onChange={(date) => setDueDate(date)}
-              sx={{ marginBottom: 2 }}
-            />
-          </LocalizationProvider> */}
+          <TextField
+            label="Tags"
+            value={tagsInput}
+            onChange={(e) => setTagsInput(e.target.value as string)}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+          />
         </form>
       </DialogContent>
       <DialogActions
@@ -95,7 +165,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
           Cancel
         </Button>
         <Button onClick={handleCreate} color="primary">
-          Create
+          Create / Edit
         </Button>
       </DialogActions>
     </Dialog>

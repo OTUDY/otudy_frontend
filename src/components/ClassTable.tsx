@@ -90,6 +90,7 @@ const ClassTable = () => {
         onRowClick={(params) => {
           const classId = encodeURIComponent(params.row.id);
           navigate(`/class/${classId}`);
+          localStorage.setItem('currentClass', params.row.id);
           console.log(params.row.classNumber);
           console.log(navigate);
         }}

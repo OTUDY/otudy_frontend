@@ -23,6 +23,8 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
   const handleCreate = async() => {
     // Handle create action
     console.log("StudentId:", studentId);
+    console.log("FirstName:", firstName);
+    console.log("LastName:", lastName);
 
     const studentIdEncoded = encodeURIComponent(studentId);
     const classIdEncoded = encodeURIComponent(classId);
@@ -36,7 +38,10 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
       }
     );
     console.log(response.data);
-    //navigate(`/class/${classIdEncoded}`, { replace: true })
+    if (!(response.status == 200 || response.status == 201 || response.status == 202)) {
+      //show false modal here
+      
+    }
     onClose(); // Close the dialog
   };
 

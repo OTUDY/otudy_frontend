@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import React, { useState } from "react";
 import {
   DataGrid,
@@ -6,6 +7,30 @@ import {
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import axios from "axios";
+
+
+interface MissionCompleteListProps {
+  missionId: string;
+  open: boolean;
+  onClose: () => void;
+  classId: string;
+  data: object[]
+}
+
+const columns = [
+  { field: "student", headerName: "Student ID", width: 150 },
+  { field: "firstname", headerName: "Name", width: 150 },
+  { field: "surname", headerName: "Last Name", width: 150 },
+  { field: "status", headerName: "Current Status", width: 150}
+];
+
+const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
+  missionId,
+  open,
+  onClose,
+  classId,
+  data
 
 interface Student {
   id: number;
@@ -49,12 +74,15 @@ const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
     // Update completion status for selected students
     console.log("Selected Students:", selectionModel);
   };
+  const handleDeny = async() => {
+
+  }
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="md">
       <div style={{ height: "100%", width: "100%" }}>
         <DataGrid
-          rows={students}
+          rows={data}
           columns={columns}
           checkboxSelection
           rowSelectionModel={selectionModel}
@@ -71,6 +99,14 @@ const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
         >
           <Button variant="contained" onClick={onClose}>
             Close
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleDeny}
+            disabled={selectionModel.length === 0}
+          >
+            Deny
           </Button>
           <Button
             variant="contained"
