@@ -55,7 +55,6 @@ const SignIn: React.FC = () => {
     else {
       setIsEmailValid(false);
       console.log("Login failed!");
-      console.error("Error:", error);
       setErrorMessage("Incorrect email or password. Please try again."); // Set the error message
 
         // Show false modal here

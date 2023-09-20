@@ -28,29 +28,11 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
   const [tagsInput, setTagsInput] = useState('');
 
   const handleCreate = async () => {
-
-}
-
-const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
-  const [missionTitle, setMissionTitle] = useState("");
-  const [missionDescription, setMissionDescription] = useState("");
-  const [dueDate, setDueDate] = useState("");
-
-  const handleCreate = async () => {
-
-    // Handle create action
-    console.log("Class Name:", missionTitle);
-    console.log("Class Level:", missionDescription);
-    console.log("Description:", dueDate);
-    
-    console.log(tagsInput);
     const tagsToSendCreate: string[] = [];
     const tagsSplitted = tagsInput.split(', ');
     tagsSplitted.forEach((currentItem) => {
       tagsToSendCreate.push(currentItem);
     })
-
-    
     const body = {
       mission_name: missionTitle,
       mission_desc: missionDescription,
@@ -59,11 +41,6 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
       mission_class_id: classId,
       mission_expired_date: dueDate,
       tags: tagsToSendCreate
-
-    const body = {
-      class_name: missionTitle,
-      level: missionDescription,
-      class_desc: dueDate,
     };
     const headers = {
       "Content-Type": "application/json",
@@ -94,15 +71,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
         //show false modal here
       }
     }
-    const response = await axios.post(
-      "https://backend.otudy.co/api/v1/class/create_class",
-      body,
-      {
-        headers: headers,
-      }
-    );
 
-    console.log(response.data);
     window.location.reload();
 
     onClose();
