@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import { Button, Grid, Typography } from "@mui/material";
 import ClassSubSectionSelect from "../components/ClassSubSectionSelect";
 import RewardForm from "../components/RewardForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RewardCard from "../components/RewardCard";
+import axios from "axios";
 
 const Reward = () => {
   const { classId } = useParams();
@@ -18,34 +19,35 @@ const Reward = () => {
   };
 
   // Sample rewards data (you will replace this with your actual data)
-  const rewards = [
-    // Sample rewards data (you will replace this with your actual data)
-    {
-      id: 1,
-      title: "Reward 1",
-      point: "100",
-      description: "Description for Reward 1",
-      amount: "50",
-      expiredDate: "2023-12-31",
-    },
-    {
-      id: 2,
-      title: "Reward 2",
-      point: "200",
-      description: "Description for Reward 2",
-      amount: "75",
-      expiredDate: "2023-12-31",
-    },
-    {
-      id: 3,
-      title: "Reward 3",
-      point: "150",
-      description: "Description for Reward 3",
-      amount: "60",
-      expiredDate: "2023-12-31",
-    },
-    // Add more reward objects as needed
-  ];
+  const [rewards, setRewards] = useState([{
+    id: 0,
+    reward_name: "",
+    reward_spent_points: 0,
+    reward_desc: "",
+    reward_pic: "",
+    reward_active_status: false,
+    reward_amount: 0,
+    classId: classId as string
+  }]);
+
+  useEffect(() => {
+    const fetchData = async() => {
+      const classIdEncoded = encodeURIComponent(classId as string);
+      const url = `https://backend.otudy.co/api/v1/reward/get_all_rewards?_class=${classIdEncoded}`;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      for (let i = 0; i < response.data.rewards.length; i++) {
+        response.data.rewards[i]['id'] = i;
+        response.data.rewards[i]['reward_active_status'] = Boolean(response.data.rewards[i]['reward_active_status']);
+        response.data.rewards[i]['classId'] = classId as string;
+      }
+      setRewards(response.data.rewards);
+    }
+    fetchData();
+  }, [])
 
   return (
     <div className="page-container">
@@ -81,7 +83,7 @@ const Reward = () => {
           </Grid>
         </div>
       </div>
-      <RewardForm open={isAddRewardOpen} onClose={handleCloseAddReward} />
+      <RewardForm open={isAddRewardOpen} onClose={handleCloseAddReward} classId={classId as string}/>
     </div>
   );
 };

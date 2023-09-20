@@ -4,20 +4,15 @@ import RewardForm from "./RewardForm";
 import TeacherRedeem from "./TeacherRedeem";
 
 interface RewardCardProps {
-  title: string;
-  point: string;
-  description: string;
-  amount: string;
-  expiredDate: string;
+  reward_name: string;
+  reward_spent_points: Number;
+  reward_desc: string;
+  reward_active_status: boolean;
+  reward_amount: Number;
+  classId: string
 }
 
-const RewardCard: React.FC<RewardCardProps> = ({
-  title,
-  point,
-  description,
-  amount,
-  expiredDate,
-}) => {
+const RewardCard: React.FC<RewardCardProps> = ({ reward_name, reward_spent_points, reward_desc, reward_active_status, reward_amount, classId }) => {
   const [isRewardFormOpen, setIsRewardFormOpen] = useState(false);
   const [isTeacherRedeemOpen, setIsTeacherRedeemOpen] = useState(false);
   const handleTeacherRedeem = (e: React.MouseEvent) => {
@@ -45,11 +40,11 @@ const RewardCard: React.FC<RewardCardProps> = ({
       onClick={handleCardClick}
     >
       <CardContent>
-        <Typography variant="h6">{title}</Typography>
-        <Typography variant="subtitle1">Point: {point}</Typography>
-        <Typography variant="body2">Description: {description}</Typography>
-        <Typography variant="body2">Amount: {amount}</Typography>
-        <Typography variant="body2">Expired Date: {expiredDate}</Typography>
+        <Typography variant="h6">{reward_name}</Typography>
+        <Typography variant="subtitle1">Point: {reward_spent_points.toString()}</Typography>
+        <Typography variant="body2">Description: {reward_desc}</Typography>
+        <Typography variant="body2">Active Status: {reward_active_status}</Typography>
+        <Typography variant="body2">Amount: {reward_amount.toString()}</Typography>
       </CardContent>
       <Button
         variant="contained"
@@ -63,7 +58,7 @@ const RewardCard: React.FC<RewardCardProps> = ({
       >
         Redeem
       </Button>
-      <RewardForm open={isRewardFormOpen} onClose={handleCloseRewardForm} />
+      <RewardForm open={isRewardFormOpen} onClose={handleCloseRewardForm} classId={classId} />
       <TeacherRedeem
         open={isTeacherRedeemOpen}
         onClose={handleCloseTeacherRedeem}
