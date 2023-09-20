@@ -46,6 +46,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
 
     console.log(response.data);
     navigate('/section');
+    console.log(navigate);
 
     onClose(); // Close the dialog
     };
