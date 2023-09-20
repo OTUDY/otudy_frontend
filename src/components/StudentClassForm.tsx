@@ -21,10 +21,6 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
   //const navigate = useNavigate();
 
   const handleCreate = async() => {
-    // Handle create action
-    console.log("StudentId:", studentId);
-    console.log("FirstName:", firstName);
-    console.log("LastName:", lastName);
 
     const studentIdEncoded = encodeURIComponent(studentId);
     const classIdEncoded = encodeURIComponent(classId);

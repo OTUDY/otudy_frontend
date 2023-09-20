@@ -45,22 +45,17 @@ const Mission = () => {
               </Button>
             </Grid>
           </Grid>
-          <MissionTable active={true} classId={classId as string}/>
-          <MissionTable />
+          <MissionTable active={true} classId={classId as string} />
           <Typography
             variant="h6"
             sx={{ marginTop: 2, justifyContent: "flex-start" }}
           >
             Expired Mission
           </Typography>
-          <MissionTable active={false} classId={classId as string}/>
+          <MissionTable active={false} classId={classId as string} />
         </div>
       </div>
       <MissionForm classId={classId} open={isAddMissionOpen} onClose={handleCloseAddMission} isEdit={false} />
-          <MissionTable />
-        </div>
-      </div>
-      <MissionForm open={isAddMissionOpen} onClose={handleCloseAddMission} />
     </div>
   );
 };
