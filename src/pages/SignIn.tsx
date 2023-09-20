@@ -33,6 +33,7 @@ const SignIn: React.FC = () => {
       console.log("Signing in with email:", email);
       const url = 'https://backend.otudy.co/api/v1/user/login'; // Replace with your OAuth2 token endpoint
       const formData = new FormData();
+<<<<<<< Updated upstream
       formData.append('username', email);
       formData.append('password', password.toString());
       formData.append('client_id', (Number(isStudent) + 1).toString());
@@ -52,6 +53,31 @@ const SignIn: React.FC = () => {
     }
     }
     else {
+=======
+      formData.append("username", email);
+      formData.append("password", password.toString());
+      formData.append("client_id", (Number(isStudent) + 1).toString());
+      try {
+        const response = await axios.post(url, formData, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
+        // document.cookie = response.data.access_token;
+        localStorage.setItem("token", response.data.access_token);
+        console.log("Login completed! Navigating to section page.");
+        navigate("/section", { replace: true });
+      } catch (error) {
+        console.log("Login failed!");
+        console.error("Error:", error);
+        setErrorMessage("Incorrect email or password. Please try again."); // Set the error message
+
+        // Show false modal here
+
+        
+      }
+    } else {
+>>>>>>> Stashed changes
       setIsEmailValid(false);
     }
 };

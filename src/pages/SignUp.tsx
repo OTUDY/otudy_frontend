@@ -77,9 +77,14 @@ const SignUp: React.FC = () => {
         navigate('/sign-in', { replace: true });
       }
       else {
+<<<<<<< Updated upstream
         console.log(`Account with email: ${email} is already existed.`);
         // Please perform logic to inform user to check their entries.
 
+=======
+        console.log(`Account with email: ${email} is existed, proceed to login.`);
+        // show false modal here
+>>>>>>> Stashed changes
       }
       
     }

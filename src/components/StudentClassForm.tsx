@@ -21,8 +21,29 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
   const handleCreate = () => {
     // Handle create action
     console.log("StudentId:", studentId);
+<<<<<<< Updated upstream
     console.log("FirstName:", firstName);
     console.log("LastName:", lastName);
+=======
+
+    const studentIdEncoded = encodeURIComponent(studentId);
+    const classIdEncoded = encodeURIComponent(classId);
+    const response = await axios.get(
+      `https://backend.otudy.co/api/v1/class/add_student?_class=${classIdEncoded}&student_username=${studentIdEncoded}`,
+      {
+        headers: {
+          "Content-Type": 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+    );
+    console.log(response.data);
+    if (!(response.status == 200 || response.status == 201 || response.status == 202)) {
+      //show false modal here
+      
+    }
+    //navigate(`/class/${classIdEncoded}`, { replace: true })
+>>>>>>> Stashed changes
     onClose(); // Close the dialog
   };
 
