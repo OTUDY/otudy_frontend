@@ -12,7 +12,6 @@ const Mission = () => {
   const { classId } = useParams();
   const [isAddMissionOpen, setIsAddMissionOpen] = useState(false);
 
-
   const handleOpenAddMission = () => {
     setIsAddMissionOpen(true);
   };
@@ -47,6 +46,7 @@ const Mission = () => {
             </Grid>
           </Grid>
           <MissionTable active={true} classId={classId as string}/>
+          <MissionTable />
           <Typography
             variant="h6"
             sx={{ marginTop: 2, justifyContent: "flex-start" }}
@@ -57,6 +57,10 @@ const Mission = () => {
         </div>
       </div>
       <MissionForm classId={classId} open={isAddMissionOpen} onClose={handleCloseAddMission} isEdit={false} />
+          <MissionTable />
+        </div>
+      </div>
+      <MissionForm open={isAddMissionOpen} onClose={handleCloseAddMission} />
     </div>
   );
 };

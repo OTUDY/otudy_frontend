@@ -6,6 +6,8 @@ import SignUp from "./pages/SignUp.tsx";
 import Section from "./pages/Section.tsx";
 import Landing from "./pages/Landing.tsx";
 import ClassRoom from "./pages/ClassRoom.tsx";
+import Mission from "./pages/Mission.tsx";
+import Reward from "./pages/Reward.tsx";
 
 const About = () => <h1>About Page</h1>;
 const Contact = () => <h1>Contact Page</h1>;
@@ -21,6 +23,8 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/section" element={<Section />} />
         <Route path="/class/:classId" element={<ClassRoom />} />
+        <Route path="/class/:classId/mission" element={<Mission />} />
+        <Route path="/class/:classId/reward" element={<Reward />} />
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
     </Router>

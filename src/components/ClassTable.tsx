@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import ClassForm from "./ClassForm.tsx";
 import { useNavigate } from "react-router-dom";
-// import axios from 'axios';
+import axios from 'axios';
 
 // const generateSampleRows = (count: number) => {
 //   const rows = [];
@@ -20,36 +20,14 @@ import { useNavigate } from "react-router-dom";
 //   return rows;
 // };
 
-// const getAssignedClasses = () => {
-//   let responseData: any;
-//   axios
-//   .get('https://backend.otudy.co/api/v1/user/teacher/get_assigned_classes', {
-//     headers: {
-//       Authorization: `Bearer ${localStorage.getItem('token')}`
-//     }
-//   })
-//   .then((response) => {
-//     responseData = response.data.classes;
-//     for (let i = 0; i < responseData.length; i++) {
-//       responseData[i]['id'] = i;
-//     };
-//     console.log(responseData);
-//     return responseData;
-//   })
-//   .catch((error) => {
-//     console.error('Error:', error);
-//   });
-// }
-
 const ClassTable = () => {
-  const rows: any = [{
-    'class_name': 'p6/2',
-    'class_level': 'ประถมต้น',
-    'teacher': 'teacher@otudy.co',
-    'class_desc': 'asdasdqwdqwdowqdoqdkoqwkdo',
-    'id': 0
-  }]
-  //const rows: any = getAssignedClasses();
+  const [rows, setRows] = useState([{
+    id: 0,
+    class_name: 'p6/2',
+    class_level: 'ประถมปลาย',
+    teacher: 'teacher@otudy.co',
+    class_desc: 'test test test'
+  }]);
   const [isAddClassFormOpen, setIsAddClassFormOpen] = useState(false);
   const handleOpenAddClassForm = () => {
     setIsAddClassFormOpen(true);
@@ -60,6 +38,26 @@ const ClassTable = () => {
     setIsAddClassFormOpen(false);
   };
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async() => {
+      const response = await axios.get('https://backend.otudy.co/api/v1/user/teacher/get_assigned_classes', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      const rows = [];
+      for (let i = 0; i < response.data.classes.length; i++) {
+        let data = response.data.classes[i];
+        data['id'] = response.data.classes[i].class_name;
+        rows.push(data);
+      }
+
+      setRows(rows);
+    }
+    fetchData();
+    console.log(rows);
+  }, [])
 
   return (
     <div style={{ height: 600, width: "100%" }}>
@@ -90,7 +88,7 @@ const ClassTable = () => {
           },
         ]}
         onRowClick={(params) => {
-          const classId = params.row.id;
+          const classId = encodeURIComponent(params.row.id);
           navigate(`/class/${classId}`);
           localStorage.setItem('currentClass', params.row.id);
           console.log(params.row.classNumber);

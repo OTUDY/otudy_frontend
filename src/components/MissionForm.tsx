@@ -29,6 +29,15 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
 
   const handleCreate = async () => {
 
+}
+
+const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose }) => {
+  const [missionTitle, setMissionTitle] = useState("");
+  const [missionDescription, setMissionDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+
+  const handleCreate = async () => {
+
     // Handle create action
     console.log("Class Name:", missionTitle);
     console.log("Class Level:", missionDescription);
@@ -50,6 +59,11 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
       mission_class_id: classId,
       mission_expired_date: dueDate,
       tags: tagsToSendCreate
+
+    const body = {
+      class_name: missionTitle,
+      level: missionDescription,
+      class_desc: dueDate,
     };
     const headers = {
       "Content-Type": "application/json",
@@ -80,7 +94,15 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
         //show false modal here
       }
     }
-    
+    const response = await axios.post(
+      "https://backend.otudy.co/api/v1/class/create_class",
+      body,
+      {
+        headers: headers,
+      }
+    );
+
+    console.log(response.data);
     window.location.reload();
 
     onClose();
@@ -89,6 +111,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Create new mission</DialogTitle>
+      <DialogTitle>Add Class</DialogTitle>
       <DialogContent>
         <form>
           <TextField
@@ -133,14 +156,6 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
             fullWidth
             sx={{ marginBottom: 2 }}
           />
-          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Due Date"
-              value={dueDate}
-              onChange={(date) => setDueDate(date)}
-              sx={{ marginBottom: 2 }}
-            />
-          </LocalizationProvider> */}
         </form>
       </DialogContent>
       <DialogActions

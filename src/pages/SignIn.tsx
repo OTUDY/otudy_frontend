@@ -15,6 +15,7 @@ const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(""); // New state for error message
   const [isStudent] = useState(false);
   const navigate = useNavigate();
 
@@ -31,9 +32,8 @@ const SignIn: React.FC = () => {
     if (validator.isEmail(email)) {
       // Email is valid, you can proceed with sign-in logic
       console.log("Signing in with email:", email);
-      const url = 'https://backend.otudy.co/api/v1/user/login'; // Replace with your OAuth2 token endpoint
+      const url = "https://backend.otudy.co/api/v1/user/login"; // Replace with your OAuth2 token endpoint
       const formData = new FormData();
-<<<<<<< Updated upstream
       formData.append('username', email);
       formData.append('password', password.toString());
       formData.append('client_id', (Number(isStudent) + 1).toString());
@@ -53,39 +53,22 @@ const SignIn: React.FC = () => {
     }
     }
     else {
-=======
-      formData.append("username", email);
-      formData.append("password", password.toString());
-      formData.append("client_id", (Number(isStudent) + 1).toString());
-      try {
-        const response = await axios.post(url, formData, {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        });
-        // document.cookie = response.data.access_token;
-        localStorage.setItem("token", response.data.access_token);
-        console.log("Login completed! Navigating to section page.");
-        navigate("/section", { replace: true });
-      } catch (error) {
-        console.log("Login failed!");
-        console.error("Error:", error);
-        setErrorMessage("Incorrect email or password. Please try again."); // Set the error message
+      setIsEmailValid(false);
+      console.log("Login failed!");
+      console.error("Error:", error);
+      setErrorMessage("Incorrect email or password. Please try again."); // Set the error message
 
         // Show false modal here
 
         
-      }
-    } else {
->>>>>>> Stashed changes
-      setIsEmailValid(false);
-    }
-};
+      }};
+    
 
   return (
     <Container maxWidth="xs">
       <div>
         <Typography variant="h4">Sign in</Typography>
+
         <Typography variant="body1" marginTop={"8px"}>
           {" "}
           Enter email and password to sign in{" "}
@@ -111,6 +94,11 @@ const SignIn: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {errorMessage && ( // Render the error message if it exists
+            <Typography variant="body2" color="error">
+              {errorMessage}
+            </Typography>
+          )}
           <Button
             variant="contained"
             color="primary"
