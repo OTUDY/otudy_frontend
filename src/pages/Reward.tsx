@@ -26,7 +26,7 @@ const Reward = () => {
     reward_spent_points: 0,
     reward_desc: "",
     reward_pic: "",
-    reward_active_status: false,
+    reward_active_status: "",
     reward_amount: 0,
     classId: classId as string
   }]);
@@ -43,7 +43,12 @@ const Reward = () => {
       });
       for (let i = 0; i < response.data.rewards.length; i++) {
         response.data.rewards[i]['id'] = i;
-        response.data.rewards[i]['reward_active_status'] = Boolean(response.data.rewards[i]['reward_active_status']);
+        if (response.data.rewards[i]['reward_active_status']) {
+          response.data.rewards[i]['reward_active_status'] = 'เปิดให้แลก';
+        }
+        else {
+          response.data.rewards[i]['reward_active_status'] = 'ไม่เปิดให้แลก';
+        }
         response.data.rewards[i]['classId'] = classId as string;
       }
       setRewards(response.data.rewards);

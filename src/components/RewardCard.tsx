@@ -7,7 +7,7 @@ interface RewardCardProps {
   reward_name: string;
   reward_spent_points: Number;
   reward_desc: string;
-  reward_active_status: boolean;
+  reward_active_status: string;
   reward_amount: Number;
   classId: string
 }
