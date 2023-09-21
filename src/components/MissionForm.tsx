@@ -35,6 +35,9 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
     tagsSplitted.forEach((currentItem) => {
       tagsToSendCreate.push(currentItem);
     })
+    if (!(missionTitle.includes(classId))) {
+      setMissionTitle(`${classId} ${missionTitle}`);
+    };
     const body = {
       mission_name: missionTitle,
       mission_desc: missionDescription,
@@ -73,7 +76,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
         //show false modal here
       }
     }
-    
+
 
     onClose();
   };

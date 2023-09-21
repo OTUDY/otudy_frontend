@@ -33,6 +33,10 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
     console.log("Description:", description);
     console.log("Amount:", amount);
     console.log("ExpiredDate:", expiredDate);
+
+    if (!(title.includes(classId))) {
+      setTitle(`${classId} ${title}`);
+    };
     const body = {
       reward_name: title,
       reward_desc: description,
