@@ -25,8 +25,6 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
   const [amount, setAmount] = useState(0);
   const [expiredDate, setExpiredDate] = useState("");
   const [cookie] = useCookies(['access_token']);
-  const [toSendTitle, setToSendTitle] = useState("");
-  //const navigate = useNavigate();
 
   const handleCreate = async() => {
     console.log("Title:", title);
@@ -35,14 +33,8 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
     console.log("Amount:", amount);
     console.log("ExpiredDate:", expiredDate);
 
-    if (!(title.includes(classId))) {
-      setToSendTitle(classId+ " " + title);
-    }
-    else {
-      setToSendTitle(title);
-    }
     const body = {
-      reward_name: toSendTitle,
+      reward_name: title,
       reward_desc: description,
       reward_pic: '',
       reward_spent_points: point,

@@ -28,7 +28,6 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
   const [activeStatus, setActiveStatus] = useState(false);
   const [tagsInput, setTagsInput] = useState('');
   const [cookie] = useCookies(['access_token']);
-  const [toSendTitle, setToSendTitle] = useState('');
 
   const handleCreate = async () => {
     const tagsToSendCreate: string[] = [];
@@ -36,14 +35,9 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
     tagsSplitted.forEach((currentItem) => {
       tagsToSendCreate.push(currentItem);
     })
-    if (!(missionTitle.includes(classId))) {
-      setToSendTitle(classId + " " + missionTitle);
-    }
-    else {
-      setToSendTitle(missionTitle);
-    }
+
     const body = {
-      mission_name: toSendTitle,
+      mission_name: missionTitle,
       mission_desc: missionDescription,
       mission_points: rewardPoints,
       mission_active_status: activeStatus,
