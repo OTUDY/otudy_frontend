@@ -8,6 +8,7 @@ import MissionCompleteList from "./MissionCompleteList";
 
 //import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 interface IsActiveMissionTable {
   active: boolean,
@@ -26,6 +27,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({active, classId}) => {
     'expired_date': '',
     'tags': ''
   }])
+  const [cookie] = useCookies(['access_token']);
   const [unactiveMissions, setUnactiveMissions] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const currentClass: string = classId;
@@ -61,7 +63,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({active, classId}) => {
     const url = `https://backend.otudy.co/api/v1/mission/get_on_going_missions_by_mission?_class=${classIdEncoded}&mission_name=${missionIdToQuery}`;
     const response = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${cookie.access_token}`
       }
     });
     for (let i = 0; i < response.data.on_going_missions.length; i++) {
@@ -85,7 +87,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({active, classId}) => {
       const response: any = await axios.get(`https://backend.otudy.co/api/v1/mission/get_all_missions?_class=${classIdEncoded}`, {
       headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${cookie.access_token}`
       }
     });
     const activeMissions = [];

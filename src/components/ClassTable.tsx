@@ -5,6 +5,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import ClassForm from "./ClassForm.tsx";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { useCookies } from "react-cookie";
 
 // const generateSampleRows = (count: number) => {
 //   const rows = [];
@@ -23,11 +24,12 @@ import axios from 'axios';
 const ClassTable = () => {
   const [rows, setRows] = useState([{
     id: 0,
-    class_name: 'p6/2',
-    class_level: 'ประถมปลาย',
-    teacher: 'teacher@otudy.co',
-    class_desc: 'test test test'
+    class_name: '',
+    class_level: '',
+    teacher: '',
+    class_desc: ''
   }]);
+  const [cookie] = useCookies(['access_token']);
   const [isAddClassFormOpen, setIsAddClassFormOpen] = useState(false);
   const handleOpenAddClassForm = () => {
     setIsAddClassFormOpen(true);
@@ -43,7 +45,7 @@ const ClassTable = () => {
     const fetchData = async() => {
       const response = await axios.get('https://backend.otudy.co/api/v1/user/teacher/get_assigned_classes', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${cookie.access_token}`
         }
       });
       const rows = [];

@@ -6,6 +6,7 @@ import RewardForm from "../components/RewardForm";
 import { useEffect, useState } from "react";
 import RewardCard from "../components/RewardCard";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const Reward = () => {
   const { classId } = useParams();
@@ -29,6 +30,7 @@ const Reward = () => {
     reward_amount: 0,
     classId: classId as string
   }]);
+  const [cookie] = useCookies(['access_token']);
 
   useEffect(() => {
     const fetchData = async() => {
@@ -36,7 +38,7 @@ const Reward = () => {
       const url = `https://backend.otudy.co/api/v1/reward/get_all_rewards?_class=${classIdEncoded}`;
       const response = await axios.get(url, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${cookie.access_token}`
         }
       });
       for (let i = 0; i < response.data.rewards.length; i++) {

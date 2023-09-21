@@ -10,6 +10,7 @@ import {
 import validator from "validator";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +19,7 @@ const SignIn: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState(""); // New state for error message
   const [isStudent] = useState(false);
   const navigate = useNavigate();
+  const [_, setCookie] = useCookies(['access_token']);
 
   const checkEmailValidity = (email: string) => {
     setEmail(email);
@@ -44,7 +46,8 @@ const SignIn: React.FC = () => {
         },
       });
       // document.cookie = response.data.access_token;
-      localStorage.setItem("token", response.data.access_token);
+      //localStorage.setItem("token", response.data.access_token);
+      setCookie('access_token', response.data.access_token);
       console.log('Login completed! Navigating to section page.')
       navigate("/section", { replace: true });
   

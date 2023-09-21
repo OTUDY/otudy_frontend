@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 interface AddClassFormProps {
   open: boolean;
@@ -20,6 +21,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
   const [classLevel, setClassLevel] = useState("");
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
+  const [cookie] = useCookies(['access_token'])
 
   const handleCreate = async () => {
     // Handle create action
@@ -34,7 +36,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
     };
     const headers = {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('token')}`
+      Authorization: `Bearer ${cookie.access_token}`
     };
 
     const response = await axios.post(

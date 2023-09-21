@@ -8,6 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 //import axios from "axios";
 //import { useNavigate } from "react-router-dom";
 
@@ -23,6 +24,7 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(0);
   const [expiredDate, setExpiredDate] = useState("");
+  const [cookie] = useCookies(['access_token']);
   //const navigate = useNavigate();
 
   const handleCreate = async() => {
@@ -44,7 +46,7 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
     const response = await axios.post(url, body, {
       headers: {
         "Content-Type": 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${cookie.access_token}`
       }
     })
     if (response.status == 200 || response.status == 201 || response.status == 202) {

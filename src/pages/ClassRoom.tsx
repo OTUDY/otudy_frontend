@@ -8,6 +8,7 @@ import StudentClassForm from "../components/StudentClassForm";
 import ClassSubSectionSelect from "../components/ClassSubSectionSelect";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const ClassRoom = () => {
   // interface Student {
@@ -42,7 +43,7 @@ const ClassRoom = () => {
       surName: "",
     },
   ]);
-
+  const [cookie] = useCookies(['access_token']);
   const { classId } = useParams();
 
   console.log(classId);
@@ -64,7 +65,7 @@ const ClassRoom = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${cookie.access_token}`,
           },
         }
       );

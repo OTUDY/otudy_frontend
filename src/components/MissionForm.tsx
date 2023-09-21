@@ -11,6 +11,7 @@ import {
 // import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 interface AddMissionFormProps {
   open: boolean;
@@ -26,6 +27,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
   const [rewardPoints, setRewardPoints] = useState(0);
   const [activeStatus, setActiveStatus] = useState(false);
   const [tagsInput, setTagsInput] = useState('');
+  const [cookie] = useCookies(['access_token']);
 
   const handleCreate = async () => {
     const tagsToSendCreate: string[] = [];
@@ -44,7 +46,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
     };
     const headers = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: `Bearer ${cookie.access_token}`,
     };
 
     if (!isEdit) {

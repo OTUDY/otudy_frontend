@@ -8,6 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 //import { useNavigate } from "react-router-dom";
 
 interface AddClassFormProps {
@@ -18,6 +19,7 @@ interface AddClassFormProps {
 const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
   const [studentId, setstudentId] = useState("");
   const [classId, setClassId] = useState("");
+  const [cookie] = useCookies(['access_token']);
   //const navigate = useNavigate();
 
   const handleCreate = async() => {
@@ -29,7 +31,7 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
       {
         headers: {
           "Content-Type": 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${cookie.access_token}`
         }
       }
     );
