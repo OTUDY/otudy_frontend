@@ -52,6 +52,10 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
     if (response.status == 200 || response.status == 201 || response.status == 202) {
       window.location.reload();
     }
+    else {
+      console.error('Error: Something gone wrong.')
+      //show modal here
+    }
   };
 
   return (

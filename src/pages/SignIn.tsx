@@ -53,16 +53,13 @@ const SignIn: React.FC = () => {
   
     } catch (error) {
       console.error('Error:', error);
+      console.log("Login failed!");
+      setErrorMessage("Incorrect email or password. Please try again.");
+      // show modal here
     }
     }
     else {
       setIsEmailValid(false);
-      console.log("Login failed!");
-      setErrorMessage("Incorrect email or password. Please try again."); // Set the error message
-
-        // Show false modal here
-
-        
       }};
     
 

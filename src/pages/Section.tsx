@@ -42,7 +42,7 @@ const Section = () => {
         </div>
       </div>
 
-      <ClassForm open={isAddClassFormOpen} onClose={handleCloseAddClassForm} />
+      <ClassForm open={isAddClassFormOpen} onClose={handleCloseAddClassForm} isEdit={false} />
     </div>
   );
 };

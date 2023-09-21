@@ -29,6 +29,8 @@ const ClassTable = () => {
     teacher: '',
     class_desc: ''
   }]);
+  const okStatus: Number[] = [200, 201, 202];
+  const [isEdit, setIsEdit] = useState(false);
   const [cookie] = useCookies(['access_token']);
   const [isAddClassFormOpen, setIsAddClassFormOpen] = useState(false);
   const handleOpenAddClassForm = () => {
@@ -54,11 +56,15 @@ const ClassTable = () => {
         data['id'] = response.data.classes[i].class_name;
         rows.push(data);
       }
-
-      setRows(rows);
+      if (!(okStatus.includes(response.status))){
+        console.error('Error: Something is gone wrong.')
+        // show modal here.
+      }
+      else {
+        setRows(rows);
+      }
     }
     fetchData();
-    console.log(rows);
   }, [])
 
   return (
@@ -82,6 +88,7 @@ const ClassTable = () => {
                 onClick={(e) => {
                   e.stopPropagation();
                   handleOpenAddClassForm();
+                  setIsEdit(true);
                 }}
               >
                 <EditIcon />
@@ -103,7 +110,7 @@ const ClassTable = () => {
         }}
         pageSizeOptions={[5, 10]}
       />
-      <ClassForm open={isAddClassFormOpen} onClose={handleCloseAddClassForm} />
+      <ClassForm open={isAddClassFormOpen} onClose={handleCloseAddClassForm} isEdit={isEdit} />
     </div>
   );
 };

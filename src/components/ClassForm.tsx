@@ -14,9 +14,10 @@ import { useCookies } from "react-cookie";
 interface AddClassFormProps {
   open: boolean;
   onClose: () => void;
+  isEdit: boolean;
 }
 
-const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
+const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
   const [className, setClassName] = useState("");
   const [classLevel, setClassLevel] = useState("");
   const [description, setDescription] = useState("");
@@ -28,6 +29,8 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
     console.log("Class Name:", className);
     console.log("Class Level:", classLevel);
     console.log("Description:", description);
+    
+    const okStatus: Number[] = [200, 201, 202];
 
     const body = {
       'class_name': className,
@@ -38,16 +41,32 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${cookie.access_token}`
     };
+    if (!isEdit) {
+      const response = await axios.post(
+        'https://backend.otudy.co/api/v1/class/create_class', 
+        body, 
+        {
+        headers: headers
+      });
+      if (!(okStatus.includes(response.status))) {
+        console.error('Error: Something gone wrong.')
+        // Show modal here
+      }
+    }
+    else {
+      const response = await axios.put(
+        'https://backend.otudy.co/api/v1/class/update_class_detail', 
+        body, 
+        {
+        headers: headers
+      });
+      if (!(okStatus.includes(response.status))) {
+        console.error('Error: Something gone wrong');
+        // show modal here
 
-    const response = await axios.post(
-      'https://backend.otudy.co/api/v1/class/create_class', 
-      body, 
-      {
-      headers: headers
-    });
-
-    console.log(response.data);
-    navigate('/section');
+      }  
+    }
+    window.location.reload();
     console.log(navigate);
 
     onClose(); // Close the dialog
