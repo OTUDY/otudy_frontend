@@ -36,7 +36,7 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
     console.log("ExpiredDate:", expiredDate);
 
     if (!(title.includes(classId))) {
-      setToSendTitle(`${classId} ${title}`);
+      setToSendTitle(classId+ " " + title);
     }
     else {
       setToSendTitle(title);

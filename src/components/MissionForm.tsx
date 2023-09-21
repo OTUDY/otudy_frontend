@@ -37,8 +37,11 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
       tagsToSendCreate.push(currentItem);
     })
     if (!(missionTitle.includes(classId))) {
-      setToSendTitle(`${classId} ${missionTitle}`);
-    };
+      setToSendTitle(classId + " " + missionTitle);
+    }
+    else {
+      setToSendTitle(missionTitle);
+    }
     const body = {
       mission_name: toSendTitle,
       mission_desc: missionDescription,
