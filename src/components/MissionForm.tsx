@@ -73,8 +73,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
         //show false modal here
       }
     }
-
-    window.location.reload();
+    
 
     onClose();
   };

@@ -110,6 +110,7 @@ const ClassRoom = () => {
       <StudentClassForm
         open={isAddStudentClassFormOpen}
         onClose={handleCloseAddStudentClassForm}
+        classId={classId as string}
       />
     </div>
   );

@@ -8,7 +8,6 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 interface AddClassFormProps {
@@ -21,7 +20,6 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
   const [className, setClassName] = useState("");
   const [classLevel, setClassLevel] = useState("");
   const [description, setDescription] = useState("");
-  const navigate = useNavigate();
   const [cookie] = useCookies(['access_token'])
 
   const handleCreate = async () => {
@@ -66,8 +64,6 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
 
       }  
     }
-    window.location.reload();
-    console.log(navigate);
 
     onClose(); // Close the dialog
     };

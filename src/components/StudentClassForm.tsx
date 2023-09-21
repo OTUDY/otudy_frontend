@@ -14,20 +14,25 @@ import { useCookies } from "react-cookie";
 interface AddClassFormProps {
   open: boolean;
   onClose: () => void;
+  classId: string
 }
 
-const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
+const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose, classId }) => {
   const [studentId, setstudentId] = useState("");
-  const [classId, setClassId] = useState("");
   const [cookie] = useCookies(['access_token']);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   //const navigate = useNavigate();
 
   const handleCreate = async() => {
 
-    const studentIdEncoded = encodeURIComponent(studentId);
-    const classIdEncoded = encodeURIComponent(classId);
-    const response = await axios.get(
-      `https://backend.otudy.co/api/v1/class/add_student?_class=${classIdEncoded}&student_username=${studentIdEncoded}`,
+    const response = await axios.post(
+      `https://backend.otudy.co/api/v1/class/add_student`, {
+        username: studentId,
+        fname: firstName,
+        surname: lastName,
+        class_id: classId
+      },
       {
         headers: {
           "Content-Type": 'application/json',
@@ -56,12 +61,20 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose }) => {
             sx={{ marginBottom: 2 }}
           />
           <TextField
-            label="Class ID"
-            value={classId}
-            onChange={(e) => setClassId(e.target.value)}
+            label="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
           />
+          <TextField
+            label="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+          />
+          
         </form>
       </DialogContent>
       <DialogActions
