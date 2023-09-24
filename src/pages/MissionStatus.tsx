@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import { useNavigate, useParams } from "react-router-dom";
@@ -28,6 +28,18 @@ const MissionStatus = () => {
       student: "123456",
     },
   ]);
+
+  const handleMissionInput = () => {
+    // Update completion status for selected students
+    setMissionDetail([
+      {
+        id: "0",
+        firstname: "John",
+        surname: "Doe",
+        status: "Approved",
+        student: "123456",
+      },
+    ]);
 
   const navigate = useNavigate();
   const { classId } = useParams();
