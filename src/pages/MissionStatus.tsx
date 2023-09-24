@@ -19,7 +19,17 @@ const MissionStatus = () => {
   );
 
   //temporary data
-  const [missionDetail, setMissionDetail] = useState([
+  // const [missionDetail, setMissionDetail] = useState([
+  //   {
+  //     id: "0",
+  //     firstname: "John",
+  //     surname: "Doe",
+  //     status: "Pending Approval",
+  //     student: "123456",
+  //   },
+  // ]);
+
+  const missionDetail = [
     {
       id: "0",
       firstname: "John",
@@ -27,19 +37,7 @@ const MissionStatus = () => {
       status: "Pending Approval",
       student: "123456",
     },
-  ]);
-
-  const handleMissionInput = () => {
-    // Update completion status for selected students
-    setMissionDetail([
-      {
-        id: "0",
-        firstname: "John",
-        surname: "Doe",
-        status: "Approved",
-        student: "123456",
-      },
-    ]);
+  ];
 
   const navigate = useNavigate();
   const { classId } = useParams();
