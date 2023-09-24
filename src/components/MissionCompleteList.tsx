@@ -1,26 +1,22 @@
 import React, { useState } from "react";
-import {
-  DataGrid,
-  GridRowSelectionModel,
-} from "@mui/x-data-grid";
+import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-
 
 interface MissionCompleteListProps {
   missionId: string;
   open: boolean;
   onClose: () => void;
   classId: string;
-  data: object[]
-};
+  data: object[];
+}
 
 const columns = [
   { field: "id", headerName: "ID", width: 70 },
   { field: "student", headerName: "Student ID", width: 150 },
   { field: "firstname", headerName: "FirstName", width: 150 },
   { field: "surname", headerName: "LastName", width: 150 },
-  { field: 'status', headerName: "Current Status", width: 200}
+  { field: "status", headerName: "Current Status", width: 200 },
 ];
 
 const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
@@ -28,7 +24,7 @@ const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
   open,
   onClose,
   classId,
-  data
+  data,
 }) => {
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>(
     []
@@ -40,9 +36,7 @@ const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
     console.log(missionId);
     console.log(classId);
   };
-  const handleDeny = async () => {
-
-  }
+  const handleDeny = async () => {};
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="md">
@@ -87,6 +81,5 @@ const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
     </Dialog>
   );
 };
-
 
 export default MissionCompleteList;
