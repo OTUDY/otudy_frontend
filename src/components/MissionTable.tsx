@@ -1,44 +1,51 @@
-
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import MissionForm from "./MissionForm";
 import MissionCompleteList from "./MissionCompleteList";
+import { useNavigate } from "react-router-dom";
 
 //import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 
 interface IsActiveMissionTable {
-  active: boolean,
-  classId: string
+  active: boolean;
+  classId: string;
 }
 
-const MissionTable: React.FC<IsActiveMissionTable> = ({active, classId}) => {
+const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
   //const [rows, setRows] = useState([]);
   const [isAddMissionFormOpen, setIsAddMissionFormOpen] = useState(false);
-  const [rows, setRows] = useState([{
-    'id': "",
-    'name': "",
-    'description': "",
-    'redeem_points': 0,
-    'active_status': false,
-    'expired_date': '',
-    'tags': ''
-  }])
-  const [cookie] = useCookies(['access_token']);
+  const [rows, setRows] = useState([
+    {
+      id: "",
+      name: "",
+      description: "",
+      redeem_points: 0,
+      active_status: false,
+      expired_date: "",
+      tags: "",
+    },
+  ]);
+  const [cookie] = useCookies(["access_token"]);
   const [unactiveMissions, setUnactiveMissions] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const currentClass: string = classId;
-  const [missionDetail, setMissionDetail] = useState([{
-    firstname: '',
-    surname: '',
-    status: '',
-    student: ''
-  }]);
+  const [missionDetail, setMissionDetail] = useState([
+    {
+      firstname: "",
+      surname: "",
+      status: "",
+      student: "",
+    },
+  ]);
 
   const [missionId, setMissionId] = useState("");
+
+  const navigate = useNavigate();
+  const encodedClassId = encodeURIComponent(classId);
 
   const handleOpenAddMissionForm = () => {
     setIsAddMissionFormOpen(true);
@@ -51,76 +58,79 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({active, classId}) => {
   const [viewCompleteStatus, setViewCompleteStatus] = useState(false);
 
   const handleOpenCompleteStatus = () => {
-    setViewCompleteStatus(true);
-  }
+    navigate(`/class/${encodedClassId}/mission-status`);
+  };
   const handleCloseCompleteStatus = () => {
     setViewCompleteStatus(false);
   };
 
-  const getInDepthMissionDetail = async() => {
+  const getInDepthMissionDetail = async () => {
     const classIdEncoded = encodeURIComponent(classId);
     const missionIdToQuery = encodeURIComponent(missionId);
     const url = `https://backend.otudy.co/api/v1/mission/get_on_going_missions_by_mission?_class=${classIdEncoded}&mission_name=${missionIdToQuery}`;
     const response = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${cookie.access_token}`
-      }
+        Authorization: `Bearer ${cookie.access_token}`,
+      },
     });
     for (let i = 0; i < response.data.on_going_missions.length; i++) {
-      if (response.data.on_going_missions[i]['status'] == 0) {
-        response.data.on_going_missions[i]['status'] = 'Denied';
-      }
-      else if (response.data.on_going_missions[i]['status'] == 2) {
-        response.data.on_going_missions[i]['status'] = 'Pending Approval';
-      }
-      else {
-        response.data.on_going_missions[i]['status'] = 'Approved';
+      if (response.data.on_going_missions[i]["status"] == 0) {
+        response.data.on_going_missions[i]["status"] = "Denied";
+      } else if (response.data.on_going_missions[i]["status"] == 2) {
+        response.data.on_going_missions[i]["status"] = "Pending Approval";
+      } else {
+        response.data.on_going_missions[i]["status"] = "Approved";
       }
     }
     setMissionDetail(response.data.on_going_missions);
-  }
-
+  };
 
   useEffect(() => {
-    const getMissionsData = async() => {
-      const classIdEncoded: any = encodeURIComponent(currentClass)
-      const response: any = await axios.get(`https://backend.otudy.co/api/v1/mission/get_all_missions?_class=${classIdEncoded}`, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${cookie.access_token}`
+    const getMissionsData = async () => {
+      const classIdEncoded: any = encodeURIComponent(currentClass);
+      const response: any = await axios.get(
+        `https://backend.otudy.co/api/v1/mission/get_all_missions?_class=${classIdEncoded}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${cookie.access_token}`,
+          },
+        }
+      );
+      const activeMissions = [];
+      const unactiveMissions = [];
+      for (let i = 0; i < response.data.missions.length; i++) {
+        response.data.missions[i]["id"] = i;
+
+        if (response.data.missions[i].active_status) {
+          response.data.missions[i]["active_status"] = "Yes";
+          activeMissions.push(response.data.missions[i]);
+        } else {
+          response.data.missions[i]["active_status"] = "No";
+          unactiveMissions.push(response.data.missions[i]);
+        }
       }
-    });
-    const activeMissions = [];
-    const unactiveMissions = [];
-    for (let i = 0; i < response.data.missions.length; i++) {
-      response.data.missions[i]['id'] = i;
-      
-      if (response.data.missions[i].active_status) {
-        response.data.missions[i]['active_status'] = "Yes";
-        activeMissions.push(response.data.missions[i]);
-      }
-      else {
-        response.data.missions[i]['active_status'] = "No";
-        unactiveMissions.push(response.data.missions[i]);
-      }
-    }
-    setRows(activeMissions);
-    setUnactiveMissions(unactiveMissions as any);
-    }
+      setRows(activeMissions);
+      setUnactiveMissions(unactiveMissions as any);
+    };
     getMissionsData();
-  }, [])
+  }, []);
   return (
-    <div style={{ height: 600, width: "100%"}}>
+    <div style={{ height: 600, width: "100%" }}>
       <DataGrid
-        rows={active? rows : unactiveMissions}
+        rows={active ? rows : unactiveMissions}
         columns={[
           { field: "id", headerName: "Mission Id", width: 150 },
           { field: "name", headerName: "Mission Name", width: 200 },
-          { field: "description", headerName: "Mission Description", width: 350 },
+          {
+            field: "description",
+            headerName: "Mission Description",
+            width: 350,
+          },
           { field: "redeem_points", headerName: "Reward Point", width: 150 },
           { field: "active_status", headerName: "Active Status", width: 200 },
-          { field: "expired_date", headerName: "Expired Date", width: 200},
-          { field: "tags", headerName: "Tags subjects", width: 250},
+          { field: "expired_date", headerName: "Expired Date", width: 200 },
+          { field: "tags", headerName: "Tags subjects", width: 250 },
           {
             field: "edit",
             headerName: "Edit",
@@ -145,12 +155,14 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({active, classId}) => {
           // Navigate to mission details page or handle as needed
           console.log("Mission ID:", params.row.name);
           setMissionId(params.row.name);
-          setMissionDetail([{
-            firstname: '',
-            surname: '',
-            status: '',
-            student: ''
-          }])
+          setMissionDetail([
+            {
+              firstname: "",
+              surname: "",
+              status: "",
+              student: "",
+            },
+          ]);
           const missionId = params.row.id;
           getInDepthMissionDetail();
           // Navigate to mission details page or handle as needed
@@ -177,7 +189,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({active, classId}) => {
         data={missionDetail}
       />
     </div>
-  )
+  );
 };
 
 export default MissionTable;
