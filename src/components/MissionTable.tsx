@@ -29,11 +29,11 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
       tags: "",
     },
   ]);
-  const [cookie] = useCookies(["access_token"]);
+  const [cookie, setCookie] = useCookies(["access_token", 'mission_id']);
   const [unactiveMissions, setUnactiveMissions] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const currentClass: string = classId;
-  const [missionDetail, setMissionDetail] = useState([
+  const [missionDetail] = useState([
     {
       firstname: "",
       surname: "",
@@ -42,7 +42,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
     },
   ]);
 
-  const [missionId, setMissionId] = useState("");
+  const [missionId] = useState("");
 
   const navigate = useNavigate();
   const encodedClassId = encodeURIComponent(classId);
@@ -64,26 +64,6 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
     setViewCompleteStatus(false);
   };
 
-  const getInDepthMissionDetail = async () => {
-    const classIdEncoded = encodeURIComponent(classId);
-    const missionIdToQuery = encodeURIComponent(missionId);
-    const url = `https://backend.otudy.co/api/v1/mission/get_on_going_missions_by_mission?_class=${classIdEncoded}&mission_name=${missionIdToQuery}`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${cookie.access_token}`,
-      },
-    });
-    for (let i = 0; i < response.data.on_going_missions.length; i++) {
-      if (response.data.on_going_missions[i]["status"] == 0) {
-        response.data.on_going_missions[i]["status"] = "Denied";
-      } else if (response.data.on_going_missions[i]["status"] == 2) {
-        response.data.on_going_missions[i]["status"] = "Pending Approval";
-      } else {
-        response.data.on_going_missions[i]["status"] = "Approved";
-      }
-    }
-    setMissionDetail(response.data.on_going_missions);
-  };
 
   useEffect(() => {
     const getMissionsData = async () => {
@@ -152,21 +132,12 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
         ]}
         onRowClick={(params) => {
           handleOpenCompleteStatus();
+          setCookie('mission_id', params.row.name);
           // Navigate to mission details page or handle as needed
           console.log("Mission ID:", params.row.name);
-          setMissionId(params.row.name);
-          setMissionDetail([
-            {
-              firstname: "",
-              surname: "",
-              status: "",
-              student: "",
-            },
-          ]);
-          const missionId = params.row.id;
-          getInDepthMissionDetail();
+          
+          //getInDepthMissionDetail();
           // Navigate to mission details page or handle as needed
-          console.log("Mission ID:", missionId);
         }}
         initialState={{
           pagination: {
