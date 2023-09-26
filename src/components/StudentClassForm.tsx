@@ -25,13 +25,13 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
   isEdit,
 }) => {
   const [studentId, setstudentId] = useState(0);
-  const [cookie] = useCookies(["access_token"]);
+  const [cookies] = useCookies(["access_token", 'currentStudentId']);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   //const navigate = useNavigate();
 
   const handleCreateAndEdit = async () => {
-    // EDIT LOGIC
+    // CREATE LOGIC
     if (!isEdit) {
       const response = await axios.post(
         `https://backend.otudy.co/api/v1/class/add_student`,
@@ -44,7 +44,7 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${cookie.access_token}`,
+            Authorization: `Bearer ${cookies.access_token}`,
           },
         }
       );
@@ -59,9 +59,25 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
         //show false modal here
       }
     }
-    // CREATE LOGIC
+    // EDIT LOGIC
     else {
-
+      const response = await axios.put('https://backend.otudy.co/api/v1/user/student/edit_user_detail', {
+        fname: firstName,
+        surname: lastName,
+        inclass_no: studentId,
+        original_id: cookies.currentStudentId,
+        class_id: classId as string
+      },{
+        headers: {
+          Authorization: `Bearer ${cookies.access_token}`
+        }
+      });
+      if (response.status == 200) {
+        // show sucess modal here
+        console.log(response.data);
+      } else {
+        console.error(response.data);
+      }
     }
     
     onClose(); // Close the dialog

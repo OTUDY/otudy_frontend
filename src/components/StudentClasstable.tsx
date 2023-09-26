@@ -6,6 +6,7 @@ import { IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import StudentClassForm from "./StudentClassForm";
 import { useParams } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 interface Student {
   id: string;
@@ -22,6 +23,7 @@ const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {
   const { classId } = useParams();
   const [isEdit, setIsEdit] = useState(false);
   const [openStudentForm, setOpenStudentForm] = useState(false);
+  const [_, setCookies] = useCookies(['currentStudentId']);
   const handleEditStudent = () => {
     setIsEdit(true);
     setOpenStudentForm(true);
@@ -36,13 +38,15 @@ const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {
       field: "edit",
       headerName: "Edit",
       width: 100,
-      renderCell: () => (
+      renderCell: (params: any) => (
         <IconButton
           aria-label="edit"
           color="primary"
           onClick={(e) => {
             e.stopPropagation();
             handleEditStudent();
+            setCookies("currentStudentId",`${params.row.firstName}.${params.row.surName}`);
+            //console.log(cookies.currentStudentId);
           }}
         >
           <EditIcon />
