@@ -4,7 +4,7 @@ import ClassTable from "../components/ClassTable";
 import ClassForm from "../components/ClassForm";
 import { Button, Grid } from "@mui/material";
 
-const Section = () => {
+const Class = () => {
   const [isAddClassFormOpen, setIsAddClassFormOpen] = useState(false);
 
   const handleOpenAddClassForm = () => {
@@ -25,7 +25,7 @@ const Section = () => {
         <div className="section-content">
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>
-              <h1>Section</h1>
+              <h1>Class</h1>
             </Grid>
             <Grid item xs={12} md={6}>
               <Button
@@ -42,9 +42,13 @@ const Section = () => {
         </div>
       </div>
 
-      <ClassForm open={isAddClassFormOpen} onClose={handleCloseAddClassForm} isEdit={false} />
+      <ClassForm
+        open={isAddClassFormOpen}
+        onClose={handleCloseAddClassForm}
+        isEdit={false}
+      />
     </div>
   );
 };
 
-export default Section;
+export default Class;
