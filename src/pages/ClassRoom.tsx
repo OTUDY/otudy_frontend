@@ -115,6 +115,7 @@ const ClassRoom = () => {
         open={isAddStudentClassFormOpen}
         onClose={handleCloseAddStudentClassForm}
         classId={classId as string}
+        isEdit={false}
       />
     </div>
   );

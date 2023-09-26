@@ -14,43 +14,54 @@ import { useCookies } from "react-cookie";
 interface AddClassFormProps {
   open: boolean;
   onClose: () => void;
-  classId: string
+  classId: any;
+  isEdit: boolean;
 }
 
-const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose, classId }) => {
+const StudentClassForm: React.FC<AddClassFormProps> = ({
+  open,
+  onClose,
+  classId,
+  isEdit,
+}) => {
   const [studentId, setstudentId] = useState(0);
-  const [cookie] = useCookies(['access_token']);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [cookie] = useCookies(["access_token"]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   //const navigate = useNavigate();
 
-  const handleCreate = async() => {
-
+  const handleCreate = async () => {
     const response = await axios.post(
-      `https://backend.otudy.co/api/v1/class/add_student`, {
+      `https://backend.otudy.co/api/v1/class/add_student`,
+      {
         fname: firstName,
         surname: lastName,
         class_id: classId,
-        inclass_id: studentId
+        inclass_id: studentId,
       },
       {
         headers: {
-          "Content-Type": 'application/json',
-          Authorization: `Bearer ${cookie.access_token}`
-        }
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cookie.access_token}`,
+        },
       }
     );
     console.log(response.data);
-    if (!(response.status == 200 || response.status == 201 || response.status == 202)) {
+    if (
+      !(
+        response.status == 200 ||
+        response.status == 201 ||
+        response.status == 202
+      )
+    ) {
       //show false modal here
-      
     }
     onClose(); // Close the dialog
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add Student</DialogTitle>
+      <DialogTitle>{isEdit ? "Edit" : "Add"} student</DialogTitle>
       <DialogContent>
         <form>
           <TextField
@@ -74,18 +85,41 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose, classId 
             fullWidth
             sx={{ marginBottom: 2 }}
           />
-          
         </form>
       </DialogContent>
       <DialogActions
-        sx={{ display: "flex", justifyContent: "center", marginBottom: 2 }}
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 2,
+          marginRight: 2,
+          marginLeft: 2,
+        }}
       >
-        <Button onClick={onClose} color="primary">
+        <Button onClick={onClose} color="primary" variant="outlined">
           Cancel
         </Button>
-        <Button onClick={handleCreate} color="primary">
-          Create
-        </Button>
+        {isEdit ? (
+          <Button
+            onClick={handleCreate}
+            color="primary"
+            variant="contained"
+            sx={{ minWidth: "100px" }}
+            disabled={!studentId || firstName == "class" || !lastName}
+          >
+            Edit
+          </Button>
+        ) : (
+          <Button
+            onClick={handleCreate}
+            color="primary"
+            variant="contained"
+            sx={{ minWidth: "100px" }}
+            disabled={!studentId || firstName == "class" || !lastName}
+          >
+            Add
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );
