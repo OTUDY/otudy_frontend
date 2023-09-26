@@ -6,6 +6,8 @@ import {
   DialogTitle,
   Button,
   TextField,
+  Select,
+  MenuItem,
 } from "@mui/material";
 // import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 // import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -20,21 +22,32 @@ interface AddMissionFormProps {
   isEdit: boolean;
 }
 
-const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, isEdit }) => {
+const MissionForm: React.FC<AddMissionFormProps> = ({
+  open,
+  onClose,
+  classId,
+  isEdit,
+}) => {
   const [missionTitle, setMissionTitle] = useState("");
   const [missionDescription, setMissionDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [rewardPoints, setRewardPoints] = useState(0);
-  const [activeStatus, setActiveStatus] = useState(false);
-  const [tagsInput, setTagsInput] = useState('');
-  const [cookie] = useCookies(['access_token']);
+  let activeStatus = true;
+  const [tagsInput, setTagsInput] = useState("Tags");
+  const [cookie] = useCookies(["access_token"]);
+
+  const handleTagsChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setTagsInput(event.target.value); // Update the selected class level
+  };
 
   const handleCreate = async () => {
     const tagsToSendCreate: string[] = [];
-    const tagsSplitted = tagsInput.split(', ');
+    const tagsSplitted = tagsInput.split(", ");
     tagsSplitted.forEach((currentItem) => {
       tagsToSendCreate.push(currentItem);
-    })
+    });
 
     const body = {
       mission_name: missionTitle,
@@ -43,7 +56,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
       mission_active_status: activeStatus,
       mission_class_id: classId,
       mission_expired_date: dueDate,
-      tags: tagsToSendCreate
+      tags: tagsToSendCreate,
     };
     const headers = {
       "Content-Type": "application/json",
@@ -59,22 +72,31 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
         }
       );
       console.log(response.data);
-      if (!(response.status == 200 || response.status == 201 || response.status == 202)) {
+      if (
+        !(
+          response.status == 200 ||
+          response.status == 201 ||
+          response.status == 202
+        )
+      ) {
         // show false modal here
       }
-    }
-    else {
+    } else {
       const response = await axios.put(
-        'https://backend.otudy.co/api/v1/mission/update_mission_detail', body, { headers: headers }
-      )
-      if (response.status == 200 || response.status == 201 || response.status == 202) {
+        "https://backend.otudy.co/api/v1/mission/update_mission_detail",
+        body,
+        { headers: headers }
+      );
+      if (
+        response.status == 200 ||
+        response.status == 201 ||
+        response.status == 202
+      ) {
         console.log(response.data);
-      }
-      else {
+      } else {
         //show false modal here
       }
     }
-
 
     onClose();
   };
@@ -82,11 +104,10 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Create new mission</DialogTitle>
-      <DialogTitle>Add Class</DialogTitle>
       <DialogContent>
         <form>
           <TextField
-            label="Title"
+            label="Mission Name"
             value={missionTitle}
             onChange={(e) => setMissionTitle(e.target.value)}
             fullWidth
@@ -94,7 +115,6 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
           />
           <TextField
             label="Reward points"
-            value={rewardPoints}
             onChange={(e) => setRewardPoints(parseInt(e.target.value))}
             fullWidth
             sx={{ marginBottom: 2 }}
@@ -106,13 +126,13 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
             fullWidth
             sx={{ marginBottom: 2 }}
           />
-          <TextField
+          {/* <TextField
             label="Active Status"
             value={activeStatus}
             onChange={(e) => setActiveStatus(Boolean(e.target.value))}
             fullWidth
             sx={{ marginBottom: 2 }}
-          />
+          /> */}
           <TextField
             label="Due Date"
             value={dueDate}
@@ -120,13 +140,17 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
             fullWidth
             sx={{ marginBottom: 2 }}
           />
-          <TextField
+          <Select
             label="Tags"
             value={tagsInput}
-            onChange={(e) => setTagsInput(e.target.value as string)}
+            onChange={handleTagsChange}
             fullWidth
-            sx={{ marginBottom: 2 }}
-          />
+            renderValue={(value) => (!value ? value : "Select Tag")}
+            sx={{ marginBottom: 2, width: "100%" }}
+          >
+            <MenuItem value="active">Tags 1</MenuItem>
+            <MenuItem value="inactive">Tags 2</MenuItem>
+          </Select>
         </form>
       </DialogContent>
       <DialogActions
@@ -136,7 +160,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({ open, onClose, classId, is
           Cancel
         </Button>
         <Button onClick={handleCreate} color="primary">
-          Create / Edit
+          Create
         </Button>
       </DialogActions>
     </Dialog>
