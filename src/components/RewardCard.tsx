@@ -18,16 +18,18 @@ const RewardCard: React.FC<RewardCardProps> = ({
   reward_desc,
   reward_active_status,
   reward_amount,
-  classId,
+  classId
 }) => {
   const [isRewardFormOpen, setIsRewardFormOpen] = useState(false);
   const navigate = useNavigate();
+  const [isEdit, setIsEdit] = useState(false);
   const encodedClassId = encodeURIComponent(classId);
   const handleTeacherRedeem = () => {
     navigate(`/class/${encodedClassId}/reward-redeem`);
   };
 
   const handleCardClick = () => {
+    setIsEdit(true);
     setIsRewardFormOpen(true);
   };
 
@@ -71,6 +73,7 @@ const RewardCard: React.FC<RewardCardProps> = ({
         open={isRewardFormOpen}
         onClose={handleCloseRewardForm}
         classId={classId}
+        isEdit={isEdit}
       />
     </Card>
   );

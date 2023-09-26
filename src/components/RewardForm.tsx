@@ -15,7 +15,8 @@ import { useCookies } from "react-cookie";
 interface RewardFormProps {
   open: boolean;
   onClose: () => void;
-  classId: string
+  classId: string;
+  isEdit: boolean;
 }
 
 const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
@@ -26,7 +27,7 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
   const [expiredDate, setExpiredDate] = useState("");
   const [cookie] = useCookies(['access_token']);
 
-  const handleCreate = async() => {
+  const handleCreateAndEdit = async() => {
     console.log("Title:", title);
     console.log("Point:", point);
     console.log("Description:", description);
@@ -107,7 +108,7 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleCreate} color="primary">
+        <Button onClick={handleCreateAndEdit} color="primary">
           Create
         </Button>
       </DialogActions>

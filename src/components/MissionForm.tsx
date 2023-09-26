@@ -42,7 +42,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
     setTagsInput(event.target.value); // Update the selected class level
   };
 
-  const handleCreate = async () => {
+  const handleCreateAndEdit = async () => {
     const tagsToSendCreate: string[] = [];
     const tagsSplitted = tagsInput.split(", ");
     tagsSplitted.forEach((currentItem) => {
@@ -159,7 +159,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleCreate} color="primary">
+        <Button onClick={handleCreateAndEdit} color="primary">
           Create
         </Button>
       </DialogActions>

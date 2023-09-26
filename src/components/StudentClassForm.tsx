@@ -30,32 +30,40 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
   const [lastName, setLastName] = useState("");
   //const navigate = useNavigate();
 
-  const handleCreate = async () => {
-    const response = await axios.post(
-      `https://backend.otudy.co/api/v1/class/add_student`,
-      {
-        fname: firstName,
-        surname: lastName,
-        class_id: classId,
-        inclass_id: studentId,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${cookie.access_token}`,
+  const handleCreateAndEdit = async () => {
+    // EDIT LOGIC
+    if (!isEdit) {
+      const response = await axios.post(
+        `https://backend.otudy.co/api/v1/class/add_student`,
+        {
+          fname: firstName,
+          surname: lastName,
+          class_id: classId,
+          inclass_id: studentId,
         },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${cookie.access_token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      if (
+        !(
+          response.status == 200 ||
+          response.status == 201 ||
+          response.status == 202
+        )
+      ) {
+        //show false modal here
       }
-    );
-    console.log(response.data);
-    if (
-      !(
-        response.status == 200 ||
-        response.status == 201 ||
-        response.status == 202
-      )
-    ) {
-      //show false modal here
     }
+    // CREATE LOGIC
+    else {
+
+    }
+    
     onClose(); // Close the dialog
   };
 
@@ -101,7 +109,7 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
         </Button>
         {isEdit ? (
           <Button
-            onClick={handleCreate}
+            onClick={handleCreateAndEdit}
             color="primary"
             variant="contained"
             sx={{ minWidth: "100px" }}
@@ -111,7 +119,7 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
           </Button>
         ) : (
           <Button
-            onClick={handleCreate}
+            onClick={handleCreateAndEdit}
             color="primary"
             variant="contained"
             sx={{ minWidth: "100px" }}

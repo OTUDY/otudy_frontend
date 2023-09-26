@@ -85,7 +85,7 @@ const Reward = () => {
           <Grid container spacing={2}>
             {rewards.map((reward) => (
               <Grid key={reward.id} item xs={12} sm={6} md={4}>
-                <RewardCard {...reward} />
+                <RewardCard {...reward}/>
               </Grid>
             ))}
           </Grid>
@@ -95,6 +95,7 @@ const Reward = () => {
         open={isAddRewardOpen}
         onClose={handleCloseAddReward}
         classId={classId as string}
+        isEdit={false}
       />
     </div>
   );

@@ -30,7 +30,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
     setClassLevel(event.target.value); // Update the selected class level
   };
 
-  const handleCreate = async () => {
+  const handleCreateAndEdit = async () => {
     // Handle create action
     console.log("Class Name:", className);
     console.log("Class Level:", classLevel);
@@ -176,7 +176,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
         </Button>
         {isEdit ? (
           <Button
-            onClick={handleCreate}
+            onClick={handleCreateAndEdit}
             color="primary"
             variant="contained"
             sx={{ minWidth: "100px" }}
@@ -186,7 +186,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
           </Button>
         ) : (
           <Button
-            onClick={handleCreate}
+            onClick={handleCreateAndEdit}
             color="primary"
             variant="contained"
             sx={{ minWidth: "100px" }}
