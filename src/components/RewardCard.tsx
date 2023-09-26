@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import RewardForm from "./RewardForm";
-import TeacherRedeem from "./TeacherRedeem";
+import { useNavigate } from "react-router-dom";
 
 interface RewardCardProps {
   reward_name: string;
@@ -9,19 +9,22 @@ interface RewardCardProps {
   reward_desc: string;
   reward_active_status: string;
   reward_amount: Number;
-  classId: string
+  classId: string;
 }
 
-const RewardCard: React.FC<RewardCardProps> = ({ reward_name, reward_spent_points, reward_desc, reward_active_status, reward_amount, classId }) => {
+const RewardCard: React.FC<RewardCardProps> = ({
+  reward_name,
+  reward_spent_points,
+  reward_desc,
+  reward_active_status,
+  reward_amount,
+  classId,
+}) => {
   const [isRewardFormOpen, setIsRewardFormOpen] = useState(false);
-  const [isTeacherRedeemOpen, setIsTeacherRedeemOpen] = useState(false);
-  const handleTeacherRedeem = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsTeacherRedeemOpen(true);
-  };
-
-  const handleCloseTeacherRedeem = () => {
-    setIsTeacherRedeemOpen(false);
+  const navigate = useNavigate();
+  const encodedClassId = encodeURIComponent(classId);
+  const handleTeacherRedeem = () => {
+    navigate(`/class/${encodedClassId}/reward-redeem`);
   };
 
   const handleCardClick = () => {
@@ -41,10 +44,16 @@ const RewardCard: React.FC<RewardCardProps> = ({ reward_name, reward_spent_point
     >
       <CardContent>
         <Typography variant="h6">{reward_name}</Typography>
-        <Typography variant="subtitle1">Point: {reward_spent_points.toString()}</Typography>
+        <Typography variant="subtitle1">
+          Point: {reward_spent_points.toString()}
+        </Typography>
         <Typography variant="body2">Description: {reward_desc}</Typography>
-        <Typography variant="body2">Active Status: {reward_active_status}</Typography>
-        <Typography variant="body2">Amount: {reward_amount.toString()}</Typography>
+        <Typography variant="body2">
+          Active Status: {reward_active_status}
+        </Typography>
+        <Typography variant="body2">
+          Amount: {reward_amount.toString()}
+        </Typography>
       </CardContent>
       <Button
         variant="contained"
@@ -58,11 +67,10 @@ const RewardCard: React.FC<RewardCardProps> = ({ reward_name, reward_spent_point
       >
         Redeem
       </Button>
-      <RewardForm open={isRewardFormOpen} onClose={handleCloseRewardForm} classId={classId} />
-      <TeacherRedeem
-        open={isTeacherRedeemOpen}
-        onClose={handleCloseTeacherRedeem}
-        students={[]}
+      <RewardForm
+        open={isRewardFormOpen}
+        onClose={handleCloseRewardForm}
+        classId={classId}
       />
     </Card>
   );
