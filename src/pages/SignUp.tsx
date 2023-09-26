@@ -6,10 +6,14 @@ import {
   Button,
   Link,
   Grid,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
-import axios from 'axios';
+import axios, { AxiosError } from "axios";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 // import "react-phone-number-input/style.css";
 // import PhoneInput from "react-phone-number-input";
 
@@ -23,6 +27,7 @@ const SignUp: React.FC = () => {
   const [telephone, setTelephone] = useState("");
   const [schoolOrOrganization, setSchoolOrOrganization] = useState("");
   const [isStudent] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   // const [urlEndpoint, setUrlEndpoint] = useState('https://backend.otudy.co/api/v1/user/teacher/register');
   const navigate = useNavigate();
 
@@ -51,42 +56,91 @@ const SignUp: React.FC = () => {
     //   schoolOrOrganization,
     // });
     const body = {
-      'email': email,
-      'pwd': password,
-      'fname': firstName,
-      'surname': lastName,
-      'phone': telephone,
-      'role': Number(isStudent) + 1,
-      'affiliation': schoolOrOrganization,
-      'class_id': ''
+      email: email,
+      pwd: password,
+      fname: firstName,
+      surname: lastName,
+      phone: telephone,
+      role: Number(isStudent) + 1,
+      affiliation: schoolOrOrganization,
+      class_id: "",
     };
 
     // if (isStudent) {
     //   await setUrlEndpoint('https://backend.otudy.co/api/v1/user/student/register');
     // };
-    
-    if (password === confirmPassword) {
-      const response = await axios.post('https://backend.otudy.co/api/v1/user/teacher/register/', body, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
 
-      if (response.status == 200 || response.status == 201 || response.status == 202){
-        console.log(response.data);
-        navigate('/sign-in', { replace: true });
-        console.log(navigate);
-      }
-      else {
-
-
-        console.log(`Account with email: ${email} is existed, proceed to login.`);
-        // show false modal here
-
-      }
-      
+    if (password !== confirmPassword) {
+      // Display an error message to the user
+      alert("Passwords do not match");
+      return;
     }
 
+    try {
+      const response = await axios.post(
+        "https://backend.otudy.co/api/v1/user/teacher/register/",
+        body,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (
+        response.status === 200 ||
+        response.status === 201 ||
+        response.status === 202
+      ) {
+        console.log(response.data);
+        navigate("/sign-in", { replace: true });
+      }
+    } catch (err: unknown) {
+      const error = err as AxiosError;
+      console.log(error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error("Server error:", error.response.data);
+        // Display the error message to the user
+        const errorResponse = (error as AxiosError<{ message: string }>)
+          .response;
+        alert(errorResponse?.data?.message ?? "An error occurred"); // You can replace this with a more user-friendly UI component
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("Request error:", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an error
+        console.error("Error:", error.message);
+      }
+    }
+
+    // if (password === confirmPassword) {
+    //   const response = await axios.post(
+    //     "https://backend.otudy.co/api/v1/user/teacher/register/",
+    //     body,
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   );
+
+    //   if (
+    //     response.status == 200 ||
+    //     response.status == 201 ||
+    //     response.status == 202
+    //   ) {
+    //     console.log(response.data);
+    //     navigate("/sign-in", { replace: true });
+    //     console.log(navigate);
+    //   } else {
+    //     console.log(
+    //       `Account with email: ${email} is existed, proceed to login.`
+    //     );
+    //     // show false modal here
+    //   }
+    // }
   };
 
   return (
@@ -123,12 +177,25 @@ const SignUp: React.FC = () => {
           />
           <TextField
             label="Password *"
-            type="password"
+            type={showPassword ? "text" : "password"} // Toggle between text and password
             fullWidth
             margin="normal"
             variant="outlined"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              // Add an eye icon to toggle password visibility
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <TextField
             label="Confirm Password *"
