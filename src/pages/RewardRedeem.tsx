@@ -88,7 +88,7 @@ const RewardRedeem = () => {
             }}
           >
             <Button
-              variant="contained"
+              variant="outlined"
               color="primary"
               onClick={handleCancel}
               disabled={selectionModel.length === 0}
