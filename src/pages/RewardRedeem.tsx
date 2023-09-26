@@ -31,9 +31,10 @@ const RewardRedeem = () => {
   //Temp data
   const students = [
     {
-      student_id: "123456",
-      firstname: "John",
-      surname: "Doe",
+      id: "0",
+      studentId: "123456",
+      name: "John",
+      lastName: "Doe",
       point: 100,
       redeemed: false,
     },
@@ -55,7 +56,7 @@ const RewardRedeem = () => {
     console.log("Redeem", selectionModel);
   };
 
-  const handleCancle = () => {
+  const handleCancel = () => {
     // Update completion status for selected students
     console.log("Cancle", selectionModel);
   };
@@ -89,10 +90,10 @@ const RewardRedeem = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={handleCancle}
+              onClick={handleCancel}
               disabled={selectionModel.length === 0}
             >
-              Deny
+              Cancel
             </Button>
             <Button
               variant="contained"
@@ -100,7 +101,7 @@ const RewardRedeem = () => {
               onClick={handleRedeem}
               disabled={selectionModel.length === 0}
             >
-              Complete
+              Redeem
             </Button>
           </div>
         </div>
