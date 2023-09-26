@@ -81,7 +81,7 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
       }
     }
     onClose(); // Close the dialog
-    navigate(`/class/${classId}`);
+    navigate(`/class/${encodeURIComponent(classId)}`);
   };
 
   return (
