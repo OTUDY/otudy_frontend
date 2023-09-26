@@ -72,9 +72,10 @@ const ClassRoom = () => {
       );
       console.log("original response:", response.data.classStudents);
       for (let i = 0; i < response.data.classStudents.length; i++) {
-        response.data.classStudents[i]["id"] = Number(response.data.classStudents[i]["No"]);
+        response.data.classStudents[i]["id"] = Number(response.data.classStudents[i]["InclassNo"]);
       }
       setStudentData(response.data.classStudents);
+      console.log(response.data.classStudents);
     };
     getClassDetails();
   }, []);
