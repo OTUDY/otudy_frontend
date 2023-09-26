@@ -28,6 +28,7 @@ const SignUp: React.FC = () => {
   const [schoolOrOrganization, setSchoolOrOrganization] = useState("");
   const [isStudent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   // const [urlEndpoint, setUrlEndpoint] = useState('https://backend.otudy.co/api/v1/user/teacher/register');
   const navigate = useNavigate();
 
@@ -199,12 +200,29 @@ const SignUp: React.FC = () => {
           />
           <TextField
             label="Confirm Password *"
-            type="password"
+            type={showConfirmPassword ? "text" : "password"} // Toggle between text and password
             fullWidth
             margin="normal"
             variant="outlined"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            InputProps={{
+              // Add an eye icon to toggle password visibility
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    edge="end"
+                  >
+                    {showConfirmPassword ? (
+                      <VisibilityIcon />
+                    ) : (
+                      <VisibilityOffIcon />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <TextField
             label="Telephone *"
