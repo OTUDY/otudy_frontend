@@ -38,7 +38,7 @@ const ClassRoom = () => {
   const [studentData, setStudentData] = useState([
     {
       studentId: "",
-      id: "",
+      id: 0,
       firstName: "",
       surName: "",
       point: 0,
@@ -72,7 +72,7 @@ const ClassRoom = () => {
       );
       console.log("original response:", response.data.classStudents);
       for (let i = 0; i < response.data.classStudents.length; i++) {
-        response.data.classStudents[i]["id"] = response.data.classStudents[i]["No"]
+        response.data.classStudents[i]["id"] = Number(response.data.classStudents[i]["No"]);
       }
       setStudentData(response.data.classStudents);
     };
@@ -107,7 +107,7 @@ const ClassRoom = () => {
               </Button>
             </Grid>
           </Grid>
-          <StudentClassTable data={studentData} />
+          <StudentClassTable data={studentData as any} />
         </div>
       </div>
       <StudentClassForm
