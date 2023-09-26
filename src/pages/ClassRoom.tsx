@@ -91,7 +91,7 @@ const ClassRoom = () => {
             <Grid item xs={12} md={6}>
               <div>
                 <Typography variant="h6">
-                  Class{classId}
+                  Class{classId}{" "}
                   {classId && <ClassSubSectionSelect classId={classId} />}
                 </Typography>
               </div>

@@ -29,8 +29,8 @@ const Mission = () => {
         <div className="classroom-content">
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>
-              <Typography>
-                Class{classId} /Mission
+              <Typography variant="h6">
+                Class{classId}{" "}
                 {classId && <ClassSubSectionSelect classId={classId} />}
               </Typography>
             </Grid>
@@ -55,7 +55,12 @@ const Mission = () => {
           <MissionTable active={false} classId={classId as string} />
         </div>
       </div>
-      <MissionForm classId={classId} open={isAddMissionOpen} onClose={handleCloseAddMission} isEdit={false} />
+      <MissionForm
+        classId={classId}
+        open={isAddMissionOpen}
+        onClose={handleCloseAddMission}
+        isEdit={false}
+      />
     </div>
   );
 };

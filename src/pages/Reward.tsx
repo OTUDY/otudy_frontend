@@ -20,41 +20,42 @@ const Reward = () => {
   };
 
   // Sample rewards data (you will replace this with your actual data)
-  const [rewards, setRewards] = useState([{
-    id: 0,
-    reward_name: "",
-    reward_spent_points: 0,
-    reward_desc: "",
-    reward_pic: "",
-    reward_active_status: "",
-    reward_amount: 0,
-    classId: classId as string
-  }]);
-  const [cookie] = useCookies(['access_token']);
+  const [rewards, setRewards] = useState([
+    {
+      id: 0,
+      reward_name: "",
+      reward_spent_points: 0,
+      reward_desc: "",
+      reward_pic: "",
+      reward_active_status: "",
+      reward_amount: 0,
+      classId: classId as string,
+    },
+  ]);
+  const [cookie] = useCookies(["access_token"]);
 
   useEffect(() => {
-    const fetchData = async() => {
+    const fetchData = async () => {
       const classIdEncoded = encodeURIComponent(classId as string);
       const url = `https://backend.otudy.co/api/v1/reward/get_all_rewards?_class=${classIdEncoded}`;
       const response = await axios.get(url, {
         headers: {
-          Authorization: `Bearer ${cookie.access_token}`
-        }
+          Authorization: `Bearer ${cookie.access_token}`,
+        },
       });
       for (let i = 0; i < response.data.rewards.length; i++) {
-        response.data.rewards[i]['id'] = i;
-        if (response.data.rewards[i]['reward_active_status']) {
-          response.data.rewards[i]['reward_active_status'] = 'เปิดให้แลก';
+        response.data.rewards[i]["id"] = i;
+        if (response.data.rewards[i]["reward_active_status"]) {
+          response.data.rewards[i]["reward_active_status"] = "เปิดให้แลก";
+        } else {
+          response.data.rewards[i]["reward_active_status"] = "ไม่เปิดให้แลก";
         }
-        else {
-          response.data.rewards[i]['reward_active_status'] = 'ไม่เปิดให้แลก';
-        }
-        response.data.rewards[i]['classId'] = classId as string;
+        response.data.rewards[i]["classId"] = classId as string;
       }
       setRewards(response.data.rewards);
-    }
+    };
     fetchData();
-  }, [])
+  }, []);
 
   return (
     <div className="page-container">
@@ -65,8 +66,8 @@ const Reward = () => {
         <div className="classroom-content">
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>
-              <Typography>
-                Class{classId} /Reward
+              <Typography variant="h6">
+                Class{classId}{" "}
                 {classId && <ClassSubSectionSelect classId={classId} />}
               </Typography>
             </Grid>
@@ -90,7 +91,11 @@ const Reward = () => {
           </Grid>
         </div>
       </div>
-      <RewardForm open={isAddRewardOpen} onClose={handleCloseAddReward} classId={classId as string}/>
+      <RewardForm
+        open={isAddRewardOpen}
+        onClose={handleCloseAddReward}
+        classId={classId as string}
+      />
     </div>
   );
 };
