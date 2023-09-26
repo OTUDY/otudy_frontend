@@ -8,7 +8,7 @@ import StudentClassForm from "./StudentClassForm";
 import { useParams } from "react-router-dom";
 
 interface Student {
-  studentId: string;
+  No: string;
   firstName: string;
   surName: string;
   point: number;
@@ -28,7 +28,7 @@ const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {
   };
 
   const columns: GridColDef[] = [
-    { field: "studentId", headerName: "Student ID", width: 150 },
+    { field: "No.", headerName: "No.", width: 150 },
     { field: "firstName", headerName: "First Name", width: 200 },
     { field: "surName", headerName: "Last Name", width: 200 },
     { field: "point", headerName: "Point", width: 200 },
