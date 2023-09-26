@@ -61,7 +61,7 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
     }
     // EDIT LOGIC
     else {
-      const response = await axios.put('https://backend.otudy.co/api/v1/user/student/edit_user_detail', {
+      const response = await axios.put('https://backend.otudy.co/api/v1/user/student/edit_student_detail', {
         fname: firstName,
         surname: lastName,
         inclass_no: studentId,
