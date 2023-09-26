@@ -18,7 +18,7 @@ interface AddClassFormProps {
 }
 
 const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose, classId }) => {
-  const [studentId, setstudentId] = useState("");
+  const [studentId, setstudentId] = useState(0);
   const [cookie] = useCookies(['access_token']);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -28,10 +28,10 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose, classId 
 
     const response = await axios.post(
       `https://backend.otudy.co/api/v1/class/add_student`, {
-        username: studentId,
         fname: firstName,
         surname: lastName,
-        class_id: classId
+        class_id: classId,
+        inclass_id: studentId
       },
       {
         headers: {
@@ -54,9 +54,9 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({ open, onClose, classId 
       <DialogContent>
         <form>
           <TextField
-            label="Student ID"
+            label="No. "
             value={studentId}
-            onChange={(e) => setstudentId(e.target.value)}
+            onChange={(e) => setstudentId(Number(e.target.value))}
             fullWidth
             sx={{ marginBottom: 2 }}
           />
