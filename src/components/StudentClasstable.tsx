@@ -7,6 +7,7 @@ interface Student {
   studentId: string;
   firstName: string;
   surName: string;
+  point: number;
 }
 
 interface StudentClassTableProps {
@@ -17,6 +18,7 @@ const columns: GridColDef[] = [
   { field: "studentId", headerName: "Student ID", width: 150 },
   { field: "firstName", headerName: "First Name", width: 200 },
   { field: "surName", headerName: "Last Name", width: 200 },
+  { field: "point", headerName: "Point", width: 200 },
 ];
 
 const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {

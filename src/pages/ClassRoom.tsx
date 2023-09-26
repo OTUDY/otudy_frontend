@@ -41,6 +41,7 @@ const ClassRoom = () => {
       id: "",
       firstName: "",
       surName: "",
+      point: 0,
     },
   ]);
   const [cookie] = useCookies(["access_token"]);
