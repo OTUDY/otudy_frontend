@@ -28,7 +28,7 @@ function App() {
         <Route path="/class/:classId/mission" element={<Mission />} />
         <Route path="/class/:classId/reward" element={<Reward />} />
         <Route
-          path="/class/:classId/reward-redeem`"
+          path="/class/:classId/reward-redeem"
           element={<RewardRedeem />}
         />
         <Route
