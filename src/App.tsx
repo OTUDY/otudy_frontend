@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 //import Home from "./pages/Home.tsx";
 import SignIn from "./pages/SignIn.tsx";
 import SignUp from "./pages/SignUp.tsx";
-import Section from "./pages/Section.tsx";
+import Class from "./pages/Class.tsx";
 import Landing from "./pages/Landing.tsx";
 import ClassRoom from "./pages/ClassRoom.tsx";
 import Mission from "./pages/Mission.tsx";
@@ -23,7 +23,7 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/section" element={<Section />} />
+        <Route path="/class" element={<Class />} />
         <Route path="/class/:classId" element={<ClassRoom />} />
         <Route path="/class/:classId/mission" element={<Mission />} />
         <Route path="/class/:classId/reward" element={<Reward />} />

@@ -45,7 +45,7 @@ function HeaderBar() {
     console.log(navigate);
   };
   const handleClassButtonClick = () => {
-    navigate("/section");
+    navigate("/class");
     handleCloseNavMenu(); // Close the navigation menu
   };
 
