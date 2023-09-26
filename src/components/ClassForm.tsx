@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 interface AddClassFormProps {
   open: boolean;
@@ -23,6 +24,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
   const [classLevel, setClassLevel] = useState("class");
   const [description, setDescription] = useState("");
   const [cookie] = useCookies(["access_token"]);
+  const navigate = useNavigate();
 
   const handleClassLevelChange = (event: {
     target: { value: React.SetStateAction<string> };
@@ -74,6 +76,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
     }
 
     onClose(); // Close the dialog
+    navigate('/class');
   };
 
   useEffect(() => {

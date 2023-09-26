@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface AddClassFormProps {
   open: boolean;
@@ -28,6 +28,7 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
   const [cookies] = useCookies(["access_token", 'currentStudentId']);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const navigate = useNavigate();
   //const navigate = useNavigate();
 
   const handleCreateAndEdit = async () => {
@@ -79,8 +80,8 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
         console.error(response.data);
       }
     }
-    
     onClose(); // Close the dialog
+    navigate(`/class/${classId}`);
   };
 
   return (
