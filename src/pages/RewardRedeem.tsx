@@ -7,6 +7,7 @@ import {
 import Button from "@mui/material/Button";
 import HeaderBar from "../components/HeaderBar";
 import Typography from "@mui/material/Typography";
+import { useParams, useNavigate } from "react-router-dom";
 
 const columns = [
   { field: "studentId", headerName: "Student ID", width: 150 },
@@ -56,9 +57,13 @@ const RewardRedeem = () => {
     console.log("Redeem", selectionModel);
   };
 
+  const navigate = useNavigate();
+  const { classId } = useParams();
+  const encodedClassId = classId ? encodeURIComponent(classId) : "";
   const handleCancel = () => {
     // Update completion status for selected students
-    console.log("Cancle", selectionModel);
+    console.log("Cancle");
+    navigate(`/class/${encodedClassId}/reward`);
   };
 
   return (
