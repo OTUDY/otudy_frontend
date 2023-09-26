@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -76,6 +76,29 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
     onClose(); // Close the dialog
   };
 
+  useEffect(() => {
+    const fetchClassDetail = async () => {
+      try {
+        const response = await axios.get(
+          "https://backend.otudy.co/api/v1/class/get_class_meta_data", // Replace with the correct API endpoint
+          {
+            headers: {
+              Authorization: `Bearer ${cookie.access_token}`,
+            },
+          }
+        );
+        // setClassDetail(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching class detail:", error);
+      }
+    };
+
+    if (isEdit) {
+      fetchClassDetail();
+    }
+  }, [isEdit, cookie.access_token]);
+
   // const handleEdit = async() => {
   //   const body = {
   //     'class_name': className,
@@ -102,7 +125,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add Class</DialogTitle>
+      <DialogTitle>{isEdit ? "Edit Class" : "Add Class"}</DialogTitle>
       <DialogContent>
         <form>
           <TextField
@@ -151,15 +174,27 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
         <Button onClick={onClose} color="primary" variant="outlined">
           Cancel
         </Button>
-        <Button
-          onClick={handleCreate}
-          color="primary"
-          variant="contained"
-          sx={{ minWidth: "100px" }}
-          disabled={!className || classLevel == "class" || !description}
-        >
-          Add
-        </Button>
+        {isEdit ? (
+          <Button
+            onClick={handleCreate}
+            color="primary"
+            variant="contained"
+            sx={{ minWidth: "100px" }}
+            disabled={!className || classLevel == "class" || !description}
+          >
+            Edit
+          </Button>
+        ) : (
+          <Button
+            onClick={handleCreate}
+            color="primary"
+            variant="contained"
+            sx={{ minWidth: "100px" }}
+            disabled={!className || classLevel == "class" || !description}
+          >
+            Add
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );
