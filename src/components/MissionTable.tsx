@@ -84,7 +84,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
 
         if (response.data.missions[i].active_status) {
           const [day, month, year] = response.data.missions[i].expired_date.split("/");
-          const expiredDate: Date = new Date(`${year}-${month}-${day}`);
+          const expiredDate: Date = new Date(`${year - 543}-${month}-${day}`);
           if (new Date() < expiredDate) {
             response.data.missions[i]["active_status"] = "No";
           }
