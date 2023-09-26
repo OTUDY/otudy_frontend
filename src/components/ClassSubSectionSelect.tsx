@@ -1,5 +1,5 @@
-import React from "react";
-import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import React, { useState } from "react";
+import { ButtonGroup, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 interface ClassSubSectionSelectProps {
@@ -10,34 +10,52 @@ const ClassSubSectionSelect: React.FC<ClassSubSectionSelectProps> = ({
   classId,
 }) => {
   const navigate = useNavigate();
+  const [selectedItem, setSelectedItem] = useState("student");
 
-  const handleMenuItemChange = (event: SelectChangeEvent<string>) => {
-    const selectedItem = event.target.value as string;
+  const handleMenuItemClick = (item: string) => {
+    setSelectedItem(item);
+
     const encodedClassId = encodeURIComponent(classId);
 
-    // Navigate to the Mission page if "Mission" is selected
-    if (selectedItem === "student") {
+    // Navigate based on the selected item
+    if (item === "student") {
       navigate(`/class/${encodedClassId}`);
-    } else if (selectedItem === "mission") {
+    } else if (item === "mission") {
       navigate(`/class/${encodedClassId}/mission`);
-    } else if (selectedItem === "reward") {
+    } else if (item === "reward") {
       navigate(`/class/${encodedClassId}/reward`);
-    } else if (selectedItem === "leaderboard") {
+    } else if (item === "leaderboard") {
       navigate(`/class/${encodedClassId}/leaderboard`);
     }
   };
 
   return (
-    <Select
-      // Set the value based on the selectedMenuItem
-      onChange={handleMenuItemChange}
-      sx={{ ".MuiOutlinedInput-notchedOutline": { border: 0 } }}
-    >
-      <MenuItem value="student">Student</MenuItem>
-      <MenuItem value="mission">Mission</MenuItem>
-      <MenuItem value="reward">Reward</MenuItem>
-      <MenuItem value="leaderboard">Leaderboard</MenuItem>
-    </Select>
+    <ButtonGroup variant="outlined" aria-label="class-subsection-select">
+      <Button
+        onClick={() => handleMenuItemClick("student")}
+        variant={selectedItem === "student" ? "contained" : "outlined"}
+      >
+        Student
+      </Button>
+      <Button
+        onClick={() => handleMenuItemClick("mission")}
+        variant={selectedItem === "mission" ? "contained" : "outlined"}
+      >
+        Mission
+      </Button>
+      <Button
+        onClick={() => handleMenuItemClick("reward")}
+        variant={selectedItem === "reward" ? "contained" : "outlined"}
+      >
+        Reward
+      </Button>
+      <Button
+        onClick={() => handleMenuItemClick("leaderboard")}
+        variant={selectedItem === "leaderboard" ? "contained" : "outlined"}
+      >
+        Leaderboard
+      </Button>
+    </ButtonGroup>
   );
 };
 

@@ -43,7 +43,7 @@ const ClassRoom = () => {
       surName: "",
     },
   ]);
-  const [cookie] = useCookies(['access_token']);
+  const [cookie] = useCookies(["access_token"]);
   const { classId } = useParams();
 
   console.log(classId);
@@ -69,12 +69,12 @@ const ClassRoom = () => {
           },
         }
       );
-      console.log('original response:', response.data.classStudents);
+      console.log("original response:", response.data.classStudents);
       for (let i = 0; i < response.data.classStudents.length; i++) {
-        response.data.classStudents[i]["id"] = response.data.classStudents[i]['studentId'];
+        response.data.classStudents[i]["id"] =
+          response.data.classStudents[i]["studentId"];
       }
       setStudentData(response.data.classStudents);
-      
     };
     getClassDetails();
   }, []);
@@ -89,10 +89,12 @@ const ClassRoom = () => {
         <div className="classroom-content">
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>
-              <Typography>
-                Class{classId} /Student
-                {classId && <ClassSubSectionSelect classId={classId} />}
-              </Typography>
+              <div>
+                <Typography variant="h6">
+                  Class{classId}
+                  {classId && <ClassSubSectionSelect classId={classId} />}
+                </Typography>
+              </div>
             </Grid>
             <Grid item xs={12} md={6}>
               <Button
