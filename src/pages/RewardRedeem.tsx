@@ -92,12 +92,7 @@ const RewardRedeem = () => {
               justifyContent: "space-between",
             }}
           >
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleCancel}
-              disabled={selectionModel.length === 0}
-            >
+            <Button variant="outlined" color="primary" onClick={handleCancel}>
               Cancel
             </Button>
             <Button
