@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ButtonGroup, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useClassSubSectionContext } from "../context/ClassSubSectionContext";
 
 interface ClassSubSectionSelectProps {
   classId: string;
@@ -10,7 +11,7 @@ const ClassSubSectionSelect: React.FC<ClassSubSectionSelectProps> = ({
   classId,
 }) => {
   const navigate = useNavigate();
-  const [selectedItem, setSelectedItem] = useState("student");
+  const { selectedItem, setSelectedItem } = useClassSubSectionContext();
 
   const handleMenuItemClick = (item: string) => {
     setSelectedItem(item);
