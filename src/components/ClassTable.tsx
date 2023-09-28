@@ -24,10 +24,10 @@ import { useCookies } from "react-cookie";
 const ClassTable = () => {
   const [rows, setRows] = useState([{
     id: 0,
-    name: '',
-    level: '',
+    class_name: '',
+    class_level: '',
     teacher: '',
-    description: ''
+    class_desc: ''
   }]);
   const okStatus: Number[] = [200, 201, 202];
   const [isEdit, setIsEdit] = useState(false);
@@ -53,6 +53,7 @@ const ClassTable = () => {
       const rows = [];
       for (let i = 0; i < response.data.classes.length; i++) {
         let data = response.data.classes[i];
+        data['id'] = response.data.classes[i].class_name;
         rows.push(data);
       }
       if (!(okStatus.includes(response.status))){
@@ -72,10 +73,10 @@ const ClassTable = () => {
         rows={rows}
         columns={[
           // { field: "classNumber", headerName: "#", width: 150 },
-          { field: "name", headerName: "Class Name", width: 200 },
-          { field: "level", headerName: "Class Level", width: 200 },
+          { field: "class_name", headerName: "Class Name", width: 200 },
+          { field: "class_level", headerName: "Class Level", width: 200 },
           { field: "teacher", headerName: "Class` teacher", width: 250 },
-          { field: "description", headerName: "Class description", width: 550 },
+          { field: "class_desc", headerName: "Class description", width: 550 },
           {
             field: "edit",
             headerName: "Edit",
