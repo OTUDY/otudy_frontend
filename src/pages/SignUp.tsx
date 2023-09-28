@@ -64,7 +64,6 @@ const SignUp: React.FC = () => {
       phone: telephone,
       role: Number(isStudent) + 1,
       affiliation: schoolOrOrganization,
-      class_id: "",
     };
 
     // if (isStudent) {
@@ -79,7 +78,7 @@ const SignUp: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "https://backend.otudy.co/api/v1/user/teacher/register/",
+        "https://backend.otudy.co/api/v1/user/register/",
         body,
         {
           headers: {
