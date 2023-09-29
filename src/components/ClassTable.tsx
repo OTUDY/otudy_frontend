@@ -24,10 +24,11 @@ import { useCookies } from "react-cookie";
 const ClassTable = () => {
   const [rows, setRows] = useState([{
     id: 0,
-    class_name: '',
-    class_level: '',
-    teacher: '',
-    class_desc: ''
+    name: '',
+    level: '',
+    teachers: [].toString(),
+    description: '',
+    totalStudents: 0
   }]);
   const okStatus: Number[] = [200, 201, 202];
   const [isEdit, setIsEdit] = useState(false);
@@ -53,7 +54,9 @@ const ClassTable = () => {
       const rows = [];
       for (let i = 0; i < response.data.classes.length; i++) {
         let data = response.data.classes[i];
-        data['id'] = response.data.classes[i].class_name;
+        response.data.classes[i]['name'] = response.data.classes[i]['id']
+        response.data.classes[i]['teachers'] = response.data.classes[i]['teachers'].toString()
+        response.data.classes[i]['totalStudents'] = response.data.classes[i]['students'].length
         rows.push(data);
       }
       if (!(okStatus.includes(response.status))){
@@ -73,10 +76,11 @@ const ClassTable = () => {
         rows={rows}
         columns={[
           // { field: "classNumber", headerName: "#", width: 150 },
-          { field: "class_name", headerName: "Class Name", width: 200 },
-          { field: "class_level", headerName: "Class Level", width: 200 },
-          { field: "teacher", headerName: "Class` teacher", width: 250 },
-          { field: "class_desc", headerName: "Class description", width: 550 },
+          { field: "name", headerName: "Class Name", width: 200 },
+          { field: "level", headerName: "Class Level", width: 200 },
+          { field: "teachers", headerName: "Class` teacher", width: 250 },
+          { field: "description", headerName: "Class description", width: 250 },
+          { field: "totalStudents", headerName: "Total students", width: 150 },
           {
             field: "edit",
             headerName: "Edit",
