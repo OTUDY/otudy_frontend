@@ -30,7 +30,7 @@ const Mission = () => {
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>
               <Typography variant="h6">
-                Class{classId}{" "}
+                Class {classId}{" "}
                 {classId && <ClassSubSectionSelect classId={classId} />}
               </Typography>
             </Grid>

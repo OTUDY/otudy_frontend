@@ -32,8 +32,8 @@ const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {
   const columns: GridColDef[] = [
     { field: "id", headerName: "No.", width: 150 },
     { field: "firstName", headerName: "First Name", width: 200 },
-    { field: "surName", headerName: "Last Name", width: 200 },
-    { field: "point", headerName: "Point", width: 200 },
+    { field: "lastName", headerName: "Last Name", width: 200 },
+    { field: "points", headerName: "Point", width: 200 },
     {
       field: "edit",
       headerName: "Edit",

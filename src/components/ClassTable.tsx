@@ -56,7 +56,7 @@ const ClassTable = () => {
         let data = response.data.classes[i];
         response.data.classes[i]['name'] = response.data.classes[i]['id']
         response.data.classes[i]['teachers'] = response.data.classes[i]['teachers'].toString()
-        response.data.classes[i]['totalStudents'] = response.data.classes[i]['students'].length
+        //response.data.classes[i]['totalStudents'] = response.data.classes[i]['students'].length
         rows.push(data);
       }
       if (!(okStatus.includes(response.status))){

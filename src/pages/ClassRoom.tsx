@@ -71,11 +71,11 @@ const ClassRoom = () => {
         }
       );
       console.log("original response:", response.data.classStudents);
-      for (let i = 0; i < response.data.classStudents.length; i++) {
-        response.data.classStudents[i]["id"] = Number(response.data.classStudents[i]["InclassNo"]);
+      for (let i = 0; i < response.data.students.length; i++) {
+        response.data.students[i]["id"] = Number(response.data.students[i]["InClassNo"]);
       }
-      setStudentData(response.data.classStudents);
-      console.log(response.data.classStudents);
+      setStudentData(response.data.students);
+      console.log(response.data.students);
     };
     getClassDetails();
   }, []);

@@ -69,7 +69,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
     const getMissionsData = async () => {
       const classIdEncoded: any = encodeURIComponent(currentClass);
       const response: any = await axios.get(
-        `https://backend.otudy.co/api/v1/mission/get_all_missions?_class=${classIdEncoded}`,
+        `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classIdEncoded}`,
         {
           headers: {
             Accept: "application/json",
@@ -77,28 +77,25 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
           },
         }
       );
-      const activeMissions = [];
-      const unactiveMissions = [];
-      for (let i = 0; i < response.data.missions.length; i++) {
-        response.data.missions[i]["id"] = i;
-
-        if (response.data.missions[i].active_status) {
-          const [day, month, year] = response.data.missions[i].expired_date.split("/");
-          const expiredDate: Date = new Date(`${year - 543}-${month}-${day}`);
-          if (new Date() < expiredDate) {
-            response.data.missions[i]["active_status"] = "No";
+      const missionResponse: any[]= response.data.missions;
+      const activeMissions: any[] = [];
+      const unactiveMissions: any[] = [];
+      for (let i = 0; i < missionResponse.length; i++) {
+        const expiredDate = missionResponse[i].expiredDate.replaceAll("/", '-');
+        if (new Date() > new Date(expiredDate)) {
+          missionResponse[i]["activeStatus"] = "No";
+          unactiveMissions.push(missionResponse[i])
           }
-          else {
-            response.data.missions[i]["active_status"] = "Yes";
+        else {
+          missionResponse[i]["activeStatus"] = "Yes";
+          activeMissions.push(missionResponse[i]);
           } 
-          activeMissions.push(response.data.missions[i]);
-        } else {
-          response.data.missions[i]["active_status"] = "No";
-          unactiveMissions.push(response.data.missions[i]);
+        //console.log(`${missionResponse[i]['expiredDate'].replaceAll('/', '-')}`);
+        //console.log(new Date(`${year}-${month.length > 1? month: `0${month}`}-${day.length == 1? `0${day}`: day}`));
         }
-      }
       setRows(activeMissions);
       setUnactiveMissions(unactiveMissions as any);
+      //console.log(missionResponse);
     };
     getMissionsData();
   }, []);
@@ -114,9 +111,9 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
             headerName: "Mission Description",
             width: 350,
           },
-          { field: "redeem_points", headerName: "Reward Point", width: 150 },
-          { field: "active_status", headerName: "Active Status", width: 200 },
-          { field: "expired_date", headerName: "Expired Date", width: 200 },
+          { field: "receivedPoints", headerName: "Reward Point", width: 150 },
+          { field: "activeStatus", headerName: "Active Status", width: 200 },
+          { field: "expiredDate", headerName: "Expired Date", width: 200 },
           { field: "tags", headerName: "Tags subjects", width: 250 },
           {
             field: "edit",
@@ -139,9 +136,9 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
         ]}
         onRowClick={(params) => {
           handleOpenCompleteStatus();
-          setCookie('mission_id', params.row.name);
+          setCookie('mission_id', params.row.id);
           // Navigate to mission details page or handle as needed
-          console.log("Mission ID:", params.row.name);
+          console.log("Mission ID:", params.row.id);
           
           //getInDepthMissionDetail();
           // Navigate to mission details page or handle as needed

@@ -35,6 +35,8 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
   let activeStatus = true;
   const [tagsInput, setTagsInput] = useState("Tags");
   const [cookie] = useCookies(["access_token"]);
+  const [amount, setAmount] = useState(0);
+  const [tempId, setTempId] = useState('');
 
   const handleTagsChange = (event: {
     target: { value: React.SetStateAction<string> };
@@ -50,12 +52,14 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
     });
 
     const body = {
+      mission_id: tempId,
       mission_name: missionTitle,
       mission_desc: missionDescription,
       mission_points: rewardPoints,
       mission_active_status: activeStatus,
       mission_class_id: classId,
       mission_expired_date: dueDate,
+      slot_amount: amount,
       tags: tagsToSendCreate,
     };
     const headers = {
@@ -65,7 +69,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
 
     if (!isEdit) {
       const response = await axios.post(
-        "https://backend.otudy.co/api/v1/mission/create_mission",
+        "http://localhost:8000/api/v1/mission/create_mission",
         body,
         {
           headers: headers,
@@ -106,6 +110,13 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
       <DialogTitle>Create new mission</DialogTitle>
       <DialogContent>
         <form>
+        <TextField
+            label="Mission ID"
+            value={tempId}
+            onChange={(e) => setTempId(e.target.value)}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+          />
           <TextField
             label="Mission Name"
             value={missionTitle}
@@ -137,6 +148,13 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
             label="Due Date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+          />
+          <TextField
+            label="Amount"
+            value={amount}
+            onChange={(e) => setAmount(Number(e.target.value))}
             fullWidth
             sx={{ marginBottom: 2 }}
           />
