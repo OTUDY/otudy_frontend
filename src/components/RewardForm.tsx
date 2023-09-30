@@ -17,15 +17,17 @@ interface RewardFormProps {
   onClose: () => void;
   classId: string;
   isEdit: boolean;
+  data: any;
 }
 
-const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
-  const [title, setTitle] = useState("");
-  const [point, setPoint] = useState(0);
-  const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState(0);
-  const [expiredDate, setExpiredDate] = useState("");
+const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId, isEdit, data }) => {
+  const [title, setTitle] = useState(data.name);
+  const [point, setPoint] = useState(data.spentPoints);
+  const [description, setDescription] = useState(data.description);
+  const [amount, setAmount] = useState(data.slotsAmount);
+  const [expiredDate, setExpiredDate] = useState(data.expiredDate);
   const [cookie] = useCookies(['access_token']);
+
 
   const handleCreateAndEdit = async() => {
     console.log("Title:", title);
@@ -34,37 +36,74 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
     console.log("Amount:", amount);
     console.log("ExpiredDate:", expiredDate);
 
+    if (isEdit) {
+      
+      const body = {
+        reward_id: data.id,
+        reward_name: title,
+        reward_desc: description,
+        reward_pic: '',
+        reward_spent_points: point,
+        expired_date: expiredDate,
+        class_id: classId,
+        amount: amount
+      };
+      const url = `http://localhost:8000/api/v1/reward/update_reward_detail`;
+      const response = await axios.put(url, body, {
+        headers: {
+          "Content-Type": 'application/json',
+          Authorization: `Bearer ${cookie.access_token}`
+        }
+      })
+    
+    if (response.status == 200 || response.status == 201 || response.status == 202) {
+      console.log('Successfully editted');
+    }
+    else {
+      console.error('Error: Something gone wrong.');
+      //show modal here
+    }
+  } else {
     const body = {
       reward_name: title,
       reward_desc: description,
       reward_pic: '',
       reward_spent_points: point,
-      reward_active_status: true,
+      expired_date: expiredDate,
       class_id: classId,
       amount: amount
     };
     const url = `https://backend.otudy.co/api/v1/reward/create_reward`;
-    const response = await axios.post(url, body, {
-      headers: {
-        "Content-Type": 'application/json',
-        Authorization: `Bearer ${cookie.access_token}`
-      }
-    })
+      const response = await axios.post(url, body, {
+        headers: {
+          "Content-Type": 'application/json',
+          Authorization: `Bearer ${cookie.access_token}`
+        }
+      })
+    
     if (response.status == 200 || response.status == 201 || response.status == 202) {
-
+      console.log('Successfully created.');
     }
     else {
-      console.error('Error: Something gone wrong.')
+      console.error('Error: Something gone wrong.');
       //show modal here
     }
+  }
     onClose();
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add Reward</DialogTitle>
+      <DialogTitle>{isEdit? 'Edit Reward Detail': 'Create a Reward'}</DialogTitle>
       <DialogContent>
         <form>
+          <TextField
+            label="id"
+            value={data['id']}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+            disabled={true}
+          />
           <TextField
             label="Title"
             value={title}
@@ -109,7 +148,7 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId }) => {
           Cancel
         </Button>
         <Button onClick={handleCreateAndEdit} color="primary">
-          Create
+          {isEdit? "Edit": "Create"}
         </Button>
       </DialogActions>
     </Dialog>

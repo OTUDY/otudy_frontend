@@ -41,6 +41,15 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
       student: "",
     },
   ]);
+  const [currentMission] = useState({
+    id: "",
+    name: "",
+    description: "",
+    receivedPoints: 0,
+    expiredDate: "",
+    tags: [],
+    slotsAmount: 0
+  });
 
   const [missionId] = useState("");
 
@@ -124,9 +133,20 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
                 aria-label="edit"
                 color="primary"
                 onClick={(e) => {
+                  setIsEdit(true);
+                  // setCurrentMission({
+                  //   id: params.row.id,
+                  //   name: params.row.name,
+                  //   description: params.row.description,
+                  //   receivedPoints: params.row.receivedPoints,
+                  //   expiredDate: params.row.expiredDate,
+                  //   tags: params.row.tags,
+                  //   slotsAmount: params.row.slotsAmount
+                  // })
+                  //console.log(currentMission);
                   e.stopPropagation();
                   handleOpenAddMissionForm();
-                  setIsEdit(true);
+                  //console.log(currentMission);
                 }}
               >
                 <EditIcon />
@@ -155,6 +175,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
         onClose={handleCloseAddMissionForm}
         classId={currentClass as string}
         isEdit={isEdit}
+        data={currentMission as any}
       />
       <MissionCompleteList
         missionId={missionId}

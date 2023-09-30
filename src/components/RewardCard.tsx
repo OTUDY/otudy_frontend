@@ -4,21 +4,25 @@ import RewardForm from "./RewardForm";
 import { useNavigate } from "react-router-dom";
 
 interface RewardCardProps {
-  reward_name: string;
-  reward_spent_points: Number;
-  reward_desc: string;
-  reward_active_status: string;
-  reward_amount: Number;
+  id: any;
+  name: string;
+  spentPoints: Number;
+  description: string;
+  activeStatus: string;
+  slotsAmount: Number;
   classId: string;
+  expiredDate: string;
 }
 
 const RewardCard: React.FC<RewardCardProps> = ({
-  reward_name,
-  reward_spent_points,
-  reward_desc,
-  reward_active_status,
-  reward_amount,
-  classId
+  id,
+  name,
+  spentPoints,
+  description,
+  activeStatus,
+  slotsAmount,
+  classId,
+  expiredDate
 }) => {
   const [isRewardFormOpen, setIsRewardFormOpen] = useState(false);
   const navigate = useNavigate();
@@ -45,16 +49,17 @@ const RewardCard: React.FC<RewardCardProps> = ({
       onClick={handleCardClick}
     >
       <CardContent>
-        <Typography variant="h6">{reward_name}</Typography>
+        <Typography variant="h5">{name}</Typography>
+        <Typography variant="h6">{`rewardId = ${id}`}</Typography>
         <Typography variant="subtitle1">
-          Point: {reward_spent_points.toString()}
+          Point: {spentPoints.toString()}
         </Typography>
-        <Typography variant="body2">Description: {reward_desc}</Typography>
+        <Typography variant="body2">Description: {description}</Typography>
         <Typography variant="body2">
-          Active Status: {reward_active_status}
+          Active Status: {activeStatus}
         </Typography>
         <Typography variant="body2">
-          Amount: {reward_amount.toString()}
+          Amount: {slotsAmount.toString()}
         </Typography>
       </CardContent>
       <Button
@@ -74,6 +79,16 @@ const RewardCard: React.FC<RewardCardProps> = ({
         onClose={handleCloseRewardForm}
         classId={classId}
         isEdit={isEdit}
+        data={
+          {
+            id: id,
+            name: name,
+            spentPoints: spentPoints,
+            description: description,
+            expiredDate: expiredDate,
+            slotsAmount: slotsAmount,
+          }
+        }
       />
     </Card>
   );

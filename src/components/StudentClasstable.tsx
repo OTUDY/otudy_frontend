@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete"
 import StudentClassForm from "./StudentClassForm";
 import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -45,11 +46,31 @@ const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {
           onClick={(e) => {
             e.stopPropagation();
             handleEditStudent();
-            setCookies("currentStudentId",`${params.row.firstName}.${params.row.surName}`);
+            setCookies("currentStudentId",`${params.row.firstName}.${params.row.lastName}`);
+            //console.log(cookies.currentStudentId);
+          }}
+          disabled={true}
+        >
+          <EditIcon/>
+        </IconButton>
+      ),
+    },
+    {
+      field: "delete",
+      headerName: "Delete",
+      width: 100,
+      renderCell: (params: any) => (
+        <IconButton
+          aria-label="delete"
+          color="primary"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEditStudent();
+            setCookies("currentStudentId",`${params.row.firstName}.${params.row.lastName}`);
             //console.log(cookies.currentStudentId);
           }}
         >
-          <EditIcon />
+          <DeleteIcon />
         </IconButton>
       ),
     },

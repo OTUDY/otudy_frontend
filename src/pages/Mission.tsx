@@ -60,6 +60,15 @@ const Mission = () => {
         open={isAddMissionOpen}
         onClose={handleCloseAddMission}
         isEdit={false}
+        data={{
+          id: "",
+          name: "",
+          description: "",
+          receivedPoints: 0,
+          expiredDate: "",
+          tags: "",
+          slotsAmount: 0
+        }}
       />
     </div>
   );

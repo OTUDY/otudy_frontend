@@ -23,13 +23,14 @@ const Reward = () => {
   const [rewards, setRewards] = useState([
     {
       id: 0,
-      reward_name: "",
-      reward_spent_points: 0,
-      reward_desc: "",
-      reward_pic: "",
-      reward_active_status: "",
-      reward_amount: 0,
+      name: "",
+      spentPoints: 0,
+      description: "",
+      pic: "",
+      activeStatus: "",
+      slotsAmount: 0,
       classId: classId as string,
+      expiredDate: ''
     },
   ]);
   const [cookie] = useCookies(["access_token"]);
@@ -37,22 +38,23 @@ const Reward = () => {
   useEffect(() => {
     const fetchData = async () => {
       const classIdEncoded = encodeURIComponent(classId as string);
-      const url = `https://backend.otudy.co/api/v1/reward/get_all_rewards?_class=${classIdEncoded}`;
+      const url = `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classIdEncoded}`;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${cookie.access_token}`,
         },
       });
-      for (let i = 0; i < response.data.rewards.length; i++) {
-        response.data.rewards[i]["id"] = i;
-        if (response.data.rewards[i]["reward_active_status"]) {
-          response.data.rewards[i]["reward_active_status"] = "เปิดให้แลก";
+      const rewardData: any[] = response.data.rewards;
+      for (let i = 0; i < rewardData.length; i++) {
+        if (new Date() < new Date(rewardData[i]['expiredDate'].replaceAll('/', '-'))) {
+          response.data.rewards[i]["activeStatus"] = "เปิดให้แลก";
         } else {
-          response.data.rewards[i]["reward_active_status"] = "ไม่เปิดให้แลก";
+          response.data.rewards[i]["activeStatus"] = "ไม่เปิดให้แลก";
         }
         response.data.rewards[i]["classId"] = classId as string;
       }
-      setRewards(response.data.rewards);
+      setRewards(rewardData);
+      console.log(rewardData);
     };
     fetchData();
   }, []);
@@ -96,6 +98,16 @@ const Reward = () => {
         onClose={handleCloseAddReward}
         classId={classId as string}
         isEdit={false}
+        data={
+          {
+            id: "ไม่ต้องกรอก",
+            name: "",
+            spentPoints: 0,
+            description: "",
+            expiredDate: "",
+            slotsAmount: 0,
+          }
+        }
       />
     </div>
   );
