@@ -48,7 +48,7 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId, isEdit,
         class_id: classId,
         amount: amount
       };
-      const url = `http://localhost:8000/api/v1/reward/update_reward_detail`;
+      const url = `https://backend.otudy.co/api/v1/reward/update_reward_detail`;
       const response = await axios.put(url, body, {
         headers: {
           "Content-Type": 'application/json',
