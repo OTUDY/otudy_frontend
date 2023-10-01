@@ -1,22 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 
 interface MissionCompleteListProps {
   missionId: string;
   open: boolean;
   onClose: () => void;
   classId: string;
-  data: object[];
 }
 
 const columns = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "student", headerName: "Student ID", width: 150 },
-  { field: "firstname", headerName: "FirstName", width: 150 },
-  { field: "surname", headerName: "LastName", width: 150 },
-  { field: "status", headerName: "Current Status", width: 200 },
+  { field: "id", headerName: "รหัส", width: 70 },
+  { field: "inClassNo", headerName: "เลขที่", width: 150 },
+  { field: "firstName", headerName: "ชื่อจริง", width: 150 },
+  { field: "lastName", headerName: "นามสกุล", width: 150 },
+  { field: "status", headerName: "สถานะปัจจุบัน", width: 200 },
 ];
 
 const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
@@ -24,11 +25,12 @@ const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
   open,
   onClose,
   classId,
-  data,
 }) => {
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>(
     []
   );
+  const [data, setData] = useState([{}]);
+  const [cookies] = useCookies(['access_token']);
 
   const handleComplete = () => {
     // Update completion status for selected students
@@ -37,6 +39,22 @@ const MissionCompleteList: React.FC<MissionCompleteListProps> = ({
     console.log(classId);
   };
   const handleDeny = async () => {};
+
+  useEffect(() => {
+    const fetchData = async() => {
+      const response = await axios.get(`https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${encodeURIComponent(classId)}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.access_token}`
+        }
+      });
+      const studentsData = response.data.students;
+      for (let i = 0; i < studentsData.length; i++) {
+        studentsData[i]['status'] = 'ยังไม่ได้รับมอบหมาย';
+      }
+      setData(studentsData);
+    }
+    fetchData();
+  }, [])
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="md">

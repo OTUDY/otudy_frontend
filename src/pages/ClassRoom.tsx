@@ -35,6 +35,7 @@ const ClassRoom = () => {
   //   return students;
   // };
   //const sampleStudentData = generateSampleStudentData(2);
+  const [className, setClassName] = useState('');
   const [studentData, setStudentData] = useState([
     {
       studentId: "",
@@ -46,6 +47,12 @@ const ClassRoom = () => {
   ]);
   const [cookie] = useCookies(["access_token"]);
   const { classId } = useParams();
+  const formData = {
+    id: '',
+    firstName: '',
+    lastName: '',
+    inClassId: 0
+  };
 
   console.log(classId);
   const [isAddStudentClassFormOpen, setIsAddStudentClassFormOpen] =
@@ -70,12 +77,9 @@ const ClassRoom = () => {
           },
         }
       );
-      console.log("original response:", response.data.classStudents);
-      for (let i = 0; i < response.data.students.length; i++) {
-        response.data.students[i]["id"] = Number(response.data.students[i]["InClassNo"]);
-      }
+      console.log(response.data);
       setStudentData(response.data.students);
-      console.log(response.data.students);
+      setClassName(response.data.name);
     };
     getClassDetails();
   }, []);
@@ -92,7 +96,7 @@ const ClassRoom = () => {
             <Grid item xs={12} md={6}>
               <div>
                 <Typography variant="h6">
-                  Class{classId}{" "}
+                  {`ห้องเรียน:  ${className} (${classId})`}{' '}
                   {classId && <ClassSubSectionSelect classId={classId} />}
                 </Typography>
               </div>
@@ -104,7 +108,7 @@ const ClassRoom = () => {
                 sx={{ marginBottom: 2 }}
                 onClick={handleOpenAddStudentClassForm}
               >
-                Add Student
+                เพิ่มนักเรียน
               </Button>
             </Grid>
           </Grid>
@@ -116,6 +120,7 @@ const ClassRoom = () => {
         onClose={handleCloseAddStudentClassForm}
         classId={classId as string}
         isEdit={false}
+        data={formData}
       />
     </div>
   );

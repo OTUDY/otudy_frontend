@@ -128,27 +128,27 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{isEdit ? "Edit Class" : "Add Class"}</DialogTitle>
+      <DialogTitle>{isEdit ? "แก้ไขข้อมูลห้องเรียน" : "เพิ่มห้องเรียน"}</DialogTitle>
       <DialogContent>
         <form>
           <TextField
-            label="Class Name"
+            label="ชื่อห้องเรียน"
             value={className}
             onChange={(e) => setClassName(e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
           />
           <Select
-            label="Class Level"
+            label="ระดับชั้น"
             value={classLevel}
             onChange={handleClassLevelChange}
             fullWidth
-            renderValue={(value) => (!value ? value : "Select Class Level")}
+            renderValue={(value) => (!value ? value : "เลือกระดับชั้น")}
             variant="outlined"
             sx={{ marginBottom: 2 }}
           >
             <MenuItem disabled value="">
-              <em>Please select a class level</em>
+              <em>เลือกระดับชั้น</em>
             </MenuItem>
             <MenuItem value="อนุบาล">อนุบาล</MenuItem>
             <MenuItem value="ประถมต้น">ประถมต้น</MenuItem>
@@ -157,7 +157,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
             <MenuItem value="มัธยมปลาย">มัธยมปลาย</MenuItem>
           </Select>
           <TextField
-            label="Description"
+            label="คำอธิบาย"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             fullWidth
@@ -175,7 +175,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
         }}
       >
         <Button onClick={onClose} color="primary" variant="outlined">
-          Cancel
+          ยกเลิก
         </Button>
         {isEdit ? (
           <Button
@@ -185,7 +185,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
             sx={{ minWidth: "100px" }}
             disabled={!className || classLevel == "class" || !description}
           >
-            Edit
+            แก้ไข
           </Button>
         ) : (
           <Button
@@ -195,7 +195,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
             sx={{ minWidth: "100px" }}
             disabled={!className || classLevel == "class" || !description}
           >
-            Add
+            เพิ่ม
           </Button>
         )}
       </DialogActions>

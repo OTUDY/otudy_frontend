@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import MissionForm from "./MissionForm";
 import MissionCompleteList from "./MissionCompleteList";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,7 @@ interface IsActiveMissionTable {
 
 const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
   //const [rows, setRows] = useState([]);
+  const [cookies] = useCookies(['access_token']);
   const [isAddMissionFormOpen, setIsAddMissionFormOpen] = useState(false);
   const [rows, setRows] = useState([
     {
@@ -29,18 +31,10 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
       tags: "",
     },
   ]);
-  const [cookie, setCookie] = useCookies(["access_token", 'mission_id']);
+  const [cookie, setCookie] = useCookies(["access_token", 'missionId']);
   const [unactiveMissions, setUnactiveMissions] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const currentClass: string = classId;
-  const [missionDetail] = useState([
-    {
-      firstname: "",
-      surname: "",
-      status: "",
-      student: "",
-    },
-  ]);
   const [currentMission] = useState({
     id: "",
     name: "",
@@ -73,6 +67,19 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
     setViewCompleteStatus(false);
   };
 
+  const deleteMission = async( id: string ) => {
+    const idEncoded = encodeURIComponent(id);
+    const classIdEncoded: any = encodeURIComponent(currentClass);
+    const response = await axios.delete(`https://backend.otudy.co/api/v1/mission/delete_mission?mission_name=${idEncoded}&_class=${classIdEncoded}`, {
+      headers: {
+        Authorization: `Bearer ${cookies.access_token}`
+      }
+    })
+    if (response.status == 200) {
+      console.log(response.data);
+      //window.location.reload();
+    }
+  }
 
   useEffect(() => {
     const getMissionsData = async () => {
@@ -113,27 +120,28 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
       <DataGrid
         rows={active ? rows : unactiveMissions}
         columns={[
-          { field: "id", headerName: "Mission Id", width: 150 },
-          { field: "name", headerName: "Mission Name", width: 200 },
+          { field: "id", headerName: "รหัสภารกิจ", width: 150 },
+          { field: "name", headerName: "ชื่อภารกิจ", width: 200 },
           {
             field: "description",
-            headerName: "Mission Description",
+            headerName: "คำอธิบายภารกิจ",
             width: 350,
           },
-          { field: "receivedPoints", headerName: "Reward Point", width: 150 },
-          { field: "activeStatus", headerName: "Active Status", width: 200 },
-          { field: "expiredDate", headerName: "Expired Date", width: 200 },
-          { field: "tags", headerName: "Tags subjects", width: 250 },
+          { field: "receivedPoints", headerName: "คะแนนรางวัล", width: 150 },
+          { field: "activeStatus", headerName: "สถานะ", width: 200 },
+          { field: "expiredDate", headerName: "วันหมดอายุ", width: 200 },
+          { field: "tags", headerName: "แท็ก", width: 250 },
           {
             field: "edit",
-            headerName: "Edit",
+            headerName: "แก้ไข",
             width: 100,
-            renderCell: () => (
+            renderCell: (params) => (
               <IconButton
                 aria-label="edit"
                 color="primary"
                 onClick={(e) => {
                   setIsEdit(true);
+                  console.log(params.row)
                   // setCurrentMission({
                   //   id: params.row.id,
                   //   name: params.row.name,
@@ -153,10 +161,39 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
               </IconButton>
             ),
           },
+          {
+            field: "delete",
+            headerName: "ลบ",
+            width: 100,
+            renderCell: (params) => (
+              <IconButton
+                aria-label="delete"
+                color="primary"
+                onClick={(e) => {
+                  console.log(params.row)
+                  // setCurrentMission({
+                  //   id: params.row.id,
+                  //   name: params.row.name,
+                  //   description: params.row.description,
+                  //   receivedPoints: params.row.receivedPoints,
+                  //   expiredDate: params.row.expiredDate,
+                  //   tags: params.row.tags,
+                  //   slotsAmount: params.row.slotsAmount
+                  // })
+                  //console.log(currentMission);
+                  e.stopPropagation();
+                  deleteMission(params.row.id);
+                  //console.log(currentMission);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            ),
+          },
         ]}
         onRowClick={(params) => {
           handleOpenCompleteStatus();
-          setCookie('mission_id', params.row.id);
+          setCookie('missionId', params.row.id);
           // Navigate to mission details page or handle as needed
           console.log("Mission ID:", params.row.id);
           
@@ -182,7 +219,6 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
         open={viewCompleteStatus}
         onClose={handleCloseCompleteStatus}
         classId={currentClass}
-        data={missionDetail}
       />
     </div>
   );

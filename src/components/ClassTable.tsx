@@ -54,7 +54,6 @@ const ClassTable = () => {
       const rows = [];
       for (let i = 0; i < response.data.classes.length; i++) {
         let data = response.data.classes[i];
-        response.data.classes[i]['name'] = response.data.classes[i]['id']
         response.data.classes[i]['teachers'] = response.data.classes[i]['teachers'].toString()
         //response.data.classes[i]['totalStudents'] = response.data.classes[i]['students'].length
         rows.push(data);
@@ -75,15 +74,15 @@ const ClassTable = () => {
       <DataGrid
         rows={rows}
         columns={[
-          // { field: "classNumber", headerName: "#", width: 150 },
-          { field: "name", headerName: "Class Name", width: 200 },
-          { field: "level", headerName: "Class Level", width: 200 },
-          { field: "teachers", headerName: "Class` teacher", width: 250 },
-          { field: "description", headerName: "Class description", width: 250 },
-          { field: "totalStudents", headerName: "Total students", width: 150 },
+          { field: "id", headerName: "ไอดี", width: 150 },
+          { field: "name", headerName: "ชื่อห้องเรียน", width: 200 },
+          { field: "level", headerName: "ระดับชั้นการศึกษา", width: 200 },
+          { field: "teachers", headerName: "ครูประจำห้อง", width: 250 },
+          { field: "description", headerName: "คำอธิบาย", width: 250 },
+          { field: "totalStudents", headerName: "จำนวนนักเรียนทั้งหมด", width: 150 },
           {
             field: "edit",
-            headerName: "Edit",
+            headerName: "แก้ไข",
             width: 100,
             renderCell: () => (
               <IconButton

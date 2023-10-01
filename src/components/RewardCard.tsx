@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import RewardForm from "./RewardForm";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 
 interface RewardCardProps {
   id: any;
@@ -28,9 +30,24 @@ const RewardCard: React.FC<RewardCardProps> = ({
   const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState(false);
   const encodedClassId = encodeURIComponent(classId);
+  const [cookies] = useCookies(['access_token']);
   const handleTeacherRedeem = () => {
     navigate(`/class/${encodedClassId}/reward-redeem`);
   };
+
+  const handleDeleteReward = async() => {
+    const idEncoded = encodeURIComponent(id);
+    const classIdEncoded = encodeURIComponent(classId);
+    const response = await axios.delete(`https://backend.otudy.co/api/v1/reward/delete_reward?reward_name=${idEncoded}&_class=${classIdEncoded}`, {
+      headers: {
+        Authorization: `Bearer ${cookies.access_token}`
+      }
+    })
+    if (response.status == 200) {
+      console.log(response.data);
+      //window.location.reload();
+    }
+  }
 
   const handleCardClick = () => {
     setIsEdit(true);
@@ -69,10 +86,22 @@ const RewardCard: React.FC<RewardCardProps> = ({
         sx={{
           position: "absolute",
           bottom: 10,
-          right: 10,
+          right: 80
         }}
       >
         Redeem
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleDeleteReward}
+        sx={{
+          position: "absolute",
+          bottom: 10,
+          right: 10,
+        }}
+      >
+        ลบ
       </Button>
       <RewardForm
         open={isRewardFormOpen}

@@ -9,17 +9,16 @@ import axios from "axios";
 
 const MissionStatus = () => {
   const columns = [
-    { field: "id", headerName: "ID", width: 70 },
-    { field: "student", headerName: "Student ID", width: 150 },
-    { field: "firstname", headerName: "FirstName", width: 150 },
-    { field: "surname", headerName: "LastName", width: 150 },
-    { field: "status", headerName: "Current Status", width: 200 },
+    { field: "id", headerName: "รหัส", width: 150 },
+    { field: "inClassId", headerName: "เลขที่", width: 150 },
+    { field: "firstName", headerName: "ชื่อจริง", width: 150 },
+    { field: "lastName", headerName: "นามสกุล", width: 150 },
+    { field: "status", headerName: "สถานะปัจจุบัน", width: 200 },
   ];
 
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>(
     []
   );
-
   //temporary data
   // const [missionDetail, setMissionDetail] = useState([
   //   {
@@ -40,76 +39,72 @@ const MissionStatus = () => {
       student: "123456",
     },
   ]);
-
   const navigate = useNavigate();
   const { classId } = useParams();
   const handleClose = () => {
     navigate(`/class/${classId}/mission`);
   };
-  const [cookies] = useCookies(["mission_id", "access_token"]);
+  const [cookies] = useCookies(["missionId", "access_token"]);
 
   const handleComplete = async() => {
     // Update completion status for selected students
     console.log("Selected Students:", selectionModel);
     for (let i = 0; i < selectionModel.length; i++) {
-      let index: any = selectionModel[i];
-      const studentId = missionDetail[index].student
-      console.log(studentId);
-      const response = await axios.get(`https://backend.otudy.co/api/v1/mission/update_mission_student_status?student_id=${encodeURIComponent(studentId)}&mission_name=${encodeURIComponent(cookies.mission_id)}&status_=${encodeURIComponent("approve")}&_class=${classId}`, {
+      const response = await axios.get(`https://backend.otudy.co/api/v1/mission/change_mission_status?_class=${encodeURIComponent(classId as string)}&student_id=${encodeURIComponent(selectionModel[i])}&mission_id=${encodeURIComponent(cookies.missionId)}&_status=${encodeURIComponent('เสร็จสิ้นภารกิจ')}`, {
         headers: {
-          Authorization: `Bearer ${cookies.access_token}`
+          'Authorization': `Bearer ${cookies.access_token}`
         }
       });
-      if (response.status == 200 || response.status == 201 || response.status == 202) {
+      if (response.status == 200) {
         console.log(response.data);
       }
-      else {
-        console.error(response.data);
-      }
-    };
-
+    }
+    //window.location.reload();
+    
   };
   const handleDeny = async () => {
     for (let i = 0; i < selectionModel.length; i++) {
-      let index: any = selectionModel[i];
-      const studentId = missionDetail[index].student
-      const response = await axios.get(`https://backend.otudy.co/api/v1/mission/update_mission_student_status?student_id=${encodeURIComponent(studentId)}&mission_name=${encodeURIComponent(cookies.mission_id)}&status_=${encodeURIComponent("deny")}&_class=${classId}`, {
+      const response = await axios.get(`https://backend.otudy.co/api/v1/mission/change_mission_status?_class=${encodeURIComponent(classId as string)}&student_id=${encodeURIComponent(selectionModel[i])}&mission_id=${encodeURIComponent(cookies.missionId)}&_status=${encodeURIComponent('ปฏิเสธการมอบหมาย')}`, {
         headers: {
-          Authorization: `Bearer ${cookies.access_token}`
+          'Authorization': `Bearer ${cookies.access_token}`
         }
       });
-      if (response.status == 200 || response.status == 201 || response.status == 202) {
+      if (response.status == 200) {
         console.log(response.data);
       }
-      else {
-        console.error(response.data);
-      }
-  };
+    }
+    //window.location.reload();
 }
+  const handleAssign = async() => {
+    for (let i = 0; i < selectionModel.length; i++) {
+      const response = await axios.get(`https://backend.otudy.co/api/v1/mission/change_mission_status?_class=${encodeURIComponent(classId as string)}&student_id=${encodeURIComponent(selectionModel[i])}&mission_id=${encodeURIComponent(cookies.missionId)}&_status=${encodeURIComponent('ได้รับมอบหมาย')}`, {
+        headers: {
+          'Authorization': `Bearer ${cookies.access_token}`
+        }
+      });
+      if (response.status == 200) {
+        console.log(response.data);
+      }
+    }
+    //window.location.reload();
+  }
 
   useEffect(() => {
     const fetchData = async() => {
-      const response = await axios.get(`https://backend.otudy.co/api/v1/mission/get_on_going_missions_by_mission?_class=${classId}&mission_name=${encodeURIComponent(cookies.mission_id)}`, {
+      const response = await axios.get(`https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classId}`, {
         headers: {
           Authorization: `Bearer ${cookies.access_token}`
         }
       })
-      for (let i = 0; i < response.data.on_going_missions.length; i++){
-        response.data.on_going_missions[i]['id'] = i;
-        if (response.data.on_going_missions[i]['status'] == 2) {
-          response.data.on_going_missions[i]['status'] = 'Pending Approval';
-        }
-        else if (response.data.on_going_missions[i]['status'] == 0) {
-          response.data.on_going_missions[i]['status'] = 'Denied';
-        }
-        else {
-          response.data.on_going_missions[i]['status'] = 'Approved';
+      console.log(cookies.missionId)
+      for (let i = 0; i < response.data.missions.length; i++) {
+        if (response.data.missions[i].id === cookies.missionId) {
+          setMissionDetail(response.data.missions[i]['onGoingStatus'])
         }
       }
-      setMissionDetail(response.data.on_going_missions)
     }
     fetchData();
-  }, [])
+  }, [cookies.missionId])
 
   return (
     <div className="page-container">
@@ -119,7 +114,7 @@ const MissionStatus = () => {
       <div className="classroom-container">
         <div className="classroom-content">
           <Typography variant="h4" sx={{ marginTop: "20px" }}>
-            Mission Status
+            สถานะการทำภารกิจ
           </Typography>
           <DataGrid
             rows={missionDetail}
@@ -147,6 +142,14 @@ const MissionStatus = () => {
               disabled={selectionModel.length === 0}
             >
               Deny
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAssign}
+              disabled={selectionModel.length === 0}
+            >
+              มอบหมาย
             </Button>
             <Button
               variant="contained"

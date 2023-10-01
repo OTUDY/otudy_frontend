@@ -8,6 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import StudentClassForm from "./StudentClassForm";
 import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import axios from "axios";
 
 interface Student {
   id: string;
@@ -24,32 +25,58 @@ const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {
   const { classId } = useParams();
   const [isEdit, setIsEdit] = useState(false);
   const [openStudentForm, setOpenStudentForm] = useState(false);
-  const [_, setCookies] = useCookies(['currentStudentId']);
+  const [studentId, setStudentId] = useState('');
+  const [studentInClassId, setStudentInClassId] = useState(0);
+  const [studentFirstName, setStudentFirstName] = useState('');
+  const [studentLastName, setStudentLastName] = useState('');
+  const [cookies] = useCookies(['access_token']);
   const handleEditStudent = () => {
     setIsEdit(true);
     setOpenStudentForm(true);
   };
 
+  const deleteStudent = async( id: string) => {
+    const data = [id];
+    const response = await axios.put(`https://backend.otudy.co/api/v1/class/remove_students?_class=${classId}`, data, {
+      headers: {
+        Authorization: `Bearer ${cookies.access_token}`
+      }
+    });
+    if (response.status == 200) {
+      console.log(response.data);
+      //localStorage.setItem('myAppState', JSON.stringify(myAppState));
+      //window.location.reload();
+    }
+  }
+
+  const onClose = () => {
+    setOpenStudentForm(false);
+  }
+
   const columns: GridColDef[] = [
-    { field: "id", headerName: "No.", width: 150 },
-    { field: "firstName", headerName: "First Name", width: 200 },
-    { field: "lastName", headerName: "Last Name", width: 200 },
-    { field: "points", headerName: "Point", width: 200 },
+    { field: "id", headerName: "รหัส", width: 150 },
+    { field: "inClassId", headerName: "เลขที่", width: 150 },
+    { field: "firstName", headerName: "ชื่อจริง", width: 200 },
+    { field: "lastName", headerName: "นามสกุล", width: 200 },
+    { field: "points", headerName: "คะแนนสะสม", width: 200 },
     {
       field: "edit",
-      headerName: "Edit",
+      headerName: "แก้ไข",
       width: 100,
-      renderCell: (params: any) => (
+      renderCell: (params) => (
         <IconButton
           aria-label="edit"
           color="primary"
           onClick={(e) => {
             e.stopPropagation();
+            setStudentId(params.row.id);
+            setStudentInClassId(params.row.inClassId);
+            setStudentFirstName(params.row.firstName);
+            setStudentLastName(params.row.lastName);
             handleEditStudent();
-            setCookies("currentStudentId",`${params.row.firstName}.${params.row.lastName}`);
             //console.log(cookies.currentStudentId);
           }}
-          disabled={true}
+          disabled={false}
         >
           <EditIcon/>
         </IconButton>
@@ -57,16 +84,15 @@ const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {
     },
     {
       field: "delete",
-      headerName: "Delete",
+      headerName: "ลบ",
       width: 100,
-      renderCell: (params: any) => (
+      renderCell: (params) => (
         <IconButton
           aria-label="delete"
           color="primary"
           onClick={(e) => {
             e.stopPropagation();
-            handleEditStudent();
-            setCookies("currentStudentId",`${params.row.firstName}.${params.row.lastName}`);
+            deleteStudent(params.row.id);
             //console.log(cookies.currentStudentId);
           }}
         >
@@ -89,9 +115,17 @@ const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {
       />
       <StudentClassForm
         open={openStudentForm}
-        onClose={() => setOpenStudentForm(false)}
+        onClose={onClose}
         classId={classId}
         isEdit={isEdit}
+        data={
+          {
+            id: studentId,
+            firstName: studentFirstName,
+            lastName: studentLastName,
+            inClassId: studentInClassId
+          }
+        }
       />
     </div>
   );

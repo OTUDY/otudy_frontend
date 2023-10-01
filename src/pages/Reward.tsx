@@ -11,6 +11,7 @@ import { useCookies } from "react-cookie";
 const Reward = () => {
   const { classId } = useParams();
   const [isAddRewardOpen, setIsAddRewardOpen] = useState(false);
+  const [className, setClassName] = useState('');
   const handleAddReward = () => {
     setIsAddRewardOpen(true);
   };
@@ -54,6 +55,7 @@ const Reward = () => {
         response.data.rewards[i]["classId"] = classId as string;
       }
       setRewards(rewardData);
+      setClassName(response.data.name);
       console.log(rewardData);
     };
     fetchData();
@@ -69,7 +71,7 @@ const Reward = () => {
           <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
             <Grid item xs={12} md={6}>
               <Typography variant="h6">
-                Class{classId}{" "}
+                Class {`${className} (${classId})`}{" "}
                 {classId && <ClassSubSectionSelect classId={classId} />}
               </Typography>
             </Grid>
