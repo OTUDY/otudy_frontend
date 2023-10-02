@@ -30,8 +30,9 @@ const RewardCard: React.FC<RewardCardProps> = ({
   const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState(false);
   const encodedClassId = encodeURIComponent(classId);
-  const [cookies] = useCookies(['access_token']);
+  const [cookies, setCookies] = useCookies(['access_token', 'rewardId']);
   const handleTeacherRedeem = () => {
+    setCookies('rewardId',id);
     navigate(`/class/${encodedClassId}/reward-redeem`);
   };
 
@@ -89,7 +90,7 @@ const RewardCard: React.FC<RewardCardProps> = ({
           right: 80
         }}
       >
-        Redeem
+        แลกรางวัล
       </Button>
       <Button
         variant="contained"

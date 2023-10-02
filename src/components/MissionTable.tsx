@@ -99,11 +99,11 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
       for (let i = 0; i < missionResponse.length; i++) {
         const expiredDate = missionResponse[i].expiredDate.replaceAll("/", '-');
         if (new Date() > new Date(expiredDate)) {
-          missionResponse[i]["activeStatus"] = "No";
+          missionResponse[i]["activeStatus"] = "ไม่เปิดให้ทำ";
           unactiveMissions.push(missionResponse[i])
           }
         else {
-          missionResponse[i]["activeStatus"] = "Yes";
+          missionResponse[i]["activeStatus"] = "เปิดให้ทำ";
           activeMissions.push(missionResponse[i]);
           } 
         //console.log(`${missionResponse[i]['expiredDate'].replaceAll('/', '-')}`);
@@ -128,6 +128,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
             width: 350,
           },
           { field: "receivedPoints", headerName: "คะแนนรางวัล", width: 150 },
+          { field: "slotsAmount", headerName: "จำนวนนักเรียนที่ทำได้", width: 150 },
           { field: "activeStatus", headerName: "สถานะ", width: 200 },
           { field: "expiredDate", headerName: "วันหมดอายุ", width: 200 },
           { field: "tags", headerName: "แท็ก", width: 250 },

@@ -1,45 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DataGrid,
-  GridCellParams,
   GridRowSelectionModel,
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import HeaderBar from "../components/HeaderBar";
 import Typography from "@mui/material/Typography";
 import { useParams, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import axios from "axios";
 
 const columns = [
-  { field: "studentId", headerName: "Student ID", width: 150 },
-  { field: "name", headerName: "Name", width: 150 },
-  { field: "lastName", headerName: "Last Name", width: 150 },
-  { field: "point", headerName: "Point", width: 150 },
-  {
-    field: "redeemed",
-    headerName: "Redeemed",
-    width: 150,
-    renderCell: (params: GridCellParams) => {
-      return params.value ? "Redeemed" : "Not Redeemed";
-    },
-  },
+  { field: "id", headerName: "รหัส", width: 100 },
+  { field: "inClassId", headerName: "เลขที่", width: 70 },
+  { field: "firstName", headerName: "ชื่อจริง", width: 150 },
+  { field: "lastName", headerName: "นามสกุล", width: 150 },
+  { field: "status", headerName: "สถานะ", width: 150 }
 ];
 
 const RewardRedeem = () => {
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>(
     []
   );
-
+  const [cookies] = useCookies(['access_token', 'rewardId']);
   //Temp data
-  const students = [
+  const [data, setData] = useState([
     {
-      id: "0",
-      studentId: "123456",
-      name: "John",
-      lastName: "Doe",
-      point: 100,
-      redeemed: false,
+      id: "",
+      firstName: "",
+      lastName: "",
+      inClassId: 0,
+      status: ""
     },
-  ];
+  ]);
   //   const [students, setStudents] = useState([
   //     {
   //       student_id: "",
@@ -52,11 +45,6 @@ const RewardRedeem = () => {
 
   //TODO: get students from backend
 
-  const handleRedeem = () => {
-    // Update completion status for selected students
-    console.log("Redeem", selectionModel);
-  };
-
   const navigate = useNavigate();
   const { classId } = useParams();
   const encodedClassId = classId ? encodeURIComponent(classId) : "";
@@ -66,6 +54,51 @@ const RewardRedeem = () => {
     navigate(`/class/${encodedClassId}/reward`);
   };
 
+  const handleRedeem = async() => {
+    // Update completion status for selected students
+    console.log("Redeem", selectionModel);
+    const rewardIdEncoded = encodeURIComponent(cookies.rewardId);
+    for (let i = 0; i < selectionModel.length; i++) {
+      const response = await axios.get(
+        `https://backend.otudy.co/api/v1/reward/change_redeem_status?reward_id=${rewardIdEncoded}&_class=${classId}&student_id=${encodeURIComponent(selectionModel[i])}&_status=${encodeURIComponent("แลกเสร็จสิ้น")}`,
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.access_token}`
+          }
+        }
+      );
+      if (response.status != 200) {
+        console.log(`Student ${selectionModel[i]} is unable to redeem.`);
+      }
+    }
+  };
+
+  const fetchData = async() => {
+    const response = await axios.get(
+      `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${cookies.access_token}`
+        }
+      }
+    );
+    //console.log(response.data.rewards[0].onGoingRedemption);
+    let index: any = null;
+    for (let i = 0; i < response.data.rewards.length; i++) {
+      if (response.data.rewards[i].id === cookies.rewardId) {
+        console.log(`Found mission at index ${i}`);
+        index = i;
+        break;
+      }
+    }
+    console.log(`Reward ID: ${cookies.rewardId}`);
+    setData(response.data.rewards[index].onGoingRedemption);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div className="page-container">
       <div className="header-bar">
@@ -74,10 +107,10 @@ const RewardRedeem = () => {
       <div className="classroom-container">
         <div className="classroom-content">
           <Typography variant="h4" sx={{ marginTop: "20px" }}>
-            Redeem Reward
+            แลกรางวัล
           </Typography>
           <DataGrid
-            rows={students}
+            rows={data}
             columns={columns}
             checkboxSelection
             rowSelectionModel={selectionModel}
@@ -93,7 +126,7 @@ const RewardRedeem = () => {
             }}
           >
             <Button variant="outlined" color="primary" onClick={handleCancel}>
-              Cancel
+              ยกเลิก
             </Button>
             <Button
               variant="contained"
@@ -101,7 +134,7 @@ const RewardRedeem = () => {
               onClick={handleRedeem}
               disabled={selectionModel.length === 0}
             >
-              Redeem
+              แลกรางวัล
             </Button>
           </div>
         </div>

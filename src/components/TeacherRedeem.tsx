@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DataGrid,
   GridCellParams,
@@ -6,17 +6,10 @@ import {
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import { useCookies } from "react-cookie";
+import axios from "axios";
 
-interface Student {
-  id: number;
-  studentId: string;
-  name: string;
-  lastName: string;
-  redeemed: boolean;
-}
-
-interface MissionCompleteListProps {
-  students: Student[];
+interface prop {
   open: boolean;
   onClose: () => void;
 }
@@ -36,8 +29,7 @@ const columns = [
   },
 ];
 
-const TeacherRedeem: React.FC<MissionCompleteListProps> = ({
-  students,
+const TeacherRedeem: React.FC<prop> = ({
   open,
   onClose,
 }) => {
@@ -45,16 +37,39 @@ const TeacherRedeem: React.FC<MissionCompleteListProps> = ({
     []
   );
 
+  const [rows, setRows] = useState([]);
+  const [cookies] = useCookies(['access_token', 'classId', 'rewardId']);
+
   const handleRedeem = () => {
     // Update completion status for selected students
     console.log("Redeem", selectionModel);
   };
 
+  const fetchData = async() => {
+    const classIdEncoded = encodeURIComponent(cookies.classId);
+    const response = await axios.get(
+      `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classIdEncoded}`,
+      {
+        headers: {
+          Authorization: `Bearer ${cookies.access_token}`
+        }
+      }
+    );
+    for (let i = 0; i < response.data.rewards.length; i++) {
+      if (response.data.rewards[i]['id'] === cookies.rewardId) {
+        setRows(response.data.rewards[i]['onGoingRedemption']);
+        break;
+      }
+    }
+  }
+  useEffect(() => {
+  }, [fetchData])
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="md">
       <div style={{ height: "100%", width: "100%" }}>
         <DataGrid
-          rows={students}
+          rows={rows}
           columns={columns}
           checkboxSelection
           rowSelectionModel={selectionModel}
