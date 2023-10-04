@@ -127,7 +127,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit, id, nam
             value={classLevel}
             onChange={handleClassLevelChange}
             fullWidth
-            renderValue={(value => value = classLevel)}
+            renderValue={(value) => (value === ''? 'เลือกระดับชั้น': value)}
             variant="outlined"
             sx={{ marginBottom: 2 }}
           >
