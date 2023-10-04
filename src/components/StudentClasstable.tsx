@@ -1,6 +1,6 @@
 // StudentClassTable.tsx
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -9,6 +9,7 @@ import StudentClassForm from "./StudentClassForm";
 import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
+import * as Swal from 'sweetalert2';
 
 interface Student {
   id: string;
@@ -30,27 +31,59 @@ const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {
   const [studentFirstName, setStudentFirstName] = useState('');
   const [studentLastName, setStudentLastName] = useState('');
   const [cookies] = useCookies(['access_token']);
+  const [rows, setRows] = useState(data);
   const handleEditStudent = () => {
     setIsEdit(true);
     setOpenStudentForm(true);
   };
 
-  const deleteStudent = async( id: string) => {
-    const data = [id];
-    const response = await axios.put(`https://backend.otudy.co/api/v1/class/remove_students?_class=${classId}`, data, {
-      headers: {
-        Authorization: `Bearer ${cookies.access_token}`
+  const getClassDetails = async () => {
+    const response = await axios.get(
+      `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cookies.access_token}`,
+        },
       }
-    });
-    if (response.status == 200) {
-      console.log(response.data);
-      //localStorage.setItem('myAppState', JSON.stringify(myAppState));
-      //window.location.reload();
-    }
+    );
+    setRows(response.data.students)
+  };
+
+  const deleteStudent = async( id: string) => {
+    const result = await Swal.default.fire({
+      title: `ต้องการลบนักเรียน ${id} ออกจากห้องใช่หรือไม่`,
+      text: "โปรดตัดสินใจอย่างรอบคอบเพราะท่านจะไม่สามารถแก้ไขได้",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ลบ'
+    })
+    if (result.isConfirmed) {
+        const data = [id];
+        const response = await axios.put(`https://backend.otudy.co/api/v1/class/remove_students?_class=${classId}`, data, {
+          headers: {
+            Authorization: `Bearer ${cookies.access_token}`
+          }
+        });
+        if (response.status == 200) {
+          console.log(response.data);
+          Swal.default.fire(
+            `ลบนักเรียนเรียบร้อย`,
+            `ลบนักเรียน ${id} ออกจากห้องเรียนเรียบร้อย`,
+            'success'
+          )
+          getClassDetails();
+        }
+        
+      }
   }
 
   const onClose = () => {
+    console.log('trigger onclose studentclasstable.tsx')
     setOpenStudentForm(false);
+    getClassDetails();
   }
 
   const columns: GridColDef[] = [
@@ -101,10 +134,15 @@ const StudentClassTable: React.FC<StudentClassTableProps> = ({ data }) => {
       ),
     },
   ];
+
+  useEffect(() => {
+    setRows(data);
+  }, [data])
+
   return (
     <div style={{ height: 400, width: "100%" }}>
       <DataGrid
-        rows={data}
+        rows={rows}
         columns={columns}
         initialState={{
           pagination: {

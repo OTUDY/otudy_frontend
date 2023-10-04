@@ -18,6 +18,7 @@ const Reward = () => {
 
   const handleCloseAddReward = () => {
     setIsAddRewardOpen(false);
+    fetchData();
   };
 
   // Sample rewards data (you will replace this with your actual data)
@@ -35,29 +36,28 @@ const Reward = () => {
     },
   ]);
   const [cookie] = useCookies(["access_token"]);
+  const fetchData = async () => {
+    const classIdEncoded = encodeURIComponent(classId as string);
+    const url = `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classIdEncoded}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${cookie.access_token}`,
+      },
+    });
+    const rewardData: any[] = response.data.rewards;
+    for (let i = 0; i < rewardData.length; i++) {
+      if (new Date() < new Date(rewardData[i]['expiredDate'].replaceAll('/', '-'))) {
+        response.data.rewards[i]["activeStatus"] = "เปิดให้แลก";
+      } else {
+        response.data.rewards[i]["activeStatus"] = "ไม่เปิดให้แลก";
+      }
+      response.data.rewards[i]["classId"] = classId as string;
+    }
+    setRewards(rewardData);
+    setClassName(response.data.name);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const classIdEncoded = encodeURIComponent(classId as string);
-      const url = `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classIdEncoded}`;
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${cookie.access_token}`,
-        },
-      });
-      const rewardData: any[] = response.data.rewards;
-      for (let i = 0; i < rewardData.length; i++) {
-        if (new Date() < new Date(rewardData[i]['expiredDate'].replaceAll('/', '-'))) {
-          response.data.rewards[i]["activeStatus"] = "เปิดให้แลก";
-        } else {
-          response.data.rewards[i]["activeStatus"] = "ไม่เปิดให้แลก";
-        }
-        response.data.rewards[i]["classId"] = classId as string;
-      }
-      setRewards(rewardData);
-      setClassName(response.data.name);
-      console.log(rewardData);
-    };
     fetchData();
   }, []);
 
@@ -82,7 +82,7 @@ const Reward = () => {
                 sx={{ marginBottom: 2 }}
                 onClick={handleAddReward}
               >
-                Add Reward
+                เพิ่มรางวัล
               </Button>
             </Grid>
           </Grid>

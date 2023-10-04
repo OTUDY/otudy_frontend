@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import * as Swal from 'sweetalert2';
 
 interface AddClassFormProps {
   open: boolean;
@@ -60,35 +61,67 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
           response.status == 202
         )
       ) {
+        Swal.default.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: 'เกิดข้อผิดพลาด โปรดลองใหม่ภายหลังหรือเช็คข้อมูลภายในช่องกรอก'
+        })
         //show false modal here
+      } else {
+        Swal.default.fire({
+          icon: 'success',
+          title: 'เพิ่มนักเรียนสำเร็จ',
+          text: 'เพิ่มนักเรียนสำเร็จ ท่านสามารถจัดการกับข้อมูลนักเรียนได้แล้ว'
+        })
       }
     }
     // EDIT LOGIC
     else {
-      const response = await axios.put('https://backend.otudy.co/api/v1/class/edit_student_detail', {
-        original_id: id,
-        firstname: firstName,
-        lastname: lastName,
-        inclass_no: inClassId,
-        class_id: classId as string
-      },{
-        headers: {
-          Authorization: `Bearer ${cookies.access_token}`
+      onClose();
+      const result = await Swal.default.fire({
+        title: `ต้องการแก้ไขข้อมูลขแงนักเรียน ${id} ใช่หรือไม่`,
+        text: "แก้ไขข้อมูลนักเรียน",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'แก้ไข'
+      })
+      if (result.isConfirmed) {
+        const body = {
+          original_id: id,
+          firstname: firstName,
+          lastname: lastName,
+          inclass_no: inClassId,
+          class_id: classId as string
         }
-      });
-      if (response.status == 200) {
-        // show sucess modal here
-        console.log(response.data);
-      } else {
-        console.error(response.data);
+        console.log(body);
+        const response = await axios.put('https://backend.otudy.co/api/v1/class/edit_student_detail', body,{
+          headers: {
+            Authorization: `Bearer ${cookies.access_token}`
+          }
+        });
+        if (response.status == 200) {
+          // show sucess modal here
+          Swal.default.fire(
+            `แก้ไขเสร็จสิ้น`,
+            `แก้ไขข้อมูลนักเรียน ${id} เรียบร้อย`,
+            'success'
+          )
+        } else {
+          console.error(response.data);
+        }
       }
     }
-    onClose(); // Close the dialog
+    onClose();
+     // Close the dialog
     navigate(`/class/${encodeURIComponent(classId)}`);
   };
   useEffect(() => {
-    console.log(data);
-  }, [])
+    setFirstName(data.firstName);
+    setLastName(data.lastName);
+    setInClassId(data.inClassId);
+  }, [isEdit, id, data])
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{isEdit ? "Edit" : "Add"} student</DialogTitle>

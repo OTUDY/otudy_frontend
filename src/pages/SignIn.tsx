@@ -11,6 +11,7 @@ import validator from "validator";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import * as Swal from 'sweetalert2';
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -48,13 +49,22 @@ const SignIn: React.FC = () => {
         // document.cookie = response.data.access_token;
         //localStorage.setItem("token", response.data.access_token);
         setCookie("access_token", response.data.access_token);
-        console.log("Login completed! Navigating to class page.");
+        Swal.default.fire({
+          icon: 'success',
+          title: 'เข้าสู่ระบบสำเร็จ',
+          text: 'กำลังนำท่านไปสู่หน้าห้องเรียน'
+        })
         navigate("/class", { replace: true });
       } catch (error) {
         console.error("Error:", error);
         console.log("Login failed!");
-        setErrorMessage("Incorrect email or password. Please try again.");
+        setErrorMessage("รหัสผ่านหรืออีเมล์ไม่ถูกต้อง กรุณาลองอีกครั้ง");
         // show modal here
+        Swal.default.fire({
+          icon: 'error',
+          title: 'รหัสผ่านหรืออีเมล์ไม่ถูกต้อง',
+          text: 'กรุณาลองอีกครั้ง'
+        })
       }
     } else {
       setIsEmailValid(false);
@@ -64,11 +74,11 @@ const SignIn: React.FC = () => {
   return (
     <Container maxWidth="xs">
       <div>
-        <Typography variant="h4">Sign in</Typography>
+        <Typography variant="h4">เข้าสู่ระบบ</Typography>
 
         <Typography variant="body1" marginTop={"8px"}>
           {" "}
-          Enter email and password to sign in{" "}
+          กรอกอีเมล์และรหัสผ่านเพื่อเข้าสู่ระบบ{" "}
         </Typography>
         <form>
           <TextField
@@ -104,19 +114,19 @@ const SignIn: React.FC = () => {
             sx={{ marginTop: "16px", marginBottom: "16px" }}
             disabled={!isEmailValid || email.length === 0}
           >
-            Sign In
+            เข้าสู่ระบบ
           </Button>
         </form>
         <Grid container justifyContent="space-between">
           <Grid item>
             <Link href="/forgot-password" variant="body2">
-              Forgot Password?
+              ลืมรหัสผ่าน
             </Link>
           </Grid>
           <Grid item>
             <Grid container>
               <Grid item>
-                <Typography variant="body2">Don't have an account?</Typography>
+                <Typography variant="body2">ยังไม่มีบัญชี</Typography>
               </Grid>
               <Grid item>
                 <Link
@@ -125,7 +135,7 @@ const SignIn: React.FC = () => {
                     navigate("/sign-up", { replace: true });
                   }}
                 >
-                  Sign up
+                  สมัครสมาชิก
                 </Link>
               </Grid>
             </Grid>

@@ -36,25 +36,25 @@ const ClassSubSectionSelect: React.FC<ClassSubSectionSelectProps> = ({
         onClick={() => handleMenuItemClick("student")}
         variant={selectedItem === "student" ? "contained" : "outlined"}
       >
-        Student
+        นักเรียน
       </Button>
       <Button
         onClick={() => handleMenuItemClick("mission")}
         variant={selectedItem === "mission" ? "contained" : "outlined"}
       >
-        Mission
+        ภารกิจ
       </Button>
       <Button
         onClick={() => handleMenuItemClick("reward")}
         variant={selectedItem === "reward" ? "contained" : "outlined"}
       >
-        Reward
+        รางวัล
       </Button>
       <Button
         onClick={() => handleMenuItemClick("leaderboard")}
         variant={selectedItem === "leaderboard" ? "contained" : "outlined"}
       >
-        Leaderboard
+        กระดานคะแนน
       </Button>
     </ButtonGroup>
   );

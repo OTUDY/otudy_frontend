@@ -12,20 +12,9 @@ const Landing = () => {
 
   return (
     <div>
-      <h1>Welcome to Our App</h1>
+      <h2>ยินดีต้อนรับเข้าสู่แอปพลิเคชัน OTUDY (โอทูดี้)</h2>
       <div className="feature-text">
-        <p>
-          App Feature 1: Lorem ipsum dolor sit amet, consectetur adipiscing
-          elit.
-        </p>
-        <p>
-          App Feature 2: Sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua.
-        </p>
-        <p>
-          App Feature 3: Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        </p>
+        <p> แอปพลิเคชันเพื่อการจัดการห้องเรียนและเสริมสร้างการเรียนรู้ด้วยการจูงใจด้วยการทำภารกิจและของรางวัล</p>
       </div>
       <div className="action-buttons">
         <Button
@@ -34,7 +23,7 @@ const Landing = () => {
           className="sign-in-button"
           onClick={handleSignInClick}
         >
-          Sign In
+          เข้าสู่ระบบ
         </Button>
         <Button
           variant="contained"
@@ -42,7 +31,7 @@ const Landing = () => {
           className="sign-up-button"
           onClick={handleSignUpClick}
         >
-          Sign Up
+          สมัครสมาชิก
         </Button>
       </div>
     </div>

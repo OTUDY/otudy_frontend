@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -12,7 +12,7 @@ import {
 // import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-
+import * as Swal from 'sweetalert2';
 interface data {
   id: string;
   name: string;
@@ -46,7 +46,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
   const [tagsInput, setTagsInput] = useState(data.tags);
   const [cookie] = useCookies(["access_token"]);
   const [amount, setAmount] = useState(data.slotsAmount);
-  const [id, setId] = useState(data.id);
+  const id = data.id;
   // const handleTagsChange = (event: {
   //   target: { value: React.SetStateAction<string> };
   // }) => {
@@ -56,7 +56,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
 
   const handleCreateAndEdit = async () => {
     const tagsToSendCreate: string[] = [];
-    const tagsSplitted = tagsInput.split(", ");
+    const tagsSplitted = tagsInput.split(",");
     tagsSplitted.forEach((currentItem: any) => {
       tagsToSendCreate.push(currentItem);
     });
@@ -93,26 +93,63 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
         )
       ) {
         // show false modal here
+        Swal.default.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: 'เกิดข้อผิดพลาดในการแก้ไข'
+        })
+      } else {
+        Swal.default.fire({
+          icon: 'success',
+          title: 'สำเร็จ',
+          text: 'เพิ่มภารกิจเสร็จสิ้น'
+        })
       }
     } else {
+      onClose();
+      const result = await Swal.default.fire({
+        title: `ต้องการแก้ไขภารกิจ ${id} ใช่หรือไม่`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'แก้ไข'
+      })
+      if (result.isConfirmed) {
       const response = await axios.put(
         "https://backend.otudy.co/api/v1/mission/update_mission_detail",
         body,
         { headers: headers }
       );
-      if (
-        response.status == 200 ||
-        response.status == 201 ||
-        response.status == 202
-      ) {
-        console.log(response.data);
-      } else {
+      if (response.status == 200 || response.status == 201 || response.status == 202) {
+          Swal.default.fire({
+            icon: 'success',
+            title: 'สำเร็จ',
+            text: 'แก้ไขภารกิจเสร็จสิ้น'
+          })
+      }
+    
+      else {
         //show false modal here
+        Swal.default.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: 'เกิดข้อผิดพลาดในการแก้ไข'
+        })
       }
     }
-
+  }
     onClose();
   };
+
+  useEffect(() => {
+    setMissionTitle(data.name);
+    setAmount(data.slotsAmount);
+    setDueDate(data.expiredDate);
+    setRewardPoints(data.receivedPoints);
+    setMissionDescription(data.description);
+    setTagsInput(data.tags);
+  }, [isEdit, id])
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -122,10 +159,9 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
         <TextField
             label="Mission ID"
             value={id}
-            onChange={(e) => setId(e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
-            disabled={!isEdit}
+            disabled={true}
           />
           <TextField
             label="Mission Name"
@@ -193,10 +229,10 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
         sx={{ display: "flex", justifyContent: "center", marginBottom: 2 }}
       >
         <Button onClick={onClose} color="primary">
-          Cancel
+          ยกเลิก
         </Button>
         <Button onClick={handleCreateAndEdit} color="primary">
-          {isEdit? "Edit": "Create"}
+          {isEdit? "แก้ไข": "เพิ่ม"}
         </Button>
       </DialogActions>
     </Dialog>

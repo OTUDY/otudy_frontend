@@ -11,20 +11,23 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
+import * as Swal from 'sweetalert2';
 
 interface AddClassFormProps {
   open: boolean;
   onClose: () => void;
   isEdit: boolean;
+  id: string;
+  name: string;
+  level: string;
+  currentDescription: string;
 }
 
-const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
-  const [className, setClassName] = useState("");
-  const [classLevel, setClassLevel] = useState("class");
-  const [description, setDescription] = useState("");
+const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit, id, name, level, currentDescription }) => {
+  const [className, setClassName] = useState('');
+  const [classLevel, setClassLevel] = useState("เลือกระดับชั้น");
+  const [description, setDescription] = useState("คำอธิบายห้องเรียน");
   const [cookie] = useCookies(["access_token"]);
-  const navigate = useNavigate();
 
   const handleClassLevelChange = (event: {
     target: { value: React.SetStateAction<string> };
@@ -39,17 +42,16 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
     console.log("Description:", description);
 
     const okStatus: Number[] = [200, 201, 202];
-
-    const body = {
-      class_name: className,
-      level: classLevel,
-      class_desc: description,
-    };
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${cookie.access_token}`,
     };
     if (!isEdit) {
+      const body = {
+        class_name: className,
+        level: classLevel,
+        class_desc: description,
+      };
       const response = await axios.post(
         "https://backend.otudy.co/api/v1/class/create_class",
         body,
@@ -61,7 +63,20 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
         console.error("Error: Something gone wrong.");
         // Show modal here
       }
+      else {
+        Swal.default.fire({
+          icon: 'success',
+          title: 'เพิ่มห้องเรียนสำเร็จ',
+          text: 'เพิ่มห้องเรียนเสร็จสิ้น'
+        });
+      }
     } else {
+      const body = {
+        id: id,
+        class_name: className,
+        level: classLevel,
+        class_desc: description,
+      };
       const response = await axios.put(
         "https://backend.otudy.co/api/v1/class/update_class_detail",
         body,
@@ -73,64 +88,33 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
         console.error("Error: Something gone wrong");
         // show modal here
       }
-    }
-
-    onClose(); // Close the dialog
-    navigate('/class');
-  };
-
-  useEffect(() => {
-    const fetchClassDetail = async () => {
-      try {
-        const response = await axios.get(
-          "https://backend.otudy.co/api/v1/class/get_class_meta_data", // Replace with the correct API endpoint
-          {
-            headers: {
-              Authorization: `Bearer ${cookie.access_token}`,
-            },
-          }
-        );
-        // setClassDetail(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching class detail:", error);
+      else {
+        Swal.default.fire({
+          icon: 'success',
+          title: 'แก้ไขห้องเรียนเสร็จสิ้น',
+          text: 'แก้ไขห้องเรียนเสร็จสิ้น'
+        })
       }
-    };
-
-    if (isEdit) {
-      fetchClassDetail();
     }
-  }, [isEdit, cookie.access_token]);
-
-  // const handleEdit = async() => {
-  //   const body = {
-  //     'class_name': className,
-  //     'level': classLevel,
-  //     'class_desc': description
-  //   };
-  //   const headers = {
-  //     'Content-Type': 'application/json',
-  //     Authorization: `Bearer ${localStorage.getItem('token')}`
-  //   };
-
-  //   const response = await axios.put(
-  //     'https://backend.otudy.co/api/v1/class/update_class_detail',
-  //     body,
-  //     {
-  //     headers: headers
-  //   });
-
-  //   console.log(response.data);
-  //   window.location.reload();
-
-  //   onClose();
-  // }
-
+    onClose();
+  };
+  useEffect(() => {
+    setClassName(name);
+    setClassLevel(level);
+    setDescription(currentDescription);
+  }, [id, isEdit])
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{isEdit ? "แก้ไขข้อมูลห้องเรียน" : "เพิ่มห้องเรียน"}</DialogTitle>
       <DialogContent>
         <form>
+          <TextField
+            label="รหัสห้องเรียน (ไม่ต้องกรอก)"
+            value={id}
+            disabled={true}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+          />
           <TextField
             label="ชื่อห้องเรียน"
             value={className}
@@ -143,7 +127,7 @@ const ClassForm: React.FC<AddClassFormProps> = ({ open, onClose, isEdit }) => {
             value={classLevel}
             onChange={handleClassLevelChange}
             fullWidth
-            renderValue={(value) => (!value ? value : "เลือกระดับชั้น")}
+            renderValue={(value => value = classLevel)}
             variant="outlined"
             sx={{ marginBottom: 2 }}
           >

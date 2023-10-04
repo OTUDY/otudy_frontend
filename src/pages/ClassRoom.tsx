@@ -10,31 +10,9 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 
+
 const ClassRoom = () => {
-  // interface Student {
-  //   id: number;
-  //   student_id: string;
-  //   name: string;
-  //   lastname: string;
-  // }
-
-  // const generateSampleStudentData = (count: number): Student[] => {
-  //   const students: Student[] = [];
-
-  //   for (let i = 1; i <= count; i++) {
-  //     const student: Student = {
-  //       id: i, // Unique ID
-  //       student_id: `S${i}`,
-  //       name: `Student ${i}`,
-  //       lastname: `Lastname ${i}`,
-  //     };
-
-  //     students.push(student);
-  //   }
-
-  //   return students;
-  // };
-  //const sampleStudentData = generateSampleStudentData(2);
+  
   const [className, setClassName] = useState('');
   const [studentData, setStudentData] = useState([
     {
@@ -53,8 +31,6 @@ const ClassRoom = () => {
     lastName: '',
     inClassId: 0
   };
-
-  console.log(classId);
   const [isAddStudentClassFormOpen, setIsAddStudentClassFormOpen] =
     useState(false);
 
@@ -64,23 +40,26 @@ const ClassRoom = () => {
 
   const handleCloseAddStudentClassForm = () => {
     setIsAddStudentClassFormOpen(false);
+    getClassDetails();
+    
+  };
+
+  const getClassDetails = async () => {
+    const response = await axios.get(
+      `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cookie.access_token}`,
+        },
+      }
+    );
+    console.log(response.data);
+    setStudentData(response.data.students);
+    setClassName(response.data.name);
   };
 
   useEffect(() => {
-    const getClassDetails = async () => {
-      const response = await axios.get(
-        `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${cookie.access_token}`,
-          },
-        }
-      );
-      console.log(response.data);
-      setStudentData(response.data.students);
-      setClassName(response.data.name);
-    };
     getClassDetails();
   }, []);
 

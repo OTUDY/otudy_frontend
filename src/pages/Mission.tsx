@@ -3,14 +3,28 @@ import { useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import ClassSubSectionSelect from "../components/ClassSubSectionSelect";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MissionForm from "../components/MissionForm";
 import { Typography } from "@mui/material";
 import MissionTable from "../components/MissionTable";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const Mission = () => {
   const { classId } = useParams();
   const [isAddMissionOpen, setIsAddMissionOpen] = useState(false);
+  const [cookies] = useCookies(['access_token']);
+  const [rows, setRows] = useState([{
+    id: '',
+    name: '',
+    description: '',
+    receivedPoints: '',
+    expiredDate: '',
+    tags: '',
+    slotsAmount: 0,
+    activeStatus: false
+  }]);
+  const [unactiveMissions, setUnactiveMissions] = useState([{}]);
 
   const handleOpenAddMission = () => {
     setIsAddMissionOpen(true);
@@ -18,7 +32,44 @@ const Mission = () => {
 
   const handleCloseAddMission = () => {
     setIsAddMissionOpen(false);
+    getMissionsData();
   };
+
+  const getMissionsData = async () => {
+    const response: any = await axios.get(
+      `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classId}`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${cookies.access_token}`,
+        },
+      }
+    );
+    const missionResponse: any[]= response.data.missions;
+    const activeMissions: any[] = [];
+    const unactiveMissions: any[] = [];
+    for (let i = 0; i < missionResponse.length; i++) {
+      const expiredDate = missionResponse[i].expiredDate.replaceAll("/", '-');
+      if (new Date() > new Date(expiredDate)) {
+        missionResponse[i]["activeStatus"] = "ไม่เปิดให้ทำ";
+        unactiveMissions.push(missionResponse[i])
+        }
+      else {
+        missionResponse[i]["activeStatus"] = "เปิดให้ทำ";
+        activeMissions.push(missionResponse[i]);
+        } 
+      //console.log(`${missionResponse[i]['expiredDate'].replaceAll('/', '-')}`);
+      //console.log(new Date(`${year}-${month.length > 1? month: `0${month}`}-${day.length == 1? `0${day}`: day}`));
+      }
+    setRows(activeMissions);
+    setUnactiveMissions(unactiveMissions as any);
+    //console.log(missionResponse);
+  };
+
+  useEffect(() => {
+    getMissionsData();
+  }, [])
+
   return (
     <div className="page-container">
       <div className="header-bar">
@@ -45,14 +96,14 @@ const Mission = () => {
               </Button>
             </Grid>
           </Grid>
-          <MissionTable active={true} classId={classId as string} />
+          <MissionTable active={true} data={rows} classId={classId as string} />
           <Typography
             variant="h6"
             sx={{ marginTop: 2, justifyContent: "flex-start" }}
           >
             Expired Mission
           </Typography>
-          <MissionTable active={false} classId={classId as string} />
+          <MissionTable active={false} data={unactiveMissions} classId={classId as string} />
         </div>
       </div>
       <MissionForm

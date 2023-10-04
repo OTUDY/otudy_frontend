@@ -10,32 +10,24 @@ import { useNavigate } from "react-router-dom";
 //import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import * as Swal from 'sweetalert2';
 
 interface IsActiveMissionTable {
   active: boolean;
   classId: string;
+  data: any[];
 }
 
-const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
+const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId, data }) => {
   //const [rows, setRows] = useState([]);
   const [cookies] = useCookies(['access_token']);
   const [isAddMissionFormOpen, setIsAddMissionFormOpen] = useState(false);
-  const [rows, setRows] = useState([
-    {
-      id: "",
-      name: "",
-      description: "",
-      redeem_points: 0,
-      active_status: false,
-      expired_date: "",
-      tags: "",
-    },
-  ]);
+  const [rows, setRows] = useState(data);
   const [cookie, setCookie] = useCookies(["access_token", 'missionId']);
   const [unactiveMissions, setUnactiveMissions] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const currentClass: string = classId;
-  const [currentMission] = useState({
+  const [currentMission, setCurrentMission] = useState({
     id: "",
     name: "",
     description: "",
@@ -56,6 +48,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
 
   const handleCloseAddMissionForm = () => {
     setIsAddMissionFormOpen(false);
+    getMissionsData();
   };
 
   const [viewCompleteStatus, setViewCompleteStatus] = useState(false);
@@ -64,61 +57,81 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
     navigate(`/class/${encodedClassId}/mission-status`);
   };
   const handleCloseCompleteStatus = () => {
+    console.log(`Trigger onClose() MissionTable.tsx.`)
     setViewCompleteStatus(false);
+    getMissionsData();
   };
 
   const deleteMission = async( id: string ) => {
-    const idEncoded = encodeURIComponent(id);
-    const classIdEncoded: any = encodeURIComponent(currentClass);
-    const response = await axios.delete(`https://backend.otudy.co/api/v1/mission/delete_mission?mission_name=${idEncoded}&_class=${classIdEncoded}`, {
-      headers: {
-        Authorization: `Bearer ${cookies.access_token}`
-      }
+    const result = await Swal.default.fire({
+      title: `ต้องการลบภารกิจ ${id} ใช่หรือไม่`,
+      text: "โปรดตัดสินใจอย่างรอบคอบเพราะท่านจะไม่สามารถแก้ไขได้",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ลบ'
     })
-    if (response.status == 200) {
-      console.log(response.data);
-      //window.location.reload();
+    if (result.isConfirmed) {
+      const idEncoded = encodeURIComponent(id);
+      const classIdEncoded: any = encodeURIComponent(currentClass);
+      const response = await axios.delete(`https://backend.otudy.co/api/v1/mission/delete_mission?mission_name=${idEncoded}&_class=${classIdEncoded}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.access_token}`
+        }
+      })
+      if (response.status == 200) {
+        console.log(response.data);
+        //window.location.reload();
+        Swal.default.fire(
+          `ลบภารกิจ`,
+          `ลบนักเรียน ${id} ออกจากห้องเรียนเรียบร้อย`,
+          'success'
+        )
+        getMissionsData();
+      }
     }
   }
+  const getMissionsData = async () => {
+    const classIdEncoded: any = encodeURIComponent(currentClass);
+    const response: any = await axios.get(
+      `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classIdEncoded}`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${cookie.access_token}`,
+        },
+      }
+    );
+    const missionResponse: any[]= response.data.missions;
+    const activeMissions: any[] = [];
+    const unactiveMissions: any[] = [];
+    for (let i = 0; i < missionResponse.length; i++) {
+      const expiredDate = missionResponse[i].expiredDate.replaceAll("/", '-');
+      if (new Date() > new Date(expiredDate)) {
+        missionResponse[i]["activeStatus"] = "ไม่เปิดให้ทำ";
+        unactiveMissions.push(missionResponse[i])
+        }
+      else {
+        missionResponse[i]["activeStatus"] = "เปิดให้ทำ";
+        activeMissions.push(missionResponse[i]);
+        } 
+      //console.log(`${missionResponse[i]['expiredDate'].replaceAll('/', '-')}`);
+      //console.log(new Date(`${year}-${month.length > 1? month: `0${month}`}-${day.length == 1? `0${day}`: day}`));
+      }
+    setRows(activeMissions);
+    setUnactiveMissions(unactiveMissions as any);
+    //console.log(missionResponse);
+  };
 
   useEffect(() => {
-    const getMissionsData = async () => {
-      const classIdEncoded: any = encodeURIComponent(currentClass);
-      const response: any = await axios.get(
-        `https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classIdEncoded}`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${cookie.access_token}`,
-          },
-        }
-      );
-      const missionResponse: any[]= response.data.missions;
-      const activeMissions: any[] = [];
-      const unactiveMissions: any[] = [];
-      for (let i = 0; i < missionResponse.length; i++) {
-        const expiredDate = missionResponse[i].expiredDate.replaceAll("/", '-');
-        if (new Date() > new Date(expiredDate)) {
-          missionResponse[i]["activeStatus"] = "ไม่เปิดให้ทำ";
-          unactiveMissions.push(missionResponse[i])
-          }
-        else {
-          missionResponse[i]["activeStatus"] = "เปิดให้ทำ";
-          activeMissions.push(missionResponse[i]);
-          } 
-        //console.log(`${missionResponse[i]['expiredDate'].replaceAll('/', '-')}`);
-        //console.log(new Date(`${year}-${month.length > 1? month: `0${month}`}-${day.length == 1? `0${day}`: day}`));
-        }
-      setRows(activeMissions);
-      setUnactiveMissions(unactiveMissions as any);
-      //console.log(missionResponse);
-    };
-    getMissionsData();
-  }, []);
+    setRows(data)
+  }, [data]);
   return (
     <div style={{ height: 600, width: "100%" }}>
       <DataGrid
         rows={active ? rows : unactiveMissions}
+        disableRowSelectionOnClick={!active}
         columns={[
           { field: "id", headerName: "รหัสภารกิจ", width: 150 },
           { field: "name", headerName: "ชื่อภารกิจ", width: 200 },
@@ -142,20 +155,9 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
                 color="primary"
                 onClick={(e) => {
                   setIsEdit(true);
-                  console.log(params.row)
-                  // setCurrentMission({
-                  //   id: params.row.id,
-                  //   name: params.row.name,
-                  //   description: params.row.description,
-                  //   receivedPoints: params.row.receivedPoints,
-                  //   expiredDate: params.row.expiredDate,
-                  //   tags: params.row.tags,
-                  //   slotsAmount: params.row.slotsAmount
-                  // })
-                  //console.log(currentMission);
                   e.stopPropagation();
                   handleOpenAddMissionForm();
-                  //console.log(currentMission);
+                  setCurrentMission(params.row as any);
                 }}
               >
                 <EditIcon />
@@ -172,19 +174,8 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId }) => {
                 color="primary"
                 onClick={(e) => {
                   console.log(params.row)
-                  // setCurrentMission({
-                  //   id: params.row.id,
-                  //   name: params.row.name,
-                  //   description: params.row.description,
-                  //   receivedPoints: params.row.receivedPoints,
-                  //   expiredDate: params.row.expiredDate,
-                  //   tags: params.row.tags,
-                  //   slotsAmount: params.row.slotsAmount
-                  // })
-                  //console.log(currentMission);
                   e.stopPropagation();
                   deleteMission(params.row.id);
-                  //console.log(currentMission);
                 }}
               >
                 <DeleteIcon />

@@ -146,10 +146,10 @@ const SignUp: React.FC = () => {
   return (
     <Container maxWidth="xs">
       <div>
-        <Typography variant="h4">Sign up</Typography>
+        <Typography variant="h4">สมัครสมาชิก</Typography>
         <form>
           <TextField
-            label="First Name *"
+            label="ชื่อจริง *"
             fullWidth
             margin="normal"
             variant="outlined"
@@ -157,7 +157,7 @@ const SignUp: React.FC = () => {
             onChange={(e) => setFirstName(e.target.value)}
           />
           <TextField
-            label="Last Name *"
+            label="นามสกุล *"
             fullWidth
             margin="normal"
             variant="outlined"
@@ -165,7 +165,7 @@ const SignUp: React.FC = () => {
             onChange={(e) => setLastName(e.target.value)}
           />
           <TextField
-            label="Email *"
+            label="อีเมล์ *"
             type="email"
             fullWidth
             margin="normal"
@@ -176,7 +176,7 @@ const SignUp: React.FC = () => {
             helperText={!isEmailValid && "Invalid email format"}
           />
           <TextField
-            label="Password *"
+            label="รหัสผ่าน *"
             type={showPassword ? "text" : "password"} // Toggle between text and password
             fullWidth
             margin="normal"
@@ -198,7 +198,7 @@ const SignUp: React.FC = () => {
             }}
           />
           <TextField
-            label="Confirm Password *"
+            label="ยืนยันรหัสผ่าน *"
             type={showConfirmPassword ? "text" : "password"} // Toggle between text and password
             fullWidth
             margin="normal"
@@ -224,7 +224,7 @@ const SignUp: React.FC = () => {
             }}
           />
           <TextField
-            label="Telephone *"
+            label="เบอร์โทรศัพท์ *"
             fullWidth
             margin="normal"
             variant="outlined"
@@ -238,7 +238,7 @@ const SignUp: React.FC = () => {
           /> */}
 
           <TextField
-            label="School or Organization *"
+            label="โรงเรียนหรือต้นสังกัด *"
             fullWidth
             margin="normal"
             variant="outlined"
@@ -252,7 +252,7 @@ const SignUp: React.FC = () => {
             onClick={handleSignUp}
             disabled={!isEmailValid || email.length === 0}
           >
-            Sign Up
+            สมัครสมาชิก
           </Button>
         </form>
         <Grid container justifyContent="center">
@@ -263,7 +263,7 @@ const SignUp: React.FC = () => {
                 navigate("/sign-in", { replace: true });
               }}
             >
-              Already have an account? Sign In
+              มีบัญชีสมาชิกแล้วเหรอ เข้าสู่ระบบเลย
             </Link>
           </Grid>
         </Grid>

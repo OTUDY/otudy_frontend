@@ -56,7 +56,6 @@ const RewardCard: React.FC<RewardCardProps> = ({
   };
 
   const handleCloseRewardForm = () => {
-    console.log("close");
     setIsRewardFormOpen(false);
   };
 
