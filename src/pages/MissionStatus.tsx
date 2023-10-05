@@ -6,15 +6,9 @@ import HeaderBar from "../components/HeaderBar";
 import Typography from "@mui/material/Typography";
 import { useCookies } from "react-cookie";
 import axios from "axios";
+import * as Swal from 'sweetalert2';
 
 const MissionStatus = () => {
-  const columns = [
-    { field: "id", headerName: "รหัส", width: 150 },
-    { field: "inClassId", headerName: "เลขที่", width: 150 },
-    { field: "firstName", headerName: "ชื่อจริง", width: 150 },
-    { field: "lastName", headerName: "นามสกุล", width: 150 },
-    { field: "status", headerName: "สถานะปัจจุบัน", width: 200 },
-  ];
 
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>(
     []
@@ -56,7 +50,12 @@ const MissionStatus = () => {
         }
       });
       if (response.status == 200) {
-        console.log(response.data);
+        Swal.default.fire({
+          icon: 'success',
+          title: 'สำเร็จ',
+          text: 'สถานะของภารกิจได้ถูกปรับให้เป็น เสร็จสิ้น แล้ว'
+        })
+        fetchData();
       }
     }
     //window.location.reload();
@@ -70,7 +69,12 @@ const MissionStatus = () => {
         }
       });
       if (response.status == 200) {
-        console.log(response.data);
+        Swal.default.fire({
+          icon: 'success',
+          title: 'สำเร็จ',
+          text: 'สถานะของภารกิจได้ถูกปรับให้เป็น ยกเลิก แล้ว'
+        })
+        fetchData();
       }
     }
     //window.location.reload();
@@ -83,26 +87,32 @@ const MissionStatus = () => {
         }
       });
       if (response.status == 200) {
-        console.log(response.data);
+        Swal.default.fire({
+          icon: 'success',
+          title: 'สำเร็จ',
+          text: 'สถานะของภารกิจได้ถูกปรับให้เป็น มอบหมาย แล้ว'
+        })
+        fetchData();
       }
     }
     //window.location.reload();
   }
-
-  useEffect(() => {
-    const fetchData = async() => {
-      const response = await axios.get(`https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classId}`, {
-        headers: {
-          Authorization: `Bearer ${cookies.access_token}`
-        }
-      })
-      console.log(cookies.missionId)
-      for (let i = 0; i < response.data.missions.length; i++) {
-        if (response.data.missions[i].id === cookies.missionId) {
-          setMissionDetail(response.data.missions[i]['onGoingStatus'])
-        }
+  
+  const fetchData = async() => {
+    const response = await axios.get(`https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classId}`, {
+      headers: {
+        Authorization: `Bearer ${cookies.access_token}`
+      }
+    })
+    console.log(cookies.missionId)
+    for (let i = 0; i < response.data.missions.length; i++) {
+      if (response.data.missions[i].id === cookies.missionId) {
+        setMissionDetail(response.data.missions[i]['onGoingStatus'])
       }
     }
+  }
+
+  useEffect(() => {
     fetchData();
   }, [cookies.missionId])
 
@@ -118,12 +128,21 @@ const MissionStatus = () => {
           </Typography>
           <DataGrid
             rows={missionDetail}
-            columns={columns}
+            columns={[
+              { field: "id", headerName: "รหัส", width: 150 },
+              { field: "inClassId", headerName: "เลขที่", width: 150 },
+              { field: "firstName", headerName: "ชื่อจริง", width: 150 },
+              { field: "lastName", headerName: "นามสกุล", width: 150 },
+              { field: "status", headerName: "สถานะปัจจุบัน", width: 200 },
+            ]}
             checkboxSelection
             rowSelectionModel={selectionModel}
             onRowSelectionModelChange={(newSelectionModel) => {
               setSelectionModel(newSelectionModel);
             }}
+            isRowSelectable={(params) => !( 
+              params.row.status === 'เสร็จสิ้นภารกิจ' || params.row.status === 'ปฏิเสธการมอบหมาย'
+            )}
           />
           <div
             style={{
@@ -133,7 +152,7 @@ const MissionStatus = () => {
             }}
           >
             <Button variant="contained" onClick={handleClose}>
-              Close
+              ปิด
             </Button>
             <Button
               variant="contained"
@@ -141,7 +160,7 @@ const MissionStatus = () => {
               onClick={handleDeny}
               disabled={selectionModel.length === 0}
             >
-              Deny
+              ยกเลิก
             </Button>
             <Button
               variant="contained"
@@ -157,7 +176,7 @@ const MissionStatus = () => {
               onClick={handleComplete}
               disabled={selectionModel.length === 0}
             >
-              Complete
+              เสร็จสิ้น
             </Button>
           </div>
         </div>

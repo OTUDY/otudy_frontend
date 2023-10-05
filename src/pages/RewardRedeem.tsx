@@ -9,14 +9,7 @@ import Typography from "@mui/material/Typography";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
-
-const columns = [
-  { field: "id", headerName: "รหัส", width: 100 },
-  { field: "inClassId", headerName: "เลขที่", width: 70 },
-  { field: "firstName", headerName: "ชื่อจริง", width: 150 },
-  { field: "lastName", headerName: "นามสกุล", width: 150 },
-  { field: "status", headerName: "สถานะ", width: 150 }
-];
+import * as Swal from 'sweetalert2';
 
 const RewardRedeem = () => {
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>(
@@ -69,7 +62,18 @@ const RewardRedeem = () => {
       );
       if (response.status != 200) {
         console.log(`Student ${selectionModel[i]} is unable to redeem.`);
+        Swal.default.fire({
+          icon: 'error',
+          title: 'ไม่สำเร็จ',
+          text: 'ไม่สามารถแลกรางวัลให้กับนักเรียนได้'
+        })
       }
+      Swal.default.fire({
+        icon: 'success',
+        title: 'สำเร็จ',
+        text: 'แลกรางวัลให้กับนักเรียนเสร็จสิ้น'
+      })
+      fetchData();
     }
   };
 
@@ -111,12 +115,21 @@ const RewardRedeem = () => {
           </Typography>
           <DataGrid
             rows={data}
-            columns={columns}
+            columns={[
+              { field: "id", headerName: "รหัส", width: 100 },
+              { field: "inClassId", headerName: "เลขที่", width: 70 },
+              { field: "firstName", headerName: "ชื่อจริง", width: 150 },
+              { field: "lastName", headerName: "นามสกุล", width: 150 },
+              { field: "status", headerName: "สถานะ", width: 150 },
+            ]}
             checkboxSelection
             rowSelectionModel={selectionModel}
             onRowSelectionModelChange={(newSelectionModel) => {
               setSelectionModel(newSelectionModel);
             }}
+            isRowSelectable={(params) => !(
+              params.row.status === 'แลกเสร็จสิ้น'
+            )}
           />
           <div
             style={{

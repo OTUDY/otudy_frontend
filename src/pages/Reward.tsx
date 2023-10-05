@@ -15,8 +15,11 @@ const Reward = () => {
   const handleAddReward = () => {
     setIsAddRewardOpen(true);
   };
-
+  const handleRefresh = () => {
+    fetchData();
+  }
   const handleCloseAddReward = () => {
+    console.log(`Trigger onClose() of Reward.tsx`);
     setIsAddRewardOpen(false);
     fetchData();
   };
@@ -32,7 +35,8 @@ const Reward = () => {
       activeStatus: "",
       slotsAmount: 0,
       classId: classId as string,
-      expiredDate: ''
+      expiredDate: '',
+      reload: handleRefresh
     },
   ]);
   const [cookie] = useCookies(["access_token"]);
@@ -52,6 +56,7 @@ const Reward = () => {
         response.data.rewards[i]["activeStatus"] = "ไม่เปิดให้แลก";
       }
       response.data.rewards[i]["classId"] = classId as string;
+      response.data.rewards[i]['reload'] = handleRefresh;
     }
     setRewards(rewardData);
     setClassName(response.data.name);
@@ -84,6 +89,14 @@ const Reward = () => {
               >
                 เพิ่มรางวัล
               </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ marginBottom: 2, marginLeft: 2 }}
+                onClick={handleRefresh}
+              >
+                รีเฟรช
+              </Button>
             </Grid>
           </Grid>
           <Grid container spacing={2}>
@@ -110,6 +123,7 @@ const Reward = () => {
             slotsAmount: 0,
           }
         }
+        reload={handleRefresh}
       />
     </div>
   );

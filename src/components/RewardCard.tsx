@@ -4,7 +4,7 @@ import RewardForm from "./RewardForm";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-
+import * as Swal from 'sweetalert2';
 interface RewardCardProps {
   id: any;
   name: string;
@@ -14,6 +14,7 @@ interface RewardCardProps {
   slotsAmount: Number;
   classId: string;
   expiredDate: string;
+  reload: () => void;
 }
 
 const RewardCard: React.FC<RewardCardProps> = ({
@@ -24,7 +25,8 @@ const RewardCard: React.FC<RewardCardProps> = ({
   activeStatus,
   slotsAmount,
   classId,
-  expiredDate
+  expiredDate,
+  reload
 }) => {
   const [isRewardFormOpen, setIsRewardFormOpen] = useState(false);
   const navigate = useNavigate();
@@ -37,33 +39,56 @@ const RewardCard: React.FC<RewardCardProps> = ({
   };
 
   const handleDeleteReward = async() => {
-    const idEncoded = encodeURIComponent(id);
-    const classIdEncoded = encodeURIComponent(classId);
-    const response = await axios.delete(`https://backend.otudy.co/api/v1/reward/delete_reward?reward_name=${idEncoded}&_class=${classIdEncoded}`, {
-      headers: {
-        Authorization: `Bearer ${cookies.access_token}`
-      }
+    const result = await Swal.default.fire({
+      title: `ต้องการลบรางวัล ${id} ใช่หรือไม่`,
+      text: "โปรดตัดสินใจอย่างรอบคอบเพราะท่านจะไม่สามารถแก้ไขได้",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ลบ'
     })
-    if (response.status == 200) {
-      console.log(response.data);
-      //window.location.reload();
+    if (result.isConfirmed) {
+      const idEncoded = encodeURIComponent(id);
+      const classIdEncoded = encodeURIComponent(classId);
+      const response = await axios.delete(`https://backend.otudy.co/api/v1/reward/delete_reward?reward_name=${idEncoded}&_class=${classIdEncoded}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.access_token}`
+        }
+    })
+      if (response.status == 200) {
+        console.log(response.data);
+        Swal.default.fire({
+          icon: 'success',
+          title: 'ลบสำเร็จ',
+          text: 'ลบรางวัลสำเร็จแล้ว'
+        })
+        reload();
+      } else {
+        Swal.default.fire({
+          icon: 'error',
+          title: 'ไม่สำเร็จ',
+          text: 'ไม่สามารถลบรางวัลได้ โปรดลองใหม่ภายหลัง'
+        })
+      }
     }
+    
   }
 
-  const handleCardClick = () => {
+  const handleEditClick = () => {
     setIsEdit(true);
     setIsRewardFormOpen(true);
   };
 
   const handleCloseRewardForm = () => {
     setIsRewardFormOpen(false);
+    reload();
   };
 
   return (
     <Card
       variant="outlined"
-      sx={{ marginBottom: 2, position: "relative" }}
-      onClick={handleCardClick}
+      sx={{ position: "relative", blockSize: 250, marginTop: 2}}
     >
       <CardContent>
         <Typography variant="h5">{name}</Typography>
@@ -84,21 +109,32 @@ const RewardCard: React.FC<RewardCardProps> = ({
         color="primary"
         onClick={handleTeacherRedeem}
         sx={{
-          position: "absolute",
-          bottom: 10,
-          right: 80
+          position: "relative",
+          bottom: 0,
         }}
       >
-        แลกรางวัล
+        แลก
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleEditClick}
+        sx={{
+          position: "relative",
+          bottom: 0,
+          marginLeft: 1
+        }}
+      >
+        แก้ไข
       </Button>
       <Button
         variant="contained"
         color="primary"
         onClick={handleDeleteReward}
         sx={{
-          position: "absolute",
-          bottom: 10,
-          right: 10,
+          position: "relative",
+          bottom: 0,
+          marginLeft: 1
         }}
       >
         ลบ
@@ -118,6 +154,7 @@ const RewardCard: React.FC<RewardCardProps> = ({
             slotsAmount: slotsAmount,
           }
         }
+        reload={reload}
       />
     </Card>
   );
