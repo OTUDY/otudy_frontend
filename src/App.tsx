@@ -11,12 +11,23 @@ import Reward from "./pages/Reward.tsx";
 import MissionStatus from "./pages/MissionStatus.tsx";
 import RewardRedeem from "./pages/RewardRedeem.tsx";
 import { ClassSubSectionProvider } from "./context/ClassSubSectionContext.tsx";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const About = () => <h1>About Page</h1>;
 const Contact = () => <h1>Contact Page</h1>;
 
+const theme = createTheme({
+  typography: {
+    allVariants: {
+      fontFamily: 'Sarabun'
+    },
+  },
+});
+
+
 function App() {
   return (
+    <ThemeProvider theme={theme}>
     <ClassSubSectionProvider>
       <Router>
         <Routes>
@@ -41,6 +52,7 @@ function App() {
         </Routes>
       </Router>
     </ClassSubSectionProvider>
+    </ThemeProvider>
   );
 }
 
