@@ -32,9 +32,10 @@ const RewardCard: React.FC<RewardCardProps> = ({
   const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState(false);
   const encodedClassId = encodeURIComponent(classId);
-  const [cookies, setCookies] = useCookies(['access_token', 'rewardId']);
+  const [cookies, setCookies] = useCookies(['access_token', 'rewardId', 'rewardPoint']);
   const handleTeacherRedeem = () => {
     setCookies('rewardId',id);
+    setCookies('rewardPoint', spentPoints);
     navigate(`/class/${encodedClassId}/reward-redeem`);
   };
 

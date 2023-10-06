@@ -42,7 +42,7 @@ function App() {
           <Route path="/class/:classId/reward" element={<Reward />} />
           <Route
             path="/class/:classId/reward-redeem"
-            element={<RewardRedeem />}
+            element={<RewardRedeem rewardId="" rewardPoint={0} />}
           />
           <Route
             path="/class/:classId/mission-status"

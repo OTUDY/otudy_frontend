@@ -11,11 +11,16 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 import * as Swal from 'sweetalert2';
 
-const RewardRedeem = () => {
+interface Props {
+  rewardId: string;
+  rewardPoint: Number;
+}
+
+const RewardRedeem: React.FC<Props> = ( {} ) => {
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>(
     []
   );
-  const [cookies] = useCookies(['access_token', 'rewardId']);
+  const [cookies] = useCookies(['access_token', 'rewardId', 'rewardPoint']);
   //Temp data
   const [data, setData] = useState([
     {
@@ -52,28 +57,42 @@ const RewardRedeem = () => {
     console.log("Redeem", selectionModel);
     const rewardIdEncoded = encodeURIComponent(cookies.rewardId);
     for (let i = 0; i < selectionModel.length; i++) {
-      const response = await axios.get(
-        `https://backend.otudy.co/api/v1/reward/change_redeem_status?reward_id=${rewardIdEncoded}&_class=${classId}&student_id=${encodeURIComponent(selectionModel[i])}&_status=${encodeURIComponent("แลกเสร็จสิ้น")}`,
-        {
-          headers: {
-            Authorization: `Bearer ${cookies.access_token}`
-          }
+      const studentPoint = await axios.get(`https://backend.otudy.co/api/v1/class/get_student_point?_class=${classId}&student_id=${encodeURIComponent(selectionModel[i])}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.access_token}`
         }
-      );
-      if (response.status != 200) {
-        console.log(`Student ${selectionModel[i]} is unable to redeem.`);
+      });
+      if (studentPoint.data >= Number(cookies.rewardPoint)) {
+        const response = await axios.get(
+          `https://backend.otudy.co/api/v1/reward/change_redeem_status?reward_id=${rewardIdEncoded}&_class=${classId}&student_id=${encodeURIComponent(selectionModel[i])}&_status=${encodeURIComponent("แลกเสร็จสิ้น")}`,
+          {
+            headers: {
+              Authorization: `Bearer ${cookies.access_token}`
+            }
+          }
+        );
+        if (response.status != 200) {
+          console.log(`Student ${selectionModel[i]} is unable to redeem.`);
+          Swal.default.fire({
+            icon: 'error',
+            title: 'ไม่สำเร็จ',
+            text: 'ไม่สามารถแลกรางวัลให้กับนักเรียนได้'
+          })
+        } else {
+          Swal.default.fire({
+            icon: 'success',
+            title: 'สำเร็จ',
+            text: 'แลกรางวัลให้กับนักเรียนเสร็จสิ้น'
+          })
+          fetchData();
+        }
+      } else {
         Swal.default.fire({
           icon: 'error',
           title: 'ไม่สำเร็จ',
-          text: 'ไม่สามารถแลกรางวัลให้กับนักเรียนได้'
+          text: 'ไม่สามารถแลกรางวัลให้กับนักเรียนได้เนื่องมีคะแนนไม่เพียงพอ'
         })
       }
-      Swal.default.fire({
-        icon: 'success',
-        title: 'สำเร็จ',
-        text: 'แลกรางวัลให้กับนักเรียนเสร็จสิ้น'
-      })
-      fetchData();
     }
   };
 
@@ -90,7 +109,6 @@ const RewardRedeem = () => {
     let index: any = null;
     for (let i = 0; i < response.data.rewards.length; i++) {
       if (response.data.rewards[i].id === cookies.rewardId) {
-        console.log(`Found mission at index ${i}`);
         index = i;
         break;
       }
