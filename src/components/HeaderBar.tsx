@@ -42,8 +42,7 @@ function HeaderBar() {
 
   const navigate = useNavigate();
   const handleLogoClick = () => {
-    navigate("/class", { replace: true });
-    console.log(navigate);
+    navigate("/class"); 
   };
   const handleClassButtonClick = () => {
     navigate("/class");
@@ -56,7 +55,7 @@ function HeaderBar() {
   }
 
   // Define your menu items
-  const navMenuItems = ["ห้องเรียน", "ประวัติ"];
+  const navMenuItems = ["Class", "History"];
   const userMenuItems = ["โปรไฟล์", "ออกจากระบบ"];
   const [_, setCookies] = useCookies(['access_token']);
 
@@ -72,7 +71,7 @@ function HeaderBar() {
             sx={{ mr: 2 }}
             onClick={handleLogoClick}
           >
-            <object data={OtudyLogo} type="image/svg+xml"></object>
+            <object data={OtudyLogo} type="image/svg+xml" onClick={handleLogoClick}></object>
           </IconButton>
 
           {/* Nav menu for smaller screens */}
@@ -109,7 +108,7 @@ function HeaderBar() {
                 <MenuItem
                   key={page}
                   onClick={
-                    page === "ห้องเรียน"
+                    page === "Class"
                       ? handleClassButtonClick
                       : handleCloseNavMenu
                   }
