@@ -20,7 +20,8 @@ const RewardRedeem: React.FC<Props> = ( {} ) => {
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>(
     []
   );
-  const [cookies] = useCookies(['access_token', 'rewardId', 'rewardPoint']);
+  const [cookies] = useCookies(['access_token', 'rewardId', 'rewardPoint', 'rewardSlot']);
+  const [slot, setSlot] = useState(cookies.rewardSlot);
   //Temp data
   const [data, setData] = useState([
     {
@@ -48,7 +49,6 @@ const RewardRedeem: React.FC<Props> = ( {} ) => {
   const encodedClassId = classId ? encodeURIComponent(classId) : "";
   const handleCancel = () => {
     // Update completion status for selected students
-    console.log("Cancle");
     navigate(`/class/${encodedClassId}/reward`);
   };
 
@@ -62,7 +62,7 @@ const RewardRedeem: React.FC<Props> = ( {} ) => {
           Authorization: `Bearer ${cookies.access_token}`
         }
       });
-      if (studentPoint.data >= Number(cookies.rewardPoint)) {
+      if ((studentPoint.data >= Number(cookies.rewardPoint)) && (slot > 0)) {
         const response = await axios.get(
           `https://backend.otudy.co/api/v1/reward/change_redeem_status?reward_id=${rewardIdEncoded}&_class=${classId}&student_id=${encodeURIComponent(selectionModel[i])}&_status=${encodeURIComponent("แลกเสร็จสิ้น")}`,
           {
@@ -84,6 +84,7 @@ const RewardRedeem: React.FC<Props> = ( {} ) => {
             title: 'สำเร็จ',
             text: 'แลกรางวัลให้กับนักเรียนเสร็จสิ้น'
           })
+          setSlot(slot - 1);
           fetchData();
         }
       } else {
@@ -119,7 +120,8 @@ const RewardRedeem: React.FC<Props> = ( {} ) => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+    setSlot(cookies.rewardSlot);
+  }, [cookies.rewardSlot]);
 
   return (
     <div className="page-container">

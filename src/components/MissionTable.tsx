@@ -23,7 +23,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId, data })
   const [cookies] = useCookies(['access_token']);
   const [isAddMissionFormOpen, setIsAddMissionFormOpen] = useState(false);
   const [rows, setRows] = useState(data);
-  const [cookie, setCookie] = useCookies(["access_token", 'missionId']);
+  const [cookie, setCookie] = useCookies(["access_token", 'missionId', 'missionSlot']);
   const [unactiveMissions, setUnactiveMissions] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const currentClass: string = classId;
@@ -186,6 +186,7 @@ const MissionTable: React.FC<IsActiveMissionTable> = ({ active, classId, data })
         onRowClick={(params) => {
           handleOpenCompleteStatus();
           setCookie('missionId', params.row.id);
+          setCookie('missionSlot', params.row.slotsAmount);
           // Navigate to mission details page or handle as needed
           console.log("Mission ID:", params.row.id);
           

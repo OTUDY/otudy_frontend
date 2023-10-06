@@ -38,25 +38,40 @@ const MissionStatus = () => {
   const handleClose = () => {
     navigate(`/class/${classId}/mission`);
   };
-  const [cookies] = useCookies(["missionId", "access_token"]);
-
+  const [cookies] = useCookies(["missionId", "access_token", 'missionSlot']);
+  const [slot, setSlot] = useState(cookies.missionSlot);
   const handleComplete = async() => {
     // Update completion status for selected students
     console.log("Selected Students:", selectionModel);
-    for (let i = 0; i < selectionModel.length; i++) {
-      const response = await axios.get(`https://backend.otudy.co/api/v1/mission/change_mission_status?_class=${encodeURIComponent(classId as string)}&student_id=${encodeURIComponent(selectionModel[i])}&mission_id=${encodeURIComponent(cookies.missionId)}&_status=${encodeURIComponent('เสร็จสิ้นภารกิจ')}`, {
-        headers: {
-          'Authorization': `Bearer ${cookies.access_token}`
+    if (slot > 0) {
+      for (let i = 0; i < selectionModel.length; i++) {
+        const response = await axios.get(`https://backend.otudy.co/api/v1/mission/change_mission_status?_class=${encodeURIComponent(classId as string)}&student_id=${encodeURIComponent(selectionModel[i])}&mission_id=${encodeURIComponent(cookies.missionId)}&_status=${encodeURIComponent('เสร็จสิ้นภารกิจ')}`, {
+          headers: {
+            'Authorization': `Bearer ${cookies.access_token}`
+          }
+        });
+        if (response.status == 200) {
+          Swal.default.fire({
+            icon: 'success',
+            title: 'สำเร็จ',
+            text: 'สถานะของภารกิจได้ถูกปรับให้เป็น เสร็จสิ้น แล้ว'
+          })
+          fetchData();
+        } else {
+          Swal.default.fire({
+            icon: 'error',
+            title: 'ไม่สำเร็จ',
+            text: 'ไม่สามารถเปลี่ยนแปลงสถานะได้ โปรดลองอีกครั้งภายหลัง'
+          })
         }
-      });
-      if (response.status == 200) {
-        Swal.default.fire({
-          icon: 'success',
-          title: 'สำเร็จ',
-          text: 'สถานะของภารกิจได้ถูกปรับให้เป็น เสร็จสิ้น แล้ว'
-        })
-        fetchData();
       }
+    }
+    else {
+      Swal.default.fire({
+        icon: 'error',
+        title: 'ไม่สำเร็จ',
+        text: 'ไม่สามารถเปลี่ยนแปลงสถานะได้เนื่องจากจำนวนนักเรียนที่ทำภารกิจได้ถึงกำหนดแล้ว'
+      })
     }
     //window.location.reload();
     
@@ -81,6 +96,7 @@ const MissionStatus = () => {
 }
   const handleAssign = async() => {
     for (let i = 0; i < selectionModel.length; i++) {
+      if (slot > 0) {
       const response = await axios.get(`https://backend.otudy.co/api/v1/mission/change_mission_status?_class=${encodeURIComponent(classId as string)}&student_id=${encodeURIComponent(selectionModel[i])}&mission_id=${encodeURIComponent(cookies.missionId)}&_status=${encodeURIComponent('ได้รับมอบหมาย')}`, {
         headers: {
           'Authorization': `Bearer ${cookies.access_token}`
@@ -93,6 +109,21 @@ const MissionStatus = () => {
           text: 'สถานะของภารกิจได้ถูกปรับให้เป็น มอบหมาย แล้ว'
         })
         fetchData();
+      }
+      else {
+        Swal.default.fire({
+          icon: 'error',
+          title: 'ไม่สำเร็จ',
+          text: 'สถานะของภารกิจไม่ถูกปรับ'
+        })
+      }
+      }
+      else {
+        Swal.default.fire({
+          icon: 'error',
+          title: 'ไม่สำเร็จ',
+          text: 'สถานะของภารกิจไม่ถูกปรับเนื่องจากจำนวนนักเรียนที่ทำได้ไม่เพียงพอ'
+        })
       }
     }
     //window.location.reload();
@@ -114,7 +145,8 @@ const MissionStatus = () => {
 
   useEffect(() => {
     fetchData();
-  }, [cookies.missionId])
+    setSlot(cookies.missionSlot);
+  }, [cookies.missionId, cookies.missionSlot])
 
   return (
     <div className="page-container">
