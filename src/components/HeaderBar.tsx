@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import OtudyLogo from "../assets/OtudyLogo.svg";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 function HeaderBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -41,7 +42,7 @@ function HeaderBar() {
 
   const navigate = useNavigate();
   const handleLogoClick = () => {
-    navigate("/", { replace: true });
+    navigate("/class", { replace: true });
     console.log(navigate);
   };
   const handleClassButtonClick = () => {
@@ -49,9 +50,15 @@ function HeaderBar() {
     handleCloseNavMenu(); // Close the navigation menu
   };
 
+  const handleLogOutClick = () => {
+    navigate("/");
+    setCookies('access_token', "");
+  }
+
   // Define your menu items
-  const navMenuItems = ["Class", "History"];
-  const userMenuItems = ["Profile", "Logout"];
+  const navMenuItems = ["ห้องเรียน", "ประวัติ"];
+  const userMenuItems = ["โปรไฟล์", "ออกจากระบบ"];
+  const [_, setCookies] = useCookies(['access_token']);
 
   return (
     <AppBar position="static">
@@ -102,7 +109,7 @@ function HeaderBar() {
                 <MenuItem
                   key={page}
                   onClick={
-                    page === "Class"
+                    page === "ห้องเรียน"
                       ? handleClassButtonClick
                       : handleCloseNavMenu
                   }
@@ -156,7 +163,7 @@ function HeaderBar() {
             >
               {/* User menu items */}
               {userMenuItems.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={setting === "ออกจากระบบ"? handleLogOutClick : handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
