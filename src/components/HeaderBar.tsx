@@ -65,7 +65,7 @@ function HeaderBar() {
             sx={{ mr: 2 }}
             onClick={handleLogoClick}
           >
-            <img src={OtudyLogo} />
+            <object data={OtudyLogo} type="image/svg+xml"></object>
           </IconButton>
 
           {/* Nav menu for smaller screens */}
