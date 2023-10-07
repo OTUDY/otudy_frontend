@@ -61,16 +61,17 @@ const Class = () => {
 
       <div className="section-container">
         <div className="section-content">
-          <Grid container spacing={2} alignItems="center" marginTop={"20px"}>
-            <Grid item xs={12} md={6}>
-              <h1>ห้องเรียน</h1>
+          <Grid container spacing={2} position='relative' alignItems="center" marginTop={"1rem"}>
+            <Grid item xs={6} md={6}>
+              <h2>ห้องเรียน</h2>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={6} md={6}>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={handleOpenAddClassForm}
-                sx={{ marginBottom: 2 }}
+                sx={{
+                      position: 'relative'}}
               >
                 เพิ่มห้องเรียน
               </Button>

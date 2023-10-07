@@ -153,7 +153,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{isEdit? "Edit the mission's detail": "Create a new mission"}</DialogTitle>
+      <DialogTitle>{isEdit? "แก้ไขข้อมูลภารกิจ": "เพิ่มภารกิจใหม่"}</DialogTitle>
       <DialogContent>
         <form>
         <TextField
@@ -231,7 +231,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
         <Button onClick={onClose} color="primary">
           ยกเลิก
         </Button>
-        <Button onClick={handleCreateAndEdit} color="primary">
+        <Button onClick={handleCreateAndEdit} disabled={missionDescription === '' || missionTitle === '' || dueDate === '' || rewardPoints == 0 || tagsInput === ''} color="primary">
           {isEdit? "แก้ไข": "เพิ่ม"}
         </Button>
       </DialogActions>

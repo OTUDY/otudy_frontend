@@ -60,7 +60,7 @@ function HeaderBar() {
   const [_, setCookies] = useCookies(['access_token']);
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{ background: '#FFFFFF'}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <IconButton
@@ -75,14 +75,14 @@ function HeaderBar() {
           </IconButton>
 
           {/* Nav menu for smaller screens */}
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none", boxShadow: 3 } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              color='default'
             >
               <MenuIcon />
             </IconButton>
@@ -120,14 +120,14 @@ function HeaderBar() {
           </Box>
 
           {/* Nav buttons for larger screens */}
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, color: 'black' }}>
             {navMenuItems.map((page) => (
               <Button
                 key={page}
                 onClick={
                   page === "Class" ? handleClassButtonClick : handleCloseNavMenu
                 }
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, color: "black", boxShadow: 2, display: "block", marginLeft: 2 }}
               >
                 {page}
               </Button>

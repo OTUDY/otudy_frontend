@@ -76,58 +76,58 @@ const MissionStatus = () => {
     //window.location.reload();
     
   };
-  const handleDeny = async () => {
-    for (let i = 0; i < selectionModel.length; i++) {
-      const response = await axios.get(`https://backend.otudy.co/api/v1/mission/change_mission_status?_class=${encodeURIComponent(classId as string)}&student_id=${encodeURIComponent(selectionModel[i])}&mission_id=${encodeURIComponent(cookies.missionId)}&_status=${encodeURIComponent('ปฏิเสธการมอบหมาย')}`, {
-        headers: {
-          'Authorization': `Bearer ${cookies.access_token}`
-        }
-      });
-      if (response.status == 200) {
-        Swal.default.fire({
-          icon: 'success',
-          title: 'สำเร็จ',
-          text: 'สถานะของภารกิจได้ถูกปรับให้เป็น ยกเลิก แล้ว'
-        })
-        fetchData();
-      }
-    }
-    //window.location.reload();
-}
-  const handleAssign = async() => {
-    for (let i = 0; i < selectionModel.length; i++) {
-      if (slot > 0) {
-      const response = await axios.get(`https://backend.otudy.co/api/v1/mission/change_mission_status?_class=${encodeURIComponent(classId as string)}&student_id=${encodeURIComponent(selectionModel[i])}&mission_id=${encodeURIComponent(cookies.missionId)}&_status=${encodeURIComponent('ได้รับมอบหมาย')}`, {
-        headers: {
-          'Authorization': `Bearer ${cookies.access_token}`
-        }
-      });
-      if (response.status == 200) {
-        Swal.default.fire({
-          icon: 'success',
-          title: 'สำเร็จ',
-          text: 'สถานะของภารกิจได้ถูกปรับให้เป็น มอบหมาย แล้ว'
-        })
-        fetchData();
-      }
-      else {
-        Swal.default.fire({
-          icon: 'error',
-          title: 'ไม่สำเร็จ',
-          text: 'สถานะของภารกิจไม่ถูกปรับ'
-        })
-      }
-      }
-      else {
-        Swal.default.fire({
-          icon: 'error',
-          title: 'ไม่สำเร็จ',
-          text: 'สถานะของภารกิจไม่ถูกปรับเนื่องจากจำนวนนักเรียนที่ทำได้ไม่เพียงพอ'
-        })
-      }
-    }
-    //window.location.reload();
-  }
+//   const handleDeny = async () => {
+//     for (let i = 0; i < selectionModel.length; i++) {
+//       const response = await axios.get(`https://backend.otudy.co/api/v1/mission/change_mission_status?_class=${encodeURIComponent(classId as string)}&student_id=${encodeURIComponent(selectionModel[i])}&mission_id=${encodeURIComponent(cookies.missionId)}&_status=${encodeURIComponent('ปฏิเสธการมอบหมาย')}`, {
+//         headers: {
+//           'Authorization': `Bearer ${cookies.access_token}`
+//         }
+//       });
+//       if (response.status == 200) {
+//         Swal.default.fire({
+//           icon: 'success',
+//           title: 'สำเร็จ',
+//           text: 'สถานะของภารกิจได้ถูกปรับให้เป็น ยกเลิก แล้ว'
+//         })
+//         fetchData();
+//       }
+//     }
+//     //window.location.reload();
+// }
+  // const handleAssign = async() => {
+  //   for (let i = 0; i < selectionModel.length; i++) {
+  //     if (slot > 0) {
+  //     const response = await axios.get(`https://backend.otudy.co/api/v1/mission/change_mission_status?_class=${encodeURIComponent(classId as string)}&student_id=${encodeURIComponent(selectionModel[i])}&mission_id=${encodeURIComponent(cookies.missionId)}&_status=${encodeURIComponent('ได้รับมอบหมาย')}`, {
+  //       headers: {
+  //         'Authorization': `Bearer ${cookies.access_token}`
+  //       }
+  //     });
+  //     if (response.status == 200) {
+  //       Swal.default.fire({
+  //         icon: 'success',
+  //         title: 'สำเร็จ',
+  //         text: 'สถานะของภารกิจได้ถูกปรับให้เป็น มอบหมาย แล้ว'
+  //       })
+  //       fetchData();
+  //     }
+  //     else {
+  //       Swal.default.fire({
+  //         icon: 'error',
+  //         title: 'ไม่สำเร็จ',
+  //         text: 'สถานะของภารกิจไม่ถูกปรับ'
+  //       })
+  //     }
+  //     }
+  //     else {
+  //       Swal.default.fire({
+  //         icon: 'error',
+  //         title: 'ไม่สำเร็จ',
+  //         text: 'สถานะของภารกิจไม่ถูกปรับเนื่องจากจำนวนนักเรียนที่ทำได้ไม่เพียงพอ'
+  //       })
+  //     }
+  //   }
+  //   //window.location.reload();
+  // }
   
   const fetchData = async() => {
     const response = await axios.get(`https://backend.otudy.co/api/v1/class/get_class_meta_data?_class=${classId}`, {
@@ -155,11 +155,20 @@ const MissionStatus = () => {
       </div>
       <div className="classroom-container">
         <div className="classroom-content">
-          <Typography variant="h4" sx={{ marginTop: "20px" }}>
+          <Typography variant="h4" sx={{ marginTop: "2.5rem" }}>
             สถานะการทำภารกิจ
           </Typography>
           <DataGrid
             rows={missionDetail}
+            sx={{
+              marginTop: '1rem',
+              boxShadow: 2,
+              border: 2,
+              borderColor: 'primary.light',
+              '& .MuiDataGrid-cell:hover': {
+                color: 'primary.main',
+              }
+            }}
             columns={[
               { field: "id", headerName: "รหัส", width: 150 },
               { field: "inClassId", headerName: "เลขที่", width: 150 },
@@ -186,22 +195,22 @@ const MissionStatus = () => {
             <Button variant="contained" onClick={handleClose}>
               ปิด
             </Button>
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               onClick={handleDeny}
               disabled={selectionModel.length === 0}
             >
               ยกเลิก
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               variant="contained"
               color="primary"
               onClick={handleAssign}
               disabled={selectionModel.length === 0}
             >
               มอบหมาย
-            </Button>
+            </Button> */}
             <Button
               variant="contained"
               color="primary"

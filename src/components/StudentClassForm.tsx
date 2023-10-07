@@ -156,6 +156,7 @@ const StudentClassForm: React.FC<AddClassFormProps> = ({
             sx={{ marginBottom: 2 }}
           />
         </form>
+        
       </DialogContent>
       <DialogActions
         sx={{

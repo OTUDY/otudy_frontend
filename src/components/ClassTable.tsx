@@ -108,20 +108,22 @@ const ClassTable: React.FC<Props> = ( {data} ) => {
   }, [data])
 
   return (
-    <div style={{ height: 600, width: "100%" }}>
+    <div style={{ height: (data.length * 160), width: "100%" }}>
       <DataGrid
         rows={rows}
         columns={[
-          { field: "id", headerName: "ไอดี", width: 150 },
-          { field: "name", headerName: "ชื่อห้องเรียน", width: 200 },
-          { field: "level", headerName: "ระดับชั้นการศึกษา", width: 200 },
-          { field: "teachers", headerName: "ครูประจำห้อง", width: 250 },
-          { field: "description", headerName: "คำอธิบาย", width: 250 },
-          { field: "totalStudents", headerName: "จำนวนนักเรียนทั้งหมด", width: 150 },
+          //{ field: "id", headerName: "รหัส", width: 20, align:'center', headerAlign: 'center' },
+          { field: "name", headerName: "ชื่อ", width: 100, align:'center', headerAlign: 'center' },
+          { field: "level", headerName: "ชั้น", width: 80, align:'center', headerAlign: 'center' },
+          //{ field: "teachers", headerName: "ครู", width: 100, align:'center', headerAlign: 'center' },
+          //{ field: "description", headerName: "คำอธิบาย", width: 250, align:'center', headerAlign: 'center' },
+          { field: "totalStudents", headerName: "นักเรียน", width: 70, align:'center', headerAlign: 'center' },
           {
             field: "edit",
             headerName: "แก้ไข",
-            width: 100,
+            width: 1,
+            align:'center',
+            headerAlign: 'center',
             renderCell: (params) => (
               <IconButton
                 aria-label="edit"
@@ -143,7 +145,9 @@ const ClassTable: React.FC<Props> = ( {data} ) => {
           {
             field: "delete",
             headerName: "ลบ",
-            width: 100,
+            width: 1,
+            align:'center',
+            headerAlign: 'center',
             renderCell: (params) => (
               <IconButton
                 aria-label="delete"
@@ -171,6 +175,17 @@ const ClassTable: React.FC<Props> = ( {data} ) => {
           },
         }}
         pageSizeOptions={[5, 10]}
+        sx={{
+          alignItems: 'center',
+          marginTop: '1rem',
+          boxShadow: 0,
+          border: 0,
+          borderColor: 'primary.light',
+          '& .MuiDataGrid-cell:hover': {
+            color: 'primary.main',
+          },
+          borderRadius: 0
+        }}
       />
       <ClassForm 
       open={isAddClassFormOpen} 
