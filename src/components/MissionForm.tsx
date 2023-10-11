@@ -77,6 +77,14 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
     };
 
     if (!isEdit) {
+      if (new Date(dueDate) <= new Date()) {
+        Swal.default.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: 'ท่านจำเป็นต้องตั้งค่าวันหมดอายุของภารกิจอย่างน้อย 1 วันนับจากวันนี้'
+        });
+        return;
+      }
       const response = await axios.post(
         "https://backend.otudy.co/api/v1/mission/create_mission",
         body,
