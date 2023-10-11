@@ -78,6 +78,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
 
     if (!isEdit) {
       if (new Date(dueDate) <= new Date()) {
+        onClose();
         Swal.default.fire({
           icon: 'error',
           title: 'เกิดข้อผิดพลาด',
