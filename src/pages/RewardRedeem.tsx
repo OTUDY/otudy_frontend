@@ -62,6 +62,7 @@ const RewardRedeem: React.FC<Props> = ( {} ) => {
           Authorization: `Bearer ${cookies.access_token}`
         }
       });
+      console.log(`Point = ${studentPoint.data}, slot = ${cookies.rewardSlot}, rewardPoints = ${cookies.rewardPoint}`);
       if ((studentPoint.data >= Number(cookies.rewardPoint)) && (slot > 0)) {
         const response = await axios.get(
           `https://backend.otudy.co/api/v1/reward/change_redeem_status?reward_id=${rewardIdEncoded}&_class=${classId}&student_id=${encodeURIComponent(selectionModel[i])}&_status=${encodeURIComponent("แลกเสร็จสิ้น")}`,
