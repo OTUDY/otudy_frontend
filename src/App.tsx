@@ -22,6 +22,9 @@ const theme = createTheme({
       fontFamily: 'Sarabun'
     },
   },
+  palette: {
+    mode: 'light'
+  }
 });
 
 

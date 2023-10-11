@@ -7,12 +7,13 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import * as Swal from 'sweetalert2';
+import dayjs from "dayjs";
 interface data {
   id: string;
   name: string;
@@ -40,7 +41,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
 }) => {
   const [missionTitle, setMissionTitle] = useState(data.name);
   const [missionDescription, setMissionDescription] = useState(data.description);
-  const [dueDate, setDueDate] = useState(data.expiredDate);
+  const [dueDate, setDueDate] = useState<Date>();
   const [rewardPoints, setRewardPoints] = useState(data.receivedPoints);
   //let activeStatus = true;
   const [tagsInput, setTagsInput] = useState(data.tags);
@@ -56,10 +57,24 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
 
   const handleCreateAndEdit = async () => {
     const tagsToSendCreate: string[] = [];
-    const tagsSplitted = tagsInput.split(",");
-    tagsSplitted.forEach((currentItem: any) => {
-      tagsToSendCreate.push(currentItem);
-    });
+    if (tagsInput.includes(',')) {
+      const tagsSplitted = tagsInput.split(',');
+      tagsSplitted.forEach((currentItem: any) => {
+        tagsToSendCreate.push(currentItem);
+      });
+    }
+    else if (tagsInput.includes(', ')) {
+      const tagsSplitted = tagsInput.split(', ')
+      tagsSplitted.forEach((currentItem: any) => {
+        tagsToSendCreate.push(currentItem);
+      });
+    }
+    else {
+      tagsToSendCreate.push(tagsInput);
+    }
+    
+    
+    console.log('dueDate', dueDate);
 
     const body = {
       mission_id: id,
@@ -77,7 +92,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
     };
 
     if (!isEdit) {
-      if (new Date(dueDate) <= new Date()) {
+      if (new Date(dueDate as any) <= new Date()) {
         onClose();
         Swal.default.fire({
           icon: 'error',
@@ -125,7 +140,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
         confirmButtonText: 'แก้ไข'
       })
       if (result.isConfirmed) {
-        if (new Date(dueDate) <= new Date()) {
+        if (new Date(dueDate as any) <= new Date()) {
           onClose();
           Swal.default.fire({
             icon: 'error',
@@ -161,9 +176,10 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
   };
 
   useEffect(() => {
+    const date = dayjs(data.expiredDate);
     setMissionTitle(data.name);
     setAmount(data.slotsAmount);
-    setDueDate(data.expiredDate);
+    setDueDate(date as any);
     setRewardPoints(data.receivedPoints);
     setMissionDescription(data.description);
     setTagsInput(data.tags);
@@ -209,13 +225,22 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
             fullWidth
             sx={{ marginBottom: 2 }}
           /> */}
-          <TextField
+          {/* <TextField
             label="Due Date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
-          />
+          /> */}
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker 
+            label="Expired Date"
+            value={dueDate}
+            onChange={(newValue) => setDueDate(newValue as any)} 
+            sx={{ marginBottom: 2,
+                  width: '100%'}}/>
+          </LocalizationProvider>
+          
           <TextField
             label="Amount"
             value={amount}
@@ -249,7 +274,7 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
         <Button onClick={onClose} color="primary">
           ยกเลิก
         </Button>
-        <Button onClick={handleCreateAndEdit} disabled={missionDescription === '' || missionTitle === '' || dueDate === '' || rewardPoints == 0 || tagsInput === ''} color="primary">
+        <Button onClick={handleCreateAndEdit} disabled={missionDescription === '' || missionTitle === '' || dueDate === new Date() || rewardPoints == 0 || tagsInput === ''} color="primary">
           {isEdit? "แก้ไข": "เพิ่ม"}
         </Button>
       </DialogActions>

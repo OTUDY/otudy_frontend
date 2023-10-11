@@ -10,6 +10,10 @@ import {
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import * as Swal from 'sweetalert2';
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 //import axios from "axios";
 //import { useNavigate } from "react-router-dom";
 
@@ -27,7 +31,7 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId, isEdit,
   const [point, setPoint] = useState(data.spentPoints);
   const [description, setDescription] = useState(data.description);
   const [amount, setAmount] = useState(data.slotsAmount);
-  const [expiredDate, setExpiredDate] = useState(data.expiredDate);
+  const [expiredDate, setExpiredDate] = useState(data.expiredDate === ''? dayjs((new Date()).toString()): dayjs(data.expiredDate));
   const [cookie] = useCookies(['access_token']);
 
 
@@ -50,6 +54,14 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId, isEdit,
         confirmButtonText: 'แก้ไข'
       })
       if (result.isConfirmed) {
+        if (expiredDate as any <= new Date()) {
+          Swal.default.fire({
+            icon: 'error',
+            title: 'แก้ไขไม่สำเร็จ',
+            text: 'วันหมดอายุของรางวัลต้องมากกว่าวันปัจจุบันอย่างน้อย 1 วัน'
+          })
+          return;
+        }
         const body = {
           reward_id: data.id,
           reward_name: title,
@@ -87,6 +99,15 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId, isEdit,
       }
       }
   } else {
+    if (expiredDate as any <= new Date()) {
+      onClose();
+      Swal.default.fire({
+        icon: 'error',
+        title: 'แก้ไขไม่สำเร็จ',
+        text: 'วันหมดอายุของรางวัลต้องมากกว่าวันปัจจุบันอย่างน้อย 1 วัน'
+      });
+      return;
+    }
     const body = {
       reward_name: title,
       reward_desc: description,
@@ -166,13 +187,14 @@ const RewardForm: React.FC<RewardFormProps> = ({ open, onClose, classId, isEdit,
             fullWidth
             sx={{ marginBottom: 2 }}
           />
-          <TextField
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker 
             label="Expired Date"
             value={expiredDate}
-            onChange={(e) => setExpiredDate(e.target.value)}
-            fullWidth
-            sx={{ marginBottom: 2 }}
-          />
+            onChange={(newValue) => setExpiredDate(newValue as any)} 
+            sx={{ marginBottom: 2,
+                  width: '100%'}}/>
+          </LocalizationProvider>
         </form>
       </DialogContent>
       <DialogActions
