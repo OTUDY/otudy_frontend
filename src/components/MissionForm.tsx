@@ -125,6 +125,15 @@ const MissionForm: React.FC<AddMissionFormProps> = ({
         confirmButtonText: 'แก้ไข'
       })
       if (result.isConfirmed) {
+        if (new Date(dueDate) <= new Date()) {
+          onClose();
+          Swal.default.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+            text: 'ท่านจำเป็นต้องตั้งค่าวันหมดอายุของภารกิจอย่างน้อย 1 วันนับจากวันนี้'
+          });
+          return;
+        }
       const response = await axios.put(
         "https://backend.otudy.co/api/v1/mission/update_mission_detail",
         body,
