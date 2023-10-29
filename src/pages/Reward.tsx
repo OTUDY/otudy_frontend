@@ -60,6 +60,7 @@ const Reward = () => {
     }
     setRewards(rewardData);
     setClassName(response.data.name);
+    console.log(response.data)
   };
 
   useEffect(() => {
