@@ -115,8 +115,9 @@ const RewardRedeem: React.FC<Props> = ( {} ) => {
         break;
       }
     }
-    console.log(`Reward ID: ${cookies.rewardId}`);
     setData(response.data.rewards[index].onGoingRedemption);
+    console.log(response.data.rewards[index].onGoingRedemption);
+    console.log(`Reward ID: ${cookies.rewardId}`);
   };
 
   useEffect(() => {
