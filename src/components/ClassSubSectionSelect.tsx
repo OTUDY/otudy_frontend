@@ -50,12 +50,12 @@ const ClassSubSectionSelect: React.FC<ClassSubSectionSelectProps> = ({
       >
         รางวัล
       </Button>
-      <Button
+      {/* <Button
         onClick={() => handleMenuItemClick("leaderboard")}
         variant={selectedItem === "leaderboard" ? "contained" : "outlined"}
       >
         กระดานคะแนน
-      </Button>
+      </Button> */}
     </ButtonGroup>
   );
 };
